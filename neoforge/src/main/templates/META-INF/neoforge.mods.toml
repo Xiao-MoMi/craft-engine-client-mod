@@ -1,0 +1,36 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license="GNU GPLv3"
+
+[[mods]]
+modId="craftengine"
+version="${project_version}"
+logoFile = "icon.png"
+displayName="CraftEngine NeoForge Mod"
+displayURL="https://github.com/Xiao-MoMi/craft-engine"
+authors="jhqwqmc"
+description='''CraftEngine NeoForge Mod'''
+
+[[dependencies.craftengine]]
+modId="minecraft"
+type="required"
+versionRange="[${latest_minecraft_version},)"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.craftengine]]
+modId="neoforge"
+type="required"
+versionRange="[${neo_version},)"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.craftengine]]
+modId="cloth_config"
+type="required"
+versionRange="[${cloth_version},)"
+ordering="NONE"
+side="CLIENT"
+
+[[mixins]]
+config="craftengine.mixins.json"

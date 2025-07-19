@@ -85,25 +85,21 @@ tasks.processResources {
     }
 }
 
-val targetJavaVersion = 21
-tasks.withType<JavaCompile>().configureEach {
+tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible) {
-        options.release.set(targetJavaVersion)
-    }
+    options.release.set(21)
+    dependsOn(tasks.clean)
 }
 
 java {
-    val javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    if (JavaVersion.current() < javaVersion) {
-        toolchain {
-            languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
-        }
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
     }
     withSourcesJar()
 }
 
-tasks.build {
-    dependsOn(tasks.clean)
-    dependsOn(tasks.shadowJar)
+artifacts {
+    archives(tasks.shadowJar)
 }

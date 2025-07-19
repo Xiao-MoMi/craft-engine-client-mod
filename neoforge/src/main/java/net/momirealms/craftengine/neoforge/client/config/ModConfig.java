@@ -1,12 +1,12 @@
-package net.momirealms.craftengine.fabric.client.config;
+package net.momirealms.craftengine.neoforge.client.config;
 
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.momirealms.craftengine.fabric.client.CraftEngineFabricModClient;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.momirealms.craftengine.neoforge.CraftEngineNeoForgeMod;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
@@ -22,28 +22,28 @@ public class ModConfig {
         ConfigBuilder builder = ConfigBuilder.create()
                 .setParentScreen(parent)
                 .setSavingRunnable(ModConfig::saveConfig)
-                .setTitle(Text.translatable("title.craftengine.config"));
-        ConfigCategory general = builder.getOrCreateCategory(Text.translatable("category.craftengine.general"));
+                .setTitle(Component.translatable("title.craftengine.config"));
+        ConfigCategory general = builder.getOrCreateCategory(Component.translatable("category.craftengine.general"));
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
         general.addEntry(entryBuilder.startBooleanToggle(
-                Text.translatable("option.craftengine.enable_network")
-                        .formatted(Formatting.WHITE),
+                        Component.translatable("option.craftengine.enable_network")
+                                .withStyle(ChatFormatting.WHITE),
                         enableNetwork)
                 .setDefaultValue(false)
                 .setSaveConsumer(newValue -> enableNetwork = newValue)
                 .setTooltip(
-                        Text.translatable("tooltip.craftengine.enable_network")
-                                .formatted(Formatting.GRAY)
+                        Component.translatable("tooltip.craftengine.enable_network")
+                                .withStyle(ChatFormatting.GRAY)
                 )
                 .build());
         general.addEntry(entryBuilder.startBooleanToggle(
-                Text.translatable("option.craftengine.enable_cancel_block_update")
-                        .formatted(Formatting.WHITE),
+                        Component.translatable("option.craftengine.enable_cancel_block_update")
+                                .withStyle(ChatFormatting.WHITE),
                         enableCancelBlockUpdate)
                 .setDefaultValue(false)
                 .setSaveConsumer(newValue -> enableCancelBlockUpdate = newValue)
                 .setTooltip(
-                        Text.translatable("tooltip.craftengine.enable_cancel_block_update")
+                        Component.translatable("tooltip.craftengine.enable_cancel_block_update")
                 )
                 .build()
         );
@@ -57,10 +57,10 @@ public class ModConfig {
         var data = new java.util.HashMap<String, Object>();
         data.put("enable-network", ModConfig.enableNetwork);
         data.put("enable-cancel-block-update", ModConfig.enableCancelBlockUpdate);
-        try (Writer writer = Files.newBufferedWriter(CraftEngineFabricModClient.CONFIG_PATH)) {
+        try (Writer writer = Files.newBufferedWriter(CraftEngineNeoForgeMod.CONFIG_PATH)) {
             yaml.dump(data, writer);
         } catch (IOException e) {
-            CraftEngineFabricModClient.LOGGER.warn("Failed to save config file", e);
+            CraftEngineNeoForgeMod.LOGGER.warn("Failed to save config file", e);
         }
     }
 }

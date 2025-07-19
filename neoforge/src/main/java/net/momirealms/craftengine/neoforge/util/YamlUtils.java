@@ -1,14 +1,15 @@
-package net.momirealms.craftengine.fabric.util;
+package net.momirealms.craftengine.neoforge.util;
 
 import com.mojang.brigadier.StringReader;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.command.argument.BlockArgumentParser;
-import net.minecraft.registry.BuiltinRegistries;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.commands.arguments.blocks.BlockStateParser;
+import net.minecraft.data.registries.VanillaRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.ResourceLocation;
+import net.momirealms.craftengine.neoforge.CraftEngineNeoForgeMod;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 
@@ -22,8 +23,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class YamlUtils {
-    public static final Path CONFIG_DIR = Path.of("config/craft-engine-fabric-mod/");
-    private static final RegistryWrapper<Block> registryWrapper = BuiltinRegistries.createWrapperLookup().getOrThrow(RegistryKeys.BLOCK);
+    public static final Path CONFIG_DIR = Path.of("config/craft-engine-neoforge-mod/");
+    private static final HolderLookup<Block> registryWrapper = VanillaRegistries.createLookup().lookupOrThrow(Registries.BLOCK);
 
     public static <T> T loadConfig(Path filePath) throws IOException {
         if (!Files.exists(filePath)) {
@@ -43,13 +44,13 @@ public class YamlUtils {
         }
     }
 
-    public static Map<Identifier, Integer> loadMappingsAndAdditionalBlocks() throws IOException {
+    public static Map<ResourceLocation, Integer> loadMappingsAndAdditionalBlocks() throws IOException {
         Path mappingPath = CONFIG_DIR.resolve("mappings.yml");
         Path additionalYamlPath = CONFIG_DIR.resolve("additional-real-blocks.yml");
         if (!Files.exists(additionalYamlPath) || !Files.exists(mappingPath)) return Map.of();
         Map<String, String> blockStateMappings = loadConfig(mappingPath);
         validateBlockStateMappings(blockStateMappings);
-        Map<Identifier, Integer> blockTypeCounter = new LinkedHashMap<>();
+        Map<ResourceLocation, Integer> blockTypeCounter = new LinkedHashMap<>();
         Map<Integer, Integer> appearanceMapper = new HashMap<>();
         for (Map.Entry<String, String> entry : blockStateMappings.entrySet()) {
             processBlockStateMapping(entry, appearanceMapper, blockTypeCounter);
@@ -69,7 +70,7 @@ public class YamlUtils {
     private static void processBlockStateMapping(
             Map.Entry<String, String> entry,
             Map<Integer, Integer> stateIdMapper,
-            Map<Identifier, Integer> blockUsageCounter
+            Map<ResourceLocation, Integer> blockUsageCounter
     ) {
         final BlockState sourceState = createBlockData(entry.getKey());
         final BlockState targetState = createBlockData(entry.getValue());
@@ -78,12 +79,12 @@ public class YamlUtils {
             return;
         }
 
-        final int sourceStateId = Block.STATE_IDS.getRawId(sourceState);
-        final int targetStateId = Block.STATE_IDS.getRawId(targetState);
+        final int sourceStateId = Block.BLOCK_STATE_REGISTRY.getId(sourceState);
+        final int targetStateId = Block.BLOCK_STATE_REGISTRY.getId(targetState);
 
         if (stateIdMapper.putIfAbsent(sourceStateId, targetStateId) == null) {
             final Block sourceBlock = sourceState.getBlock();
-            final Identifier blockId = Registries.BLOCK.getId(sourceBlock);
+            final ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(sourceBlock);
             blockUsageCounter.merge(blockId, 1, Integer::sum);
         }
     }
@@ -91,16 +92,16 @@ public class YamlUtils {
     public static BlockState createBlockData(String blockState) {
         try {
             StringReader reader = new StringReader(blockState);
-            BlockArgumentParser.BlockResult arg = BlockArgumentParser.block(registryWrapper, reader, true);
+            BlockStateParser.BlockResult arg = BlockStateParser.parseForBlock(registryWrapper, reader, true);
             return arg.blockState();
         } catch (Exception e) {
             return null;
         }
     }
 
-    private static LinkedHashMap<Identifier, Integer> buildRegisteredRealBlockSlots(Map<Identifier, Integer> counter, Map<String, Integer> additionalYaml) {
-        LinkedHashMap<Identifier, Integer> map = new LinkedHashMap<>();
-        for (Map.Entry<Identifier, Integer> entry : counter.entrySet()) {
+    private static LinkedHashMap<ResourceLocation, Integer> buildRegisteredRealBlockSlots(Map<ResourceLocation, Integer> counter, Map<String, Integer> additionalYaml) {
+        LinkedHashMap<ResourceLocation, Integer> map = new LinkedHashMap<>();
+        for (Map.Entry<ResourceLocation, Integer> entry : counter.entrySet()) {
             String id = entry.getKey().toString();
             Integer additionalStates = additionalYaml.get(id);
             int internalIds = entry.getValue() + (additionalStates != null ? additionalStates : 0);

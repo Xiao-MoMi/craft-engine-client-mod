@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworkin
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.color.world.BiomeColors;
@@ -23,10 +24,16 @@ import net.momirealms.craftengine.fabric.client.blocks.CustomBlock;
 import net.momirealms.craftengine.fabric.client.config.ModConfig;
 import net.momirealms.craftengine.fabric.client.network.CraftEnginePayload;
 import net.momirealms.craftengine.fabric.client.util.NetWorkDataTypes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.nio.file.Path;
 
 @Environment(EnvType.CLIENT)
 public class CraftEngineFabricModClient implements ClientModInitializer {
     public static final String MOD_ID = "craftengine";
+    public static final Logger LOGGER = LoggerFactory.getLogger("craftengine");
+    public static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("craft-engine-fabric-mod").resolve("config.yml");
     public static boolean serverInstalled = false;
 
     @Override
@@ -67,20 +74,17 @@ public class CraftEngineFabricModClient implements ClientModInitializer {
 
     private static void initChannel(ClientConfigurationNetworkHandler handler, MinecraftClient client) {
         if (!ModConfig.enableNetwork && !ModConfig.enableCancelBlockUpdate) {
-            ClientConfigurationNetworking.unregisterGlobalReceiver(CraftEnginePayload.ID);
             return;
         }
 
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 
         if (ModConfig.enableNetwork) {
-            NetWorkDataTypes<Integer> type = NetWorkDataTypes.CLIENT_CUSTOM_BLOCK;
-            type.writeType(buf);
-            type.encode(buf, Block.STATE_IDS.size());
+            buf.writeEnumConstant(NetWorkDataTypes.CLIENT_CUSTOM_BLOCK);
+            NetWorkDataTypes.CLIENT_CUSTOM_BLOCK.encode(buf, Block.STATE_IDS.size());
         } else if (ModConfig.enableCancelBlockUpdate) {
-            NetWorkDataTypes<Boolean> type = NetWorkDataTypes.CANCEL_BLOCK_UPDATE;
-            type.writeType(buf);
-            type.encode(buf, true);
+            buf.writeEnumConstant(NetWorkDataTypes.CANCEL_BLOCK_UPDATE);
+            NetWorkDataTypes.CANCEL_BLOCK_UPDATE.encode(buf, true);
         }
 
         ClientConfigurationNetworking.send(new CraftEnginePayload(buf.array()));
@@ -89,9 +93,9 @@ public class CraftEngineFabricModClient implements ClientModInitializer {
     private static void handleReceiver(CraftEnginePayload payload, ClientConfigurationNetworking.Context context) {
         byte[] data = payload.data();
         PacketByteBuf buf = new PacketByteBuf(Unpooled.wrappedBuffer(data));
-        NetWorkDataTypes<?> type = NetWorkDataTypes.readType(buf);
+        NetWorkDataTypes type = buf.readEnumConstant(NetWorkDataTypes.class);
         if (type == NetWorkDataTypes.CANCEL_BLOCK_UPDATE) {
-            serverInstalled = type.as(Boolean.class).decode(buf);
+            serverInstalled = type.decode(buf);
         }
     }
 }

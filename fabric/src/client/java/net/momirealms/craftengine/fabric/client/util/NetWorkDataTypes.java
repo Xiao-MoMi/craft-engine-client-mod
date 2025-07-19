@@ -1,63 +1,30 @@
 package net.momirealms.craftengine.fabric.client.util;
 
-import net.minecraft.network.PacketByteBuf;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
+public enum NetWorkDataTypes {
+    CLIENT_CUSTOM_BLOCK(PacketCodecs.INTEGER),
+    CANCEL_BLOCK_UPDATE(PacketCodecs.BOOLEAN);
 
-public class NetWorkDataTypes<T> {
-    private static final Map<Integer, NetWorkDataTypes<?>> id2NetWorkDataTypes = new HashMap<>();
+    private final PacketCodec<?, ?> codec;
 
-    public static final NetWorkDataTypes<Integer> CLIENT_CUSTOM_BLOCK =
-            new NetWorkDataTypes<>(0, PacketByteBuf::readInt, PacketByteBuf::writeInt);
-
-    public static final NetWorkDataTypes<Boolean> CANCEL_BLOCK_UPDATE =
-            new NetWorkDataTypes<>(1, PacketByteBuf::readBoolean, PacketByteBuf::writeBoolean);
-
-    static {
-        register(CLIENT_CUSTOM_BLOCK);
-        register(CANCEL_BLOCK_UPDATE);
+    NetWorkDataTypes(PacketCodec<?, ?> codec) {
+        this.codec = codec;
     }
 
-    private static void register(NetWorkDataTypes<?> type) {
-        id2NetWorkDataTypes.put(type.id, type);
+    public PacketCodec<?, ?> codec() {
+        return codec;
     }
 
-    private final int id;
-    private final Function<PacketByteBuf, T> decoder;
-    private final BiConsumer<PacketByteBuf, T> encoder;
-
-    public NetWorkDataTypes(int id, Function<PacketByteBuf, T> decoder, BiConsumer<PacketByteBuf, T> encoder) {
-        this.id = id;
-        this.decoder = decoder;
-        this.encoder = encoder;
+    @SuppressWarnings("unchecked")
+    public <B extends ByteBuf, V> V decode(B buf) {
+        return ((PacketCodec<B, V>) codec).decode(buf);
     }
 
-    public T decode(PacketByteBuf buf) {
-        return decoder.apply(buf);
-    }
-
-    public void encode(PacketByteBuf buf, T data) {
-        encoder.accept(buf, data);
-    }
-
-    public int id() {
-        return id;
-    }
-
-    public void writeType(PacketByteBuf buf) {
-        buf.writeVarInt(id);
-    }
-
-    public static NetWorkDataTypes<?> readType(PacketByteBuf buf) {
-        int id = buf.readVarInt();
-        return id2NetWorkDataTypes.get(id);
-    }
-
-    @SuppressWarnings({"unchecked", "unused"})
-    public <R> NetWorkDataTypes<R> as(Class<R> clazz) {
-        return (NetWorkDataTypes<R>) this;
+    @SuppressWarnings("unchecked")
+    public <B extends ByteBuf, V> void encode(B buf, V value) {
+        ((PacketCodec<B, V>) codec).encode(buf, value);
     }
 }

@@ -23,7 +23,7 @@ import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class CraftEngineFabricMod implements ModInitializer {
-    private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("craft-engine-fabric-mod/config.yml");
+    private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("craft-engine-fabric-mod").resolve("config.yml");
     public static final String MOD_ID = "craftengine";
     public static final Logger LOGGER = LoggerFactory.getLogger("craftengine");
 
@@ -48,7 +48,7 @@ public class CraftEngineFabricMod implements ModInitializer {
                 }
             }
         } catch (IOException e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error("Failed to initialize the mod", e);
         }
     }
 
@@ -70,7 +70,7 @@ public class CraftEngineFabricMod implements ModInitializer {
             ModConfig.enableNetwork = (Boolean) config.getOrDefault("enable-network", false);
             ModConfig.enableCancelBlockUpdate = (Boolean) config.getOrDefault("enable-cancel-block-update", false);
         } catch (IOException e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error("Failed to load config", e);
         }
     }
 }
