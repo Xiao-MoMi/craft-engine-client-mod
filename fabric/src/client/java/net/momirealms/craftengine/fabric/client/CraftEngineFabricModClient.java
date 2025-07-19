@@ -4,10 +4,10 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.loader.api.FabricLoader;
@@ -15,7 +15,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.network.ClientConfigurationNetworkHandler;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
@@ -51,7 +51,7 @@ public class CraftEngineFabricModClient implements ClientModInitializer {
             Identifier id = Registries.BLOCK.getId(block);
             if (block instanceof CustomBlock customBlock) {
                 if (customBlock.isTransparent()) {
-                    BlockRenderLayerMap.INSTANCE.putBlock(customBlock, RenderLayer.getCutoutMipped());
+                    BlockRenderLayerMap.putBlock(customBlock, BlockRenderLayer.TRANSLUCENT);
                 }
                 if (id.getPath().contains("leaves")) {
                     registerColor(block);
