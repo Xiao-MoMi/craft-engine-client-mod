@@ -1,6 +1,5 @@
 rootProject.name = "craft-engine-client-mod"
 include(":fabric")
-include(":neoforge")
 pluginManagement {
     plugins {
         id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
