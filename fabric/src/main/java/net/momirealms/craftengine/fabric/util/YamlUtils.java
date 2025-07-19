@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class YamlUtils {
     public static final Path CONFIG_DIR = Path.of("config/craft-engine-fabric-mod/");
-    private static final RegistryWrapper<Block> registryWrapper = BuiltinRegistries.createWrapperLookup().getOrThrow(RegistryKeys.BLOCK);
+    private static final RegistryWrapper<Block> registryWrapper = BuiltinRegistries.createWrapperLookup().getWrapperOrThrow(RegistryKeys.BLOCK);
 
     public static <T> T loadConfig(Path filePath) throws IOException {
         if (!Files.exists(filePath)) {

@@ -12,8 +12,6 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
-import net.minecraft.world.block.WireOrientation;
-import net.minecraft.world.tick.ScheduledTickView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -28,13 +26,13 @@ import static net.momirealms.craftengine.fabric.client.config.ModConfig.enableCa
 public abstract class AbstractBlockStateMixin {
 
     @Inject(method = "getStateForNeighborUpdate", at = @At("HEAD"), cancellable = true)
-    private void cancelGetStateForNeighborUpdate(WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random, CallbackInfoReturnable<AbstractBlockStateMixin> cir) {
+    private void cancelGetStateForNeighborUpdate(Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos, CallbackInfoReturnable<AbstractBlockStateMixin> cir) {
         if (!enableCancelBlockUpdate || !serverInstalled) return;
         cir.setReturnValue(this);
     }
 
     @Inject(method = "neighborUpdate", at = @At("HEAD"), cancellable = true)
-    private void cancelNeighborUpdate(World world, BlockPos pos, Block sourceBlock, WireOrientation wireOrientation, boolean notify, CallbackInfo ci) {
+    private void cancelNeighborUpdate(World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, CallbackInfo ci) {
         if (!enableCancelBlockUpdate || !serverInstalled) return;
         ci.cancel();
     }

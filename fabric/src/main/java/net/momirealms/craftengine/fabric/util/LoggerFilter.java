@@ -12,7 +12,9 @@ public class LoggerFilter {
         rootLogger.addFilter(new AbstractFilter() {
             @Override
             public Result filter(LogEvent event) {
-                if (event.getMessage().getFormattedMessage().contains("Missing model for variant: 'craftengine:")) {
+                String message = event.getMessage().getFormattedMessage();
+                if (message.contains("Missing model for variant: 'craftengine:")
+                        || message.contains("Exception loading blockstate definition: 'craftengine:")) {
                     return Result.DENY;
                 }
                 return Result.NEUTRAL;

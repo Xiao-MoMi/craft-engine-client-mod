@@ -37,7 +37,7 @@ public class RegisterBlocks {
 
     public static Block register(String name, Function<AbstractBlock.Settings, Block> blockFactory, AbstractBlock.Settings settings) {
         RegistryKey<Block> blockKey = keyOfBlock(name);
-        Block block = blockFactory.apply(settings.registryKey(blockKey));
+        Block block = blockFactory.apply(settings);
 
         return Registry.register(Registries.BLOCK, blockKey, block);
     }
