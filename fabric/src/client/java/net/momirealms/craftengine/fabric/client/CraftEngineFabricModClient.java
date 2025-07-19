@@ -66,7 +66,7 @@ public class CraftEngineFabricModClient implements ClientModInitializer {
                     if (world != null && pos != null) {
                         return BiomeColors.getFoliageColor(world, pos);
                     }
-                    return FoliageColors.DEFAULT;
+                    return FoliageColors.getDefaultColor();
                 },
                 block
         );
