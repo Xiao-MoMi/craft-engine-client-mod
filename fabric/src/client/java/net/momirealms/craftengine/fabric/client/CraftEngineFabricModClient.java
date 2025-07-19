@@ -9,7 +9,9 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectio
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.impl.networking.client.ClientConfigurationNetworkAddon;
+import net.fabricmc.fabric.impl.networking.client.ClientNetworkingImpl;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
@@ -38,12 +40,10 @@ public class CraftEngineFabricModClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        PayloadTypeRegistry.configurationS2C().register(CraftEnginePayload.ID, CraftEnginePayload.CODEC);
-        PayloadTypeRegistry.configurationC2S().register(CraftEnginePayload.ID, CraftEnginePayload.CODEC);
         registerRenderLayer();
-        ClientConfigurationConnectionEvents.START.register(CraftEngineFabricModClient::initChannel);
-        ClientConfigurationNetworking.registerGlobalReceiver(CraftEnginePayload.ID, CraftEngineFabricModClient::handleReceiver);
+        ClientConfigurationConnectionEvents.INIT.register(CraftEngineFabricModClient::initChannel);
         ClientPlayConnectionEvents.DISCONNECT.register((client, handler) -> serverInstalled = false);
+        ClientConfigurationNetworking.registerGlobalReceiver(CraftEnginePayload.CRAFTENGINE_PAYLOAD, CraftEngineFabricModClient::handleReceiver);
     }
 
     public static void registerRenderLayer() {
@@ -72,6 +72,7 @@ public class CraftEngineFabricModClient implements ClientModInitializer {
         );
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     private static void initChannel(ClientConfigurationNetworkHandler handler, MinecraftClient client) {
         if (!ModConfig.enableNetwork && !ModConfig.enableCancelBlockUpdate) {
             return;
@@ -87,11 +88,16 @@ public class CraftEngineFabricModClient implements ClientModInitializer {
             NetWorkDataTypes.CANCEL_BLOCK_UPDATE.encode(buf, true);
         }
 
-        ClientConfigurationNetworking.send(new CraftEnginePayload(buf.array()));
+        final ClientConfigurationNetworkAddon addon = ClientNetworkingImpl.getClientConfigurationAddon();
+        if (addon == null) {
+            throw new IllegalStateException("Cannot send packet while not configuring!");
+        }
+        addon.sendPacket(new CraftEnginePayload(buf.array()));
     }
 
-    private static void handleReceiver(CraftEnginePayload payload, ClientConfigurationNetworking.Context context) {
-        byte[] data = payload.data();
+    private static void handleReceiver(MinecraftClient client, ClientConfigurationNetworkHandler handler, PacketByteBuf byteBuf, PacketSender responseSender) {
+        byte[] data = new byte[byteBuf.readableBytes()];
+        byteBuf.readBytes(data);
         PacketByteBuf buf = new PacketByteBuf(Unpooled.wrappedBuffer(data));
         NetWorkDataTypes type = buf.readEnumConstant(NetWorkDataTypes.class);
         if (type == NetWorkDataTypes.CANCEL_BLOCK_UPDATE) {
