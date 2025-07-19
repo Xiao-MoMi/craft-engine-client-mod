@@ -18,6 +18,7 @@ import static java.util.Objects.requireNonNull;
 
 public class BlockUtils {
     private final static Field COLLIDABLE_FIELD = requireNonNull(getDeclaredField(AbstractBlock.Settings.class, boolean.class, 0));
+    private final static Field SETTINGS_FIELD = requireNonNull(getDeclaredField(AbstractBlock.class, AbstractBlock.Settings.class, 0));
 
     @Nullable
     public static Field getDeclaredField(final Class<?> clazz, final Class<?> type, int index) {
@@ -42,7 +43,7 @@ public class BlockUtils {
     public static boolean canPassThrough(BlockState state) {
         try {
             if (state == null) return false;
-            AbstractBlock.Settings settings = state.getBlock().getSettings();
+            AbstractBlock.Settings settings = (AbstractBlock.Settings) SETTINGS_FIELD.get(state.getBlock());
             return !COLLIDABLE_FIELD.getBoolean(settings);
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Failed to access 'collidable' field", e);
