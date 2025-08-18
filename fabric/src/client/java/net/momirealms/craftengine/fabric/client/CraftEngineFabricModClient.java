@@ -72,8 +72,9 @@ public class CraftEngineFabricModClient implements ClientModInitializer {
         );
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     private static void initChannel(ClientConfigurationNetworkHandler handler, MinecraftClient client) {
+        sendStatesSize();
+
         if (!ModConfig.enableNetwork && !ModConfig.enableCancelBlockUpdate) {
             return;
         }
@@ -87,7 +88,18 @@ public class CraftEngineFabricModClient implements ClientModInitializer {
             buf.writeEnumConstant(NetWorkDataTypes.CANCEL_BLOCK_UPDATE);
             NetWorkDataTypes.CANCEL_BLOCK_UPDATE.encode(buf, true);
         }
+        send(buf);
+    }
 
+    private static void sendStatesSize() {
+        PacketByteBuf blockStateData = new PacketByteBuf(Unpooled.buffer());
+        blockStateData.writeEnumConstant(NetWorkDataTypes.CLIENT_BLOCK_STATE_SIZE);
+        NetWorkDataTypes.CLIENT_CUSTOM_BLOCK.encode(blockStateData, Block.STATE_IDS.size());
+        send(blockStateData);
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    private static void send(PacketByteBuf buf) {
         final ClientConfigurationNetworkAddon addon = ClientNetworkingImpl.getClientConfigurationAddon();
         if (addon == null) {
             throw new IllegalStateException("Cannot send packet while not configuring!");
