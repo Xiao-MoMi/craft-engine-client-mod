@@ -73,6 +73,8 @@ public class CraftEngineFabricModClient implements ClientModInitializer {
     }
 
     private static void initChannel(ClientConfigurationNetworkHandler handler, MinecraftClient client) {
+        sendStatesSize();
+
         if (!ModConfig.enableNetwork && !ModConfig.enableCancelBlockUpdate) {
             return;
         }
@@ -88,6 +90,13 @@ public class CraftEngineFabricModClient implements ClientModInitializer {
         }
 
         ClientConfigurationNetworking.send(new CraftEnginePayload(buf.array()));
+    }
+
+    private static void sendStatesSize() {
+        PacketByteBuf blockStateData = new PacketByteBuf(Unpooled.buffer());
+        blockStateData.writeEnumConstant(NetWorkDataTypes.CLIENT_BLOCK_STATE_SIZE);
+        NetWorkDataTypes.CLIENT_CUSTOM_BLOCK.encode(blockStateData, Block.STATE_IDS.size());
+        ClientConfigurationNetworking.send(new CraftEnginePayload(blockStateData.array()));
     }
 
     private static void handleReceiver(CraftEnginePayload payload, ClientConfigurationNetworking.Context context) {
