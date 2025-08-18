@@ -6,7 +6,8 @@ import net.minecraft.network.codec.PacketCodecs;
 
 public enum NetWorkDataTypes {
     CLIENT_CUSTOM_BLOCK(PacketCodecs.INTEGER),
-    CANCEL_BLOCK_UPDATE(PacketCodecs.BOOL);
+    CANCEL_BLOCK_UPDATE(PacketCodecs.BOOL),
+    CLIENT_BLOCK_STATE_SIZE(PacketCodecs.INTEGER);
 
     private final PacketCodec<?, ?> codec;
 
