@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientConfigurationPacketListenerImpl;
-import net.minecraft.core.Holder;
 import net.minecraft.core.RegistrationInfo;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.network.FriendlyByteBuf;
@@ -20,8 +19,6 @@ import net.momirealms.craftengine.fabric.network.protocol.CancelBlockUpdatePacke
 import net.momirealms.craftengine.fabric.network.protocol.ClientBlockStateSizePacket;
 import net.momirealms.craftengine.fabric.network.protocol.ClientCustomBlockPacket;
 import net.momirealms.craftengine.fabric.registries.BuiltInRegistries;
-
-import java.util.Optional;
 
 public class NetworkManager {
     public static boolean serverInstalled = false;
@@ -62,13 +59,12 @@ public class NetworkManager {
     }
 
     public void sendData(ModPacket data) {
-        Optional<Holder.Reference<StreamCodec<FriendlyByteBuf, ? extends ModPacket>>> optionalType = BuiltInRegistries.MOD_PACKET.get(data.type());
-        if (optionalType.isEmpty()) {
+        @SuppressWarnings("unchecked")
+        StreamCodec<FriendlyByteBuf, ModPacket> codec = (StreamCodec<FriendlyByteBuf, ModPacket>) BuiltInRegistries.MOD_PACKET.getValue(data.type());
+        if (codec == null) {
             this.mod.logger().warn("Unknown data type class: " + data.getClass().getName());
             return;
         }
-        @SuppressWarnings("unchecked")
-        StreamCodec<FriendlyByteBuf, ModPacket> codec = (StreamCodec<FriendlyByteBuf, ModPacket>) optionalType.get().value();
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeByte(BuiltInRegistries.MOD_PACKET.getId(codec));
         codec.encode(buf, data);
