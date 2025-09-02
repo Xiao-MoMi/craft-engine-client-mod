@@ -30,7 +30,7 @@ public interface CraftEngineBlockClientProperties {
                     if (world != null && pos != null) {
                         return BiomeColors.getAverageFoliageColor(world, pos);
                     }
-                    return FoliageColor.FOLIAGE_DEFAULT;
+                    return FoliageColor.getDefaultColor();
                 }, block
         );
     }
