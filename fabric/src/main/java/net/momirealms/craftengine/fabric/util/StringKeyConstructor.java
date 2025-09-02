@@ -1,5 +1,7 @@
 package net.momirealms.craftengine.fabric.util;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.nodes.MappingNode;
@@ -10,7 +12,8 @@ import org.yaml.snakeyaml.nodes.ScalarNode;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class StringKeyConstructor extends SafeConstructor {
+@Environment(EnvType.CLIENT)
+public final class StringKeyConstructor extends SafeConstructor {
     private static final String VERSION_PREFIX = "$$";
     private static final String DEEP_KEY_SEPARATOR = "::";
 
