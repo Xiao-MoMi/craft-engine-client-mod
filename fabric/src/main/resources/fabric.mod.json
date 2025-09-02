@@ -9,8 +9,8 @@
   ],
   "contact": {
     "name": "CraftEngine",
-    "homepage": "https://github.com/Xiao-MoMi/craft-engine",
-    "issues": "https://github.com/Xiao-MoMi/craft-engine/issues"
+    "homepage": "https://github.com/Xiao-MoMi/craft-engine-client-mod",
+    "issues": "https://github.com/Xiao-MoMi/craft-engine-client-mod/issues"
   },
   "license": "GPL-3.0",
   "icon": "assets/craft-engine-fabric-mod/icon.png",
