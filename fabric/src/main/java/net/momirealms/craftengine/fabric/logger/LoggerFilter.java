@@ -1,4 +1,4 @@
-package net.momirealms.craftengine.fabric.util;
+package net.momirealms.craftengine.fabric.logger;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LogEvent;
@@ -12,10 +12,9 @@ public class LoggerFilter {
         rootLogger.addFilter(new AbstractFilter() {
             @Override
             public Result filter(LogEvent event) {
-                if (event.getMessage().getFormattedMessage().contains("Missing model for variant: 'craftengine:")) {
-                    return Result.DENY;
-                }
-                return Result.NEUTRAL;
+                String message = event.getMessage().getFormattedMessage();
+                return message.contains("Missing model for variant:") && message.contains("craftengine:")
+                        ? Result.DENY : Result.NEUTRAL;
             }
         });
     }
