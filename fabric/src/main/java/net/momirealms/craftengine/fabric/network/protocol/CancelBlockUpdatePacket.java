@@ -2,7 +2,7 @@ package net.momirealms.craftengine.fabric.network.protocol;
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientConfigurationPacketListenerImpl;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -35,7 +35,7 @@ public record CancelBlockUpdatePacket(boolean enabled) implements ModPacket {
     }
 
     @Override
-    public void handle(Minecraft client, ClientConfigurationPacketListenerImpl handler, PacketSender responseSender) {
+    public void handle(Minecraft client, ClientPacketListener handler, PacketSender responseSender) {
         ModConfig.enableCancelBlockUpdate = this.enabled;
         NetworkManager.serverInstalled = this.enabled;
     }
