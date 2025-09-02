@@ -4,73 +4,70 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Identifier;
+import net.momirealms.craftengine.fabric.block.BlockManager;
 import net.momirealms.craftengine.fabric.client.config.ModConfig;
-import net.momirealms.craftengine.fabric.util.BlockUtils;
-import net.momirealms.craftengine.fabric.util.LoggerFilter;
-import net.momirealms.craftengine.fabric.util.RegisterBlocks;
-import net.momirealms.craftengine.fabric.util.YamlUtils;
-import org.slf4j.Logger;
+import net.momirealms.craftengine.fabric.network.NetworkManager;
+import net.momirealms.craftengine.fabric.logger.LoggerFilter;
+import net.momirealms.craftengine.fabric.logger.ModLogger;
+import net.momirealms.craftengine.fabric.logger.Slf4jModLogger;
+import net.momirealms.craftengine.fabric.util.ConfigUtils;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class CraftEngineFabricMod implements ModInitializer {
-    private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("craft-engine-fabric-mod").resolve("config.yml");
     public static final String MOD_ID = "craftengine";
-    public static final Logger LOGGER = LoggerFactory.getLogger("craftengine");
+    private static CraftEngineFabricMod instance;
+    private Path configPath;
+    private ModLogger logger;
+    private NetworkManager networkManager;
+    private BlockManager blockManager;
 
     @Override
     public void onInitialize() {
-        loadConfig();
-        LoggerFilter.filter();
+        instance = this;
         try {
-            YamlUtils.saveDefaultResource();
-            Map<Identifier, Integer> map = YamlUtils.loadMappingsAndAdditionalBlocks();
-            for (Map.Entry<Identifier, Integer> entry : map.entrySet()) {
-                Identifier replacedBlockId = entry.getKey();
-                for (int i = 0; i < entry.getValue(); i++) {
-                    BlockState blockState = YamlUtils.createBlockData("minecraft:" + replacedBlockId.getPath());
-                    RegisterBlocks.register(
-                            replacedBlockId.getPath() + "_" + i,
-                            BlockUtils.canPassThrough(blockState),
-                            BlockUtils.getShape(blockState),
-                            BlockUtils.isTransparent(blockState),
-                            BlockUtils.canPush(blockState)
-                    );
-                }
-            }
+            LoggerFilter.filter();
+            ConfigUtils.saveDefaultResource();
+            ModConfig.loadConfig();
+            this.networkManager = new NetworkManager(this);
+            this.blockManager = new BlockManager(this);
         } catch (IOException e) {
-            LOGGER.error("Failed to initialize the mod", e);
+            logger().severe("Failed to initialize the mod", e);
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private void loadConfig() {
-        if (!Files.exists(CONFIG_PATH)) {
-            ModConfig.enableNetwork = false;
-            ModConfig.enableCancelBlockUpdate = false;
-            return;
+    public static CraftEngineFabricMod instance() {
+        return instance;
+    }
+
+    public ModLogger logger() {
+        if (logger == null) {
+            logger = new Slf4jModLogger(LoggerFactory.getLogger(MOD_ID));
         }
-        try (InputStream inputStream = Files.newInputStream(CONFIG_PATH)) {
-            Yaml yaml = new Yaml();
-            var config = yaml.loadAs(inputStream, java.util.Map.class);
-            if (config == null) {
-                ModConfig.enableNetwork = false;
-                ModConfig.enableCancelBlockUpdate = false;
-                return;
-            }
-            ModConfig.enableNetwork = (Boolean) config.getOrDefault("enable-network", false);
-            ModConfig.enableCancelBlockUpdate = (Boolean) config.getOrDefault("enable-cancel-block-update", false);
-        } catch (IOException e) {
-            LOGGER.error("Failed to load config", e);
+        return logger;
+    }
+
+    public Path dataFolderPath() {
+        if (configPath == null) {
+            configPath = FabricLoader.getInstance().getConfigDir().resolve("craft-engine-fabric-mod");
         }
+        return configPath;
+    }
+
+    public NetworkManager networkManager() {
+        if (networkManager == null) {
+            throw new IllegalStateException("NetworkManager not initialized");
+        }
+        return networkManager;
+    }
+
+    public BlockManager blockManager() {
+        if (blockManager == null) {
+            throw new IllegalStateException("BlockManager not initialized");
+        }
+        return blockManager;
     }
 }
