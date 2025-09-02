@@ -9,9 +9,9 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.redstone.Orientation;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -26,13 +26,13 @@ import static net.momirealms.craftengine.fabric.network.NetworkManager.serverIns
 public abstract class BlockStateBaseMixin {
 
     @Inject(method = "updateShape", at = @At("HEAD"), cancellable = true)
-    private void cancelUpdateShape(LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, net.minecraft.world.level.block.state.BlockState blockState, RandomSource randomSource, CallbackInfoReturnable<BlockStateBaseMixin> cir) {
+    private void cancelUpdateShape(Direction direction, BlockState blockState, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2, CallbackInfoReturnable<BlockStateBaseMixin> cir) {
         if (!enableCancelBlockUpdate || !serverInstalled) return;
         cir.setReturnValue(this);
     }
 
     @Inject(method = "handleNeighborChanged", at = @At("HEAD"), cancellable = true)
-    private void cancelNeighborUpdate(Level level, BlockPos blockPos, net.minecraft.world.level.block.Block block, Orientation orientation, boolean bl, CallbackInfo ci) {
+    private void cancelNeighborUpdate(Level level, BlockPos blockPos, Block block, BlockPos blockPos2, boolean bl, CallbackInfo ci) {
         if (!enableCancelBlockUpdate || !serverInstalled) return;
         ci.cancel();
     }

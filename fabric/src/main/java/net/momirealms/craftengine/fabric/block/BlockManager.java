@@ -10,9 +10,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -35,6 +37,7 @@ import java.util.*;
 
 @Environment(EnvType.CLIENT)
 public class BlockManager {
+    public static final HolderLookup<Block> BLOCK_REGISTRY_LOOKUP = VanillaRegistries.createLookup().lookupOrThrow(Registries.BLOCK);
     private static BlockManager instance;
     private final CraftEngineFabricMod mod;
 
@@ -131,7 +134,7 @@ public class BlockManager {
 
     private BlockState createBlockState(Path mappingFile, String state) {
         try {
-            return BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK, state, false).blockState();
+            return BlockStateParser.parseForBlock(BLOCK_REGISTRY_LOOKUP, state, false).blockState();
         } catch (Exception e) {
             this.mod.logger().warn(mappingFile, "'" + state + "' is not a valid block state.");
             return null;
@@ -226,7 +229,7 @@ public class BlockManager {
                                       List<ResourceLocation> order) throws Exception {
         ResourceLocation clientSideBlockType = blockWithCount.getKey();
         boolean isNoteBlock = clientSideBlockType.equals(BlockKeys.NOTE_BLOCK);
-        Block clientSideBlock = BuiltInRegistries.BLOCK.getValue(clientSideBlockType);
+        Block clientSideBlock = BuiltInRegistries.BLOCK.get(clientSideBlockType);
         int amount = blockWithCount.getValue();
         List<Integer> stateIds = new IntArrayList();
         List<Integer> blockStateIds = blockAppearanceArranger.get(clientSideBlockType);
@@ -274,10 +277,7 @@ public class BlockManager {
     }
 
     private BlockBehaviour.Properties createBlockProperties(ResourceLocation realBlockKey) {
-        BlockBehaviour.Properties blockProperties = BlockBehaviour.Properties.of();
-        ResourceKey<Block> realBlockResourceKey = ResourceKey.create(Registries.BLOCK, realBlockKey);
-        blockProperties.setId(realBlockResourceKey);
-        return blockProperties;
+        return BlockBehaviour.Properties.of();
     }
 
     public int customBlockCount() {
