@@ -3,7 +3,7 @@ package net.momirealms.craftengine.fabric.block;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
@@ -61,7 +61,7 @@ public class CraftEngineBlock extends Block implements CraftEngineBlockClientPro
     }
 
     @Override
-    public ChunkSectionLayer chunkSectionLayer() {
+    public RenderType chunkSectionLayer() {
         return ItemBlockRenderTypes.getChunkRenderType(this.ownerBlock.defaultBlockState());
     }
 
