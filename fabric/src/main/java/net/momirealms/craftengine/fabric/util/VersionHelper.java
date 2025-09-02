@@ -3,12 +3,15 @@ package net.momirealms.craftengine.fabric.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-public class VersionHelper {
+@Environment(EnvType.CLIENT)
+public final class VersionHelper {
     private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
 
     private static final int version;
