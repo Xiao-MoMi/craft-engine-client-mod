@@ -59,7 +59,12 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:${property("latest_minecraft_version")}")
-    mappings("net.fabricmc:yarn:${property("yarn_mappings")}:v2")
+    mappings(
+        @Suppress("UnstableApiUsage")
+        loom.layered {
+            officialMojangMappings()
+        }
+    )
     modImplementation("net.fabricmc:fabric-loader:${property("loader_version")}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_version")}")
     modApi("me.shedaniel.cloth:cloth-config-fabric:${property("cloth_version")}")
