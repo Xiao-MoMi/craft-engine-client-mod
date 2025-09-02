@@ -12,7 +12,7 @@ import net.momirealms.craftengine.fabric.registries.BuiltInRegistries;
 
 public record CancelBlockUpdatePacket(boolean enabled) implements ModPacket {
     public static final ResourceKey<StreamCodec<FriendlyByteBuf, ? extends ModPacket>> TYPE = ResourceKey.create(
-            BuiltInRegistries.MOD_PACKET.key(), ResourceLocation.fromNamespaceAndPath("craftengine", "cancel_block_update")
+            BuiltInRegistries.MOD_PACKET.key(), ResourceLocation.tryBuild("craftengine", "cancel_block_update")
     );
     public static final StreamCodec<FriendlyByteBuf, CancelBlockUpdatePacket> CODEC = ModPacket.codec(
             CancelBlockUpdatePacket::encode,

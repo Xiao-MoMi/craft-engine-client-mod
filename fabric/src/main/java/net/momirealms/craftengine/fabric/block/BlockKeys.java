@@ -8,5 +8,5 @@ import net.minecraft.resources.ResourceLocation;
 public class BlockKeys {
     private BlockKeys() {}
 
-    public static final ResourceLocation NOTE_BLOCK = ResourceLocation.parse("minecraft:note_block");
+    public static final ResourceLocation NOTE_BLOCK = ResourceLocation.tryParse("minecraft:note_block");
 }

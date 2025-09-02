@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public record CraftEnginePayload(byte[] data) implements CustomPacketPayload {
-    public static final ResourceLocation CRAFTENGINE_PAYLOAD = ResourceLocation.fromNamespaceAndPath("craftengine", "payload");
+    public static final ResourceLocation CRAFTENGINE_PAYLOAD = ResourceLocation.tryBuild("craftengine", "payload");
     public static final Type<CraftEnginePayload> TYPE = new Type<>(CraftEnginePayload.CRAFTENGINE_PAYLOAD);
     public static final StreamCodec<FriendlyByteBuf, CraftEnginePayload> CODEC = StreamCodec.of(
             (byteBuf, payload) -> byteBuf.writeBytes(payload.data()),

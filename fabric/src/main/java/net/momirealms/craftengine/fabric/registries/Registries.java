@@ -10,6 +10,6 @@ import net.momirealms.craftengine.fabric.network.ModPacket;
 public class Registries {
     private Registries() {}
 
-    public static final ResourceKey<Registry<StreamCodec<FriendlyByteBuf, ? extends ModPacket>>> MOD_PACKET = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath("craftengine", "mod_packet"));
+    public static final ResourceKey<Registry<StreamCodec<FriendlyByteBuf, ? extends ModPacket>>> MOD_PACKET = ResourceKey.createRegistryKey(ResourceLocation.tryBuild("craftengine", "mod_packet"));
 
 }

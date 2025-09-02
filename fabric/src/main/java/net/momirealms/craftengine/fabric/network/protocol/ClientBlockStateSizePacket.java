@@ -9,7 +9,7 @@ import net.momirealms.craftengine.fabric.registries.BuiltInRegistries;
 
 public record ClientBlockStateSizePacket(int blockStateSize) implements ModPacket {
     public static final ResourceKey<StreamCodec<FriendlyByteBuf, ? extends ModPacket>> TYPE = ResourceKey.create(
-            BuiltInRegistries.MOD_PACKET.key(), ResourceLocation.fromNamespaceAndPath("craftengine", "client_block_state_size")
+            BuiltInRegistries.MOD_PACKET.key(), ResourceLocation.tryBuild("craftengine", "client_block_state_size")
     );
     public static final StreamCodec<FriendlyByteBuf, ClientBlockStateSizePacket> CODEC = ModPacket.codec(
             ClientBlockStateSizePacket::encode,

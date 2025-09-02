@@ -144,9 +144,9 @@ public class BlockManager {
     private ResourceLocation blockOwnerFromString(String stateString) {
         int index = stateString.indexOf('[');
         if (index == -1) {
-            return ResourceLocation.parse(stateString);
+            return ResourceLocation.tryParse(stateString);
         } else {
-            return ResourceLocation.parse(stateString.substring(0, index));
+            return ResourceLocation.tryParse(stateString.substring(0, index));
         }
     }
 
@@ -179,7 +179,7 @@ public class BlockManager {
     private LinkedHashMap<ResourceLocation, Integer> buildRegisteredRealBlockSlots(Map<ResourceLocation, Integer> counter, Map<String, Object> additionalYaml) {
         LinkedHashMap<ResourceLocation, Integer> map = new LinkedHashMap<>(counter);
         for (Map.Entry<String, Object> entry : additionalYaml.entrySet()) {
-            ResourceLocation blockType = ResourceLocation.parse(entry.getKey());
+            ResourceLocation blockType = ResourceLocation.tryParse(entry.getKey());
             if (entry.getValue() instanceof Integer i) {
                 int previous = map.getOrDefault(blockType, 0);
                 if (previous == 0) {
@@ -240,7 +240,7 @@ public class BlockManager {
         }
 
         for (int i = 0; i < amount; i++) {
-            ResourceLocation realBlockKey = ResourceLocation.fromNamespaceAndPath("craftengine", clientSideBlockType.getPath() + "_" + i);
+            ResourceLocation realBlockKey = ResourceLocation.tryBuild("craftengine", clientSideBlockType.getPath() + "_" + i);
             BlockBehaviour.Properties blockProperties = createBlockProperties(realBlockKey);
 
             Block newRealBlock;
