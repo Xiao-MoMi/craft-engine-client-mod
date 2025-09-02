@@ -50,7 +50,7 @@ public class CraftEngineBlock extends Block implements CraftEngineBlockClientPro
     }
 
     public static Block generateBlock(ResourceLocation replacedBlock, Block ownerBlock, BlockState clientSideBlockState, BlockBehaviour.Properties properties) throws ReflectiveOperationException {
-        BlockBehaviour.Properties ownerProperties = ownerBlock.properties();
+        BlockBehaviour.Properties ownerProperties = (Properties) Reflections.field$BlockBehaviour$properties.get(ownerBlock);
         Reflections.field$BlockBehaviour$Properties$hasCollision.set(properties, Reflections.field$BlockBehaviour$Properties$hasCollision.get(ownerProperties));
         if (!clientSideBlockState.canOcclude()) properties.noOcclusion();
         properties.pushReaction(clientSideBlockState.getPistonPushReaction())

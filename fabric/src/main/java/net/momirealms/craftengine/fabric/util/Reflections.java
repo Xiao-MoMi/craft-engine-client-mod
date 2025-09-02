@@ -55,4 +55,10 @@ public final class Reflections {
                     BlockBehaviour.class, SoundType.class, 0
             )
     );
+
+    public static final Field field$BlockBehaviour$properties = requireNonNull(
+            ReflectionUtils.getDeclaredField(
+                    BlockBehaviour.class, BlockBehaviour.Properties.class, 0
+            )
+    );
 }
