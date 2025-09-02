@@ -2,14 +2,14 @@ package net.momirealms.craftengine.fabric.registries;
 
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.momirealms.craftengine.fabric.network.ModPacket;
+import net.momirealms.craftengine.fabric.network.codec.NetworkCodec;
 
 public class Registries {
     private Registries() {}
 
-    public static final ResourceKey<Registry<StreamCodec<FriendlyByteBuf, ? extends ModPacket>>> MOD_PACKET = ResourceKey.createRegistryKey(ResourceLocation.tryBuild("craftengine", "mod_packet"));
+    public static final ResourceKey<Registry<NetworkCodec<FriendlyByteBuf, ? extends ModPacket>>> MOD_PACKET = ResourceKey.createRegistryKey(ResourceLocation.tryBuild("craftengine", "mod_packet"));
 
 }

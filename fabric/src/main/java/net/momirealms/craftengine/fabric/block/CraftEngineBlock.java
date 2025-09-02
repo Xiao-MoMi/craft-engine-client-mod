@@ -18,6 +18,7 @@ import net.momirealms.craftengine.fabric.util.Reflections;
 import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
+@SuppressWarnings("deprecation")
 public class CraftEngineBlock extends Block implements CraftEngineBlockClientProperties {
     private final ResourceLocation replacedBlock;
     private final Block ownerBlock;
@@ -31,17 +32,20 @@ public class CraftEngineBlock extends Block implements CraftEngineBlockClientPro
     }
 
     @Override
-    protected @NotNull VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
+    @NotNull
+    public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
         return clientSideBlockState.getShape(blockGetter, blockPos, collisionContext);
     }
 
     @Override
-    protected @NotNull VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
+    @NotNull
+    public VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
         return clientSideBlockState.getCollisionShape(blockGetter, blockPos, collisionContext);
     }
 
     @Override
-    protected @NotNull VoxelShape getBlockSupportShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+    @NotNull
+    public VoxelShape getBlockSupportShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
         return clientSideBlockState.getBlockSupportShape(blockGetter, blockPos);
     }
 
@@ -56,7 +60,7 @@ public class CraftEngineBlock extends Block implements CraftEngineBlockClientPro
         StateDefinition.Builder<Block, BlockState> stateDefinitionBuilder = new StateDefinition.Builder<>(newBlockInstance);
         StateDefinition<Block, BlockState> stateDefinition = stateDefinitionBuilder.create(Block::defaultBlockState, CraftEngineStateFactory.INSTANCE);
         Reflections.field$Block$stateDefinition.set(newBlockInstance, stateDefinition);
-        Reflections.field$Block$defaultBlockState.set(newBlockInstance, stateDefinition.getPossibleStates().getFirst());
+        Reflections.field$Block$defaultBlockState.set(newBlockInstance, stateDefinition.getPossibleStates().get(0));
         return newBlockInstance;
     }
 

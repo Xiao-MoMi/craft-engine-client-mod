@@ -2,11 +2,10 @@ package net.momirealms.craftengine.fabric.mixin;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,9 +23,9 @@ public class BlockItemMixin {
     private void onPlace(BlockPlaceContext blockPlaceContext, CallbackInfoReturnable<InteractionResult> cir) {
         if (!enableCancelBlockUpdate || !serverInstalled) return;
         ItemStack stack = blockPlaceContext.getItemInHand();
-        CustomData customData = stack.getComponents().get(DataComponents.CUSTOM_DATA);
-        if (customData == null) return;
-        if (customData.contains("craftengine:id")) {
+        CompoundTag tag = stack.getTag();
+        if (tag == null) return;
+        if (tag.contains("craftengine:id")) {
             cir.setReturnValue(InteractionResult.FAIL);
             cir.cancel();
         }
