@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "craft-engine-fabric-mod",
+  "version": "${version}",
+  "name": "CraftEngine Fabric Mod",
+  "description": "CraftEngine Fabric Mod",
+  "authors": [
+    "jhqwqmc"
+  ],
+  "contact": {
+    "name": "CraftEngine",
+    "homepage": "https://github.com/Xiao-MoMi/craft-engine-client-mod",
+    "issues": "https://github.com/Xiao-MoMi/craft-engine-client-mod/issues"
+  },
+  "license": "GPL-3.0",
+  "icon": "assets/craft-engine-fabric-mod/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["net.momirealms.craftengine.fabric.client.CraftEngineFabricModClient"],
+    "main": ["net.momirealms.craftengine.fabric.CraftEngineFabricMod"],
+    "modmenu": ["net.momirealms.craftengine.fabric.client.config.ModMenuIntegration"]
+  },
+  "mixins": [
+    "craftengine.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": ">=${minecraft_version}",
+    "modmenu": ">=${modmenu_version}",
+    "cloth-config": ">=${cloth_version}"
+  }
+}
