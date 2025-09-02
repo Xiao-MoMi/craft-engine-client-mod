@@ -1,4 +1,4 @@
-package net.momirealms.craftengine.fabric.util;
+package net.momirealms.craftengine.fabric.logger;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LogEvent;
@@ -13,11 +13,9 @@ public class LoggerFilter {
             @Override
             public Result filter(LogEvent event) {
                 String message = event.getMessage().getFormattedMessage();
-                if (message.contains("Missing model for variant: 'craftengine:")
-                        || message.contains("Exception loading blockstate definition: 'craftengine:")) {
-                    return Result.DENY;
-                }
-                return Result.NEUTRAL;
+                return message.contains("Missing model for variant:") && message.contains("craftengine:")
+                        || message.contains("Exception loading blockstate definition: 'craftengine:")
+                        ? Result.DENY : Result.NEUTRAL;
             }
         });
     }
