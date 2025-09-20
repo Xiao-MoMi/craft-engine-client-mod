@@ -3,7 +3,6 @@ package net.momirealms.craftengine.fabric.client.block;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.minecraft.client.renderer.BiomeColors;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.FoliageColor;
@@ -16,7 +15,6 @@ public interface CraftEngineBlockClientProperties {
     boolean hasTints();
 
     static void registerRenderLayer() {
-        ItemBlockRenderTypes.setFancy(true);
         for (Block block : BuiltInRegistries.BLOCK) {
             if (!(block instanceof CraftEngineBlockClientProperties craftEngineBlock)) continue;
             BlockRenderLayerMap.INSTANCE.putBlock(block, craftEngineBlock.chunkSectionLayer());
