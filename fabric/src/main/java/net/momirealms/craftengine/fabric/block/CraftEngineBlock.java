@@ -2,23 +2,33 @@ package net.momirealms.craftengine.fabric.block;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.momirealms.craftengine.fabric.CraftEngineFabricMod;
 import net.momirealms.craftengine.fabric.client.block.CraftEngineBlockClientProperties;
+import net.momirealms.craftengine.fabric.util.ReflectionUtils;
 import net.momirealms.craftengine.fabric.util.Reflections;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static java.util.Objects.requireNonNull;
+
 @Environment(EnvType.CLIENT)
 public class CraftEngineBlock extends Block implements CraftEngineBlockClientProperties {
+    private static Map<Block, ChunkSectionLayer> TYPE_BY_BLOCK;
     private final ResourceLocation replacedBlock;
     private final Block ownerBlock;
     private final BlockState clientSideBlockState;
@@ -62,7 +72,25 @@ public class CraftEngineBlock extends Block implements CraftEngineBlockClientPro
 
     @Override
     public ChunkSectionLayer chunkSectionLayer() {
-        return ItemBlockRenderTypes.getChunkRenderType(this.ownerBlock.defaultBlockState());
+        return this.ownerBlock instanceof LeavesBlock
+                ? ChunkSectionLayer.CUTOUT_MIPPED
+                : getChunkRenderType(this.ownerBlock);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static ChunkSectionLayer getChunkRenderType(Block block) {
+        if (!FabricLoader.getInstance().isModLoaded("iris")) {
+            return ItemBlockRenderTypes.getChunkRenderType(block.defaultBlockState());
+        }
+        if (TYPE_BY_BLOCK == null) {
+            try {
+                TYPE_BY_BLOCK = (Map<Block, ChunkSectionLayer>) requireNonNull(ReflectionUtils.getDeclaredField(ItemBlockRenderTypes.class, Map.class, 0)).get(null);
+            } catch (Throwable e) {
+                CraftEngineFabricMod.instance().logger().warn("Failed to get TYPE_BY_BLOCK", e);
+                TYPE_BY_BLOCK = new HashMap<>();
+            }
+        }
+        return TYPE_BY_BLOCK.getOrDefault(block, ChunkSectionLayer.SOLID);
     }
 
     @Override
