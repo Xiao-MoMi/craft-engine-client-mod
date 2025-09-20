@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -66,7 +67,9 @@ public class CraftEngineBlock extends Block implements CraftEngineBlockClientPro
 
     @Override
     public RenderType chunkSectionLayer() {
-        return ItemBlockRenderTypes.getChunkRenderType(this.ownerBlock.defaultBlockState());
+        return this.ownerBlock instanceof LeavesBlock
+                ? RenderType.cutoutMipped()
+                : ItemBlockRenderTypes.getChunkRenderType(this.ownerBlock.defaultBlockState());
     }
 
     @Override
