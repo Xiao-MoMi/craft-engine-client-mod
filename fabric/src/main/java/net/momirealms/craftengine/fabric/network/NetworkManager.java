@@ -18,7 +18,9 @@ import net.momirealms.craftengine.fabric.client.config.ModConfig;
 import net.momirealms.craftengine.fabric.network.protocol.CancelBlockUpdatePacket;
 import net.momirealms.craftengine.fabric.network.protocol.ClientBlockStateSizePacket;
 import net.momirealms.craftengine.fabric.network.protocol.ClientCustomBlockPacket;
+import net.momirealms.craftengine.fabric.network.protocol.VisualBlockStatePacket;
 import net.momirealms.craftengine.fabric.registries.BuiltInRegistries;
+import net.momirealms.craftengine.fabric.util.BlockStateUtils;
 
 public class NetworkManager {
     public static boolean serverInstalled = false;
@@ -38,6 +40,7 @@ public class NetworkManager {
         registerDataType(ClientCustomBlockPacket.TYPE, ClientCustomBlockPacket.CODEC);
         registerDataType(CancelBlockUpdatePacket.TYPE, CancelBlockUpdatePacket.CODEC);
         registerDataType(ClientBlockStateSizePacket.TYPE, ClientBlockStateSizePacket.CODEC);
+        registerDataType(VisualBlockStatePacket.TYPE, VisualBlockStatePacket.CODEC);
     }
 
     public static <T extends ModPacket> void registerDataType(ResourceKey<StreamCodec<FriendlyByteBuf, ? extends ModPacket>> key, StreamCodec<FriendlyByteBuf, T> codec) {
@@ -52,7 +55,7 @@ public class NetworkManager {
         }
 
         if (ModConfig.enableNetwork) {
-            sendData(new ClientCustomBlockPacket(Block.BLOCK_STATE_REGISTRY.size()));
+            sendData(new ClientCustomBlockPacket(BlockStateUtils.vanillaStateSize(), Block.BLOCK_STATE_REGISTRY.size()));
         } else {
             sendData(new CancelBlockUpdatePacket(true));
         }

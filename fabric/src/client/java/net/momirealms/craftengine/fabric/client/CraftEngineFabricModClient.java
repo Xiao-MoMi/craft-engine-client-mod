@@ -14,6 +14,6 @@ public class CraftEngineFabricModClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        CraftEngineBlockClientProperties.registerRenderLayer();
+        // CraftEngineBlockClientProperties.registerRenderLayer();
     }
 }

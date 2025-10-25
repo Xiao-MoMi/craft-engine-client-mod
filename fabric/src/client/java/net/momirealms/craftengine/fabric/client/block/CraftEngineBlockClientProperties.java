@@ -3,23 +3,22 @@ package net.momirealms.craftengine.fabric.client.block;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 public interface CraftEngineBlockClientProperties {
 
-    ChunkSectionLayer chunkSectionLayer();
-
-    boolean hasTints();
-
-    static void registerRenderLayer() {
-        for (Block block : BuiltInRegistries.BLOCK) {
-            if (!(block instanceof CraftEngineBlockClientProperties craftEngineBlock)) continue;
-            BlockRenderLayerMap.putBlock(block, craftEngineBlock.chunkSectionLayer());
-            if (craftEngineBlock.hasTints()) registerColor(block);
-        }
+    static void registerRenderLayer(Block block, BlockState vanillaState) {
+        BlockRenderLayerMap.putBlock(
+                block,
+                vanillaState.getBlock() instanceof LeavesBlock
+                        ? ChunkSectionLayer.CUTOUT_MIPPED
+                        : ItemBlockRenderTypes.getChunkRenderType(vanillaState)
+        );
     }
 
     static void registerColor(Block block) {

@@ -6,7 +6,12 @@
     "BaseRailBlockMixin",
     "BlockItemMixin",
     "BlockStateBaseMixin",
-    "FluidStateMixin"
+    "FluidStateMixin",
+    "BlockBehaviourAccessor",
+    "PropertiesAccessor",
+    "BlockAccessor",
+    "HolderReferenceInvoker",
+    "BlockStateBaseAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -2,99 +2,91 @@ package net.momirealms.craftengine.fabric.block;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.LeavesBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.momirealms.craftengine.fabric.CraftEngineFabricMod;
 import net.momirealms.craftengine.fabric.client.block.CraftEngineBlockClientProperties;
-import net.momirealms.craftengine.fabric.util.ReflectionUtils;
-import net.momirealms.craftengine.fabric.util.Reflections;
+import net.momirealms.craftengine.fabric.mixin.BlockAccessor;
+import net.momirealms.craftengine.fabric.mixin.PropertiesAccessor;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static java.util.Objects.requireNonNull;
 
 @Environment(EnvType.CLIENT)
 public class CraftEngineBlock extends Block implements CraftEngineBlockClientProperties {
-    private static Map<Block, ChunkSectionLayer> TYPE_BY_BLOCK;
-    private final ResourceLocation replacedBlock;
-    private final Block ownerBlock;
-    private final BlockState clientSideBlockState;
 
-    public CraftEngineBlock(Properties properties, ResourceLocation replacedBlock, Block ownerBlock, BlockState clientSideBlockState) {
+    public CraftEngineBlock(Properties properties) {
         super(properties);
-        this.replacedBlock = replacedBlock;
-        this.ownerBlock = ownerBlock;
-        this.clientSideBlockState = clientSideBlockState;
     }
 
     @Override
-    protected @NotNull VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
-        return clientSideBlockState.getShape(blockGetter, blockPos, collisionContext);
+    public @NotNull VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
+        try {
+            int[] mappings = BlockManager.instance().mappings();
+            if (mappings == null) return super.getShape(blockState, blockGetter, blockPos, collisionContext);
+            int id = Block.BLOCK_STATE_REGISTRY.getId(blockState);
+            int mapping = mappings[id];
+            BlockState visualState = Block.BLOCK_STATE_REGISTRY.byId(mapping);
+            if (visualState == null) return super.getShape(blockState, blockGetter, blockPos, collisionContext);
+            return visualState.getShape(blockGetter, blockPos, collisionContext);
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+            return super.getShape(blockState, blockGetter, blockPos, collisionContext);
+        }
     }
 
     @Override
     protected @NotNull VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
-        return clientSideBlockState.getCollisionShape(blockGetter, blockPos, collisionContext);
+        try {
+            int[] mappings = BlockManager.instance().mappings();
+            if (mappings == null) return super.getCollisionShape(blockState, blockGetter, blockPos, collisionContext);
+            int id = Block.BLOCK_STATE_REGISTRY.getId(blockState);
+            int mapping = mappings[id];
+            BlockState visualState = Block.BLOCK_STATE_REGISTRY.byId(mapping);
+            if (visualState == null) return super.getCollisionShape(blockState, blockGetter, blockPos, collisionContext);
+            return visualState.getCollisionShape(blockGetter, blockPos, collisionContext);
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+            return super.getCollisionShape(blockState, blockGetter, blockPos, collisionContext);
+        }
     }
 
     @Override
     protected @NotNull VoxelShape getBlockSupportShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
-        return clientSideBlockState.getBlockSupportShape(blockGetter, blockPos);
+        try {
+            int[] mappings = BlockManager.instance().mappings();
+            if (mappings == null) return super.getBlockSupportShape(blockState, blockGetter, blockPos);
+            int id = Block.BLOCK_STATE_REGISTRY.getId(blockState);
+            int mapping = mappings[id];
+            BlockState visualState = Block.BLOCK_STATE_REGISTRY.byId(mapping);
+            if (visualState == null) return super.getBlockSupportShape(blockState, blockGetter, blockPos);
+            return visualState.getBlockSupportShape(blockGetter, blockPos);
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+            return super.getBlockSupportShape(blockState, blockGetter, blockPos);
+        }
     }
 
-    public static Block generateBlock(ResourceLocation replacedBlock, Block ownerBlock, BlockState clientSideBlockState, BlockBehaviour.Properties properties) throws ReflectiveOperationException {
-        BlockBehaviour.Properties ownerProperties = ownerBlock.properties();
-        Reflections.field$BlockBehaviour$Properties$hasCollision.set(properties, Reflections.field$BlockBehaviour$Properties$hasCollision.get(ownerProperties));
-        if (!clientSideBlockState.canOcclude()) properties.noOcclusion();
-        properties.pushReaction(clientSideBlockState.getPistonPushReaction())
-                .destroyTime(clientSideBlockState.getDestroySpeed(null, null))
-                .strength(clientSideBlockState.getDestroySpeed(null, null));
-        CraftEngineBlock newBlockInstance = new CraftEngineBlock(properties, replacedBlock, ownerBlock, clientSideBlockState);
+    public static CraftEngineBlock generateBlock(ResourceLocation blockId) {
+        CraftEngineBlock newBlockInstance = new CraftEngineBlock(createEmptyBlockProperties(blockId));
         StateDefinition.Builder<Block, BlockState> stateDefinitionBuilder = new StateDefinition.Builder<>(newBlockInstance);
         StateDefinition<Block, BlockState> stateDefinition = stateDefinitionBuilder.create(Block::defaultBlockState, CraftEngineStateFactory.INSTANCE);
-        Reflections.field$Block$stateDefinition.set(newBlockInstance, stateDefinition);
-        Reflections.field$Block$defaultBlockState.set(newBlockInstance, stateDefinition.getPossibleStates().getFirst());
+        BlockAccessor blockAccessor = (BlockAccessor) newBlockInstance;
+        blockAccessor.setStateDefinition(stateDefinition);
+        blockAccessor.setDefaultBlockState(stateDefinition.getPossibleStates().getFirst());
         return newBlockInstance;
     }
 
-    @Override
-    public ChunkSectionLayer chunkSectionLayer() {
-        return this.ownerBlock instanceof LeavesBlock
-                ? ChunkSectionLayer.CUTOUT_MIPPED
-                : getChunkRenderType(this.ownerBlock);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static ChunkSectionLayer getChunkRenderType(Block block) {
-        if (!FabricLoader.getInstance().isModLoaded("iris")) {
-            return ItemBlockRenderTypes.getChunkRenderType(block.defaultBlockState());
-        }
-        if (TYPE_BY_BLOCK == null) {
-            try {
-                TYPE_BY_BLOCK = (Map<Block, ChunkSectionLayer>) requireNonNull(ReflectionUtils.getDeclaredField(ItemBlockRenderTypes.class, Map.class, 0)).get(null);
-            } catch (Throwable e) {
-                CraftEngineFabricMod.instance().logger().warn("Failed to get TYPE_BY_BLOCK", e);
-                TYPE_BY_BLOCK = new HashMap<>();
-            }
-        }
-        return TYPE_BY_BLOCK.getOrDefault(block, ChunkSectionLayer.SOLID);
-    }
-
-    @Override
-    public boolean hasTints() {
-        return replacedBlock.getPath().contains("leaves");
+    private static Properties createEmptyBlockProperties(ResourceLocation id) {
+        Properties blockProperties = Properties.of();
+        ResourceKey<Block> resourceKey = ResourceKey.create(Registries.BLOCK, id);
+        ((PropertiesAccessor) blockProperties).setId(resourceKey);
+        return blockProperties;
     }
 }

@@ -22,6 +22,7 @@ public class ModConfig {
     public static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("craft-engine-fabric-mod").resolve("config.yml");
     public static boolean enableNetwork = false;
     public static boolean enableCancelBlockUpdate = false;
+    public static int serverSideBlocks = 2000;
 
     public static Screen getConfigScreen(Screen parent) {
         ConfigBuilder builder = ConfigBuilder.create()
@@ -52,6 +53,18 @@ public class ModConfig {
                 )
                 .build()
         );
+        general.addEntry(entryBuilder.startIntField(
+                        Component.translatable("option.craftengine.server_side_blocks")
+                                .withStyle(ChatFormatting.WHITE),
+                        serverSideBlocks)
+                .setDefaultValue(2000)
+                .setSaveConsumer(newValue -> serverSideBlocks = newValue)
+                .setTooltip(
+                        Component.translatable("tooltip.craftengine.server_side_blocks")
+                                .withStyle(ChatFormatting.GRAY)
+                )
+                .build()
+        );
         return builder.build();
     }
 
@@ -62,6 +75,7 @@ public class ModConfig {
         var data = new java.util.HashMap<String, Object>();
         data.put("enable-network", ModConfig.enableNetwork);
         data.put("enable-cancel-block-update", ModConfig.enableCancelBlockUpdate);
+        data.put("server-side-blocks", ModConfig.serverSideBlocks);
         try (Writer writer = Files.newBufferedWriter(CONFIG_PATH)) {
             yaml.dump(data, writer);
         } catch (IOException e) {
@@ -73,6 +87,7 @@ public class ModConfig {
         if (!Files.exists(CONFIG_PATH)) {
             ModConfig.enableNetwork = false;
             ModConfig.enableCancelBlockUpdate = false;
+            ModConfig.serverSideBlocks = 2000;
             return;
         }
         try (InputStream inputStream = Files.newInputStream(CONFIG_PATH)) {
@@ -81,10 +96,12 @@ public class ModConfig {
             if (config == null) {
                 ModConfig.enableNetwork = false;
                 ModConfig.enableCancelBlockUpdate = false;
+                ModConfig.serverSideBlocks = 2000;
                 return;
             }
             ModConfig.enableNetwork = (boolean) config.getOrDefault("enable-network", false);
             ModConfig.enableCancelBlockUpdate = (boolean) config.getOrDefault("enable-cancel-block-update", false);
+            ModConfig.serverSideBlocks = (int) config.getOrDefault("server-side-blocks", 2000);
         } catch (IOException e) {
             CraftEngineFabricModClient.LOGGER.error("Failed to load config", e);
         }
