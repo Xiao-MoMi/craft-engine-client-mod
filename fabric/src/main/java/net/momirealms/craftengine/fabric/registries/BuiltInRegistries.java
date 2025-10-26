@@ -1,6 +1,8 @@
 package net.momirealms.craftengine.fabric.registries;
 
 import com.mojang.serialization.Lifecycle;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
@@ -8,6 +10,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.momirealms.craftengine.fabric.network.ModPacket;
 
+@Environment(EnvType.CLIENT)
 public class BuiltInRegistries {
     private BuiltInRegistries() {}
 

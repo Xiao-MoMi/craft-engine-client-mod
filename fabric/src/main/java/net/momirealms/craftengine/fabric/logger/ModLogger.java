@@ -1,8 +1,12 @@
 package net.momirealms.craftengine.fabric.logger;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import java.io.File;
 import java.nio.file.Path;
 
+@Environment(EnvType.CLIENT)
 public interface ModLogger {
     void info(String s);
 

@@ -1,5 +1,7 @@
 package net.momirealms.craftengine.fabric.network.protocol;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.minecraft.client.color.block.BlockColor;
@@ -18,6 +20,7 @@ import net.momirealms.craftengine.fabric.mixin.BlockStateBaseAccessor;
 import net.momirealms.craftengine.fabric.network.ModPacket;
 import net.momirealms.craftengine.fabric.registries.BuiltInRegistries;
 
+@Environment(EnvType.CLIENT)
 public record VisualBlockStatePacket(int[] data) implements ModPacket {
     public static final ResourceKey<StreamCodec<FriendlyByteBuf, ? extends ModPacket>> TYPE = ResourceKey.create(
             BuiltInRegistries.MOD_PACKET.key(), ResourceLocation.fromNamespaceAndPath("craftengine", "visual_block_state")
@@ -42,15 +45,18 @@ public record VisualBlockStatePacket(int[] data) implements ModPacket {
 
     @Override
     public void handle(ClientConfigurationNetworking.Context context) {
-        BlockManager.instance().setMappings(data);
         for (int customId = 0; customId < data.length; customId++) {
             int vanillaId = data[customId];
-            if (vanillaId == 0) continue;
+            if (vanillaId == 0) {
+                data[customId] = customId;
+                continue;
+            }
             BlockState customState = Block.BLOCK_STATE_REGISTRY.byId(customId);
             if (!(customState instanceof CraftEngineBlockState craftEngineBlockState)) continue;
             if (!(craftEngineBlockState.getBlock() instanceof CraftEngineBlock craftEngineBlock)) continue;
             BlockState vanillaState = Block.BLOCK_STATE_REGISTRY.byId(vanillaId);
             if (vanillaState == null) continue;
+            craftEngineBlockState.setVisualBlockState(vanillaState);
             Block vanillaBlock = vanillaState.getBlock();
             CraftEngineBlockClientProperties.registerRenderLayer(craftEngineBlock, vanillaState);
             BlockColor blockColor = ColorProviderRegistry.BLOCK.get(vanillaBlock);
@@ -61,7 +67,6 @@ public record VisualBlockStatePacket(int[] data) implements ModPacket {
             BlockBehaviourAccessor vanillaBlockAccessor = (BlockBehaviourAccessor) vanillaBlock;
             customBlockAccessor.hasCollision(vanillaBlockAccessor.hasCollision());
             customBlockAccessor.explosionResistance(vanillaBlockAccessor.explosionResistance());
-            customBlockAccessor.isRandomlyTicking(vanillaBlockAccessor.isRandomlyTicking());
             customBlockAccessor.soundType(vanillaBlockAccessor.soundType());
             customBlockAccessor.friction(vanillaBlockAccessor.friction());
             customBlockAccessor.speedFactor(vanillaBlockAccessor.speedFactor());
@@ -71,7 +76,6 @@ public record VisualBlockStatePacket(int[] data) implements ModPacket {
             customBlockAccessor.properties(vanillaBlockAccessor.properties());
             customBlockAccessor.drops(vanillaBlockAccessor.drops());
             customBlockAccessor.descriptionId(vanillaBlockAccessor.descriptionId());
-            craftEngineBlockState.initCache();
             BlockStateBaseAccessor customStateAccessor = (BlockStateBaseAccessor) customState;
             BlockStateBaseAccessor vanillaStateAccessor = (BlockStateBaseAccessor) vanillaState;
             customStateAccessor.lightEmission(vanillaStateAccessor.lightEmission());
@@ -79,7 +83,6 @@ public record VisualBlockStatePacket(int[] data) implements ModPacket {
             customStateAccessor.isAir(vanillaStateAccessor.isAir());
             customStateAccessor.ignitedByLava(vanillaStateAccessor.ignitedByLava());
             customStateAccessor.liquid(vanillaStateAccessor.liquid());
-            customStateAccessor.legacySolid(vanillaStateAccessor.legacySolid());
             customStateAccessor.pushReaction(vanillaStateAccessor.pushReaction());
             customStateAccessor.mapColor(vanillaStateAccessor.mapColor());
             customStateAccessor.destroySpeed(vanillaStateAccessor.destroySpeed());
@@ -93,14 +96,18 @@ public record VisualBlockStatePacket(int[] data) implements ModPacket {
             customStateAccessor.spawnTerrainParticles(vanillaStateAccessor.spawnTerrainParticles());
             customStateAccessor.instrument(vanillaStateAccessor.instrument());
             customStateAccessor.replaceable(vanillaStateAccessor.replaceable());
-            customStateAccessor.fluidState(vanillaStateAccessor.fluidState());
             customStateAccessor.isRandomlyTicking(vanillaStateAccessor.isRandomlyTicking());
-            customStateAccessor.solidRender(vanillaStateAccessor.solidRender());
+            customStateAccessor.offsetFunction(vanillaStateAccessor.offsetFunction());
+            craftEngineBlockState.initCache();
+            customStateAccessor.fluidState(vanillaStateAccessor.fluidState());
+            customBlockAccessor.isRandomlyTicking(vanillaBlockAccessor.isRandomlyTicking());
+            customStateAccessor.legacySolid(vanillaStateAccessor.legacySolid());
             customStateAccessor.occlusionShape(vanillaStateAccessor.occlusionShape());
+            customStateAccessor.solidRender(vanillaStateAccessor.solidRender());
             customStateAccessor.occlusionShapesByFace(vanillaStateAccessor.occlusionShapesByFace());
             customStateAccessor.propagatesSkylightDown(vanillaStateAccessor.propagatesSkylightDown());
             customStateAccessor.lightBlock(vanillaStateAccessor.lightBlock());
-            customStateAccessor.offsetFunction(vanillaStateAccessor.offsetFunction());
         }
+        BlockManager.instance().setMappings(data);
     }
 }

@@ -32,6 +32,10 @@ public class BlockManager {
         this.customBlockHolders = new Holder.Reference[ModConfig.serverSideBlocks];
         this.initVanillaRegistry();
         this.registerServerSideCustomBlocks(ModConfig.serverSideBlocks);
+        this.mappings = new int[Block.BLOCK_STATE_REGISTRY.size()];
+        for (int i = 0; i < mappings.length; i++) {
+            this.mappings[i] = i;
+        }
     }
 
     public static BlockManager instance() {

@@ -1,5 +1,7 @@
 package net.momirealms.craftengine.fabric.mixin;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.level.block.SoundType;
@@ -11,6 +13,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.Optional;
 
+@Environment(EnvType.CLIENT)
 @Mixin(BlockBehaviour.class)
 public interface BlockBehaviourAccessor {
 

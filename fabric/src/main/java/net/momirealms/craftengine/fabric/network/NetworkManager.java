@@ -1,6 +1,8 @@
 package net.momirealms.craftengine.fabric.network;
 
 import io.netty.buffer.Unpooled;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -22,6 +24,7 @@ import net.momirealms.craftengine.fabric.network.protocol.VisualBlockStatePacket
 import net.momirealms.craftengine.fabric.registries.BuiltInRegistries;
 import net.momirealms.craftengine.fabric.util.BlockStateUtils;
 
+@Environment(EnvType.CLIENT)
 public class NetworkManager {
     public static boolean serverInstalled = false;
     private final CraftEngineFabricMod mod;
