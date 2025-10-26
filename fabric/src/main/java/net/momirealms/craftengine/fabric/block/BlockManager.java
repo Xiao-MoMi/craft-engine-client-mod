@@ -21,7 +21,6 @@ public class BlockManager {
     private final CraftEngineBlock[] customBlocks;
     private final CraftEngineBlockState[] customBlockStates;
     private final Holder.Reference<Block>[] customBlockHolders;
-    private int[] mappings;
 
     @SuppressWarnings("unchecked")
     public BlockManager(CraftEngineFabricMod mod) {
@@ -32,10 +31,6 @@ public class BlockManager {
         this.customBlockHolders = new Holder.Reference[ModConfig.serverSideBlocks];
         this.initVanillaRegistry();
         this.registerServerSideCustomBlocks(ModConfig.serverSideBlocks);
-        this.mappings = new int[Block.BLOCK_STATE_REGISTRY.size()];
-        for (int i = 0; i < mappings.length; i++) {
-            this.mappings[i] = i;
-        }
     }
 
     public static BlockManager instance() {
@@ -65,12 +60,14 @@ public class BlockManager {
         }
     }
 
-    public void setMappings(int[] mappings) {
-        this.mappings = mappings;
+    public CraftEngineBlock[] customBlocks() {
+        return this.customBlocks;
     }
-
-    public int[] mappings() {
-        return mappings;
+    public CraftEngineBlockState[] customBlockStates() {
+        return this.customBlockStates;
+    }
+    public Holder.Reference<Block>[] customBlockHolders() {
+        return this.customBlockHolders;
     }
 
 }

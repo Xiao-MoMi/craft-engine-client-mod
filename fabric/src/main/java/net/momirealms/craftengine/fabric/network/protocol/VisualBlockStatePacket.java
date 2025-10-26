@@ -3,22 +3,19 @@ package net.momirealms.craftengine.fabric.network.protocol;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.momirealms.craftengine.fabric.block.BlockManager;
 import net.momirealms.craftengine.fabric.block.CraftEngineBlock;
 import net.momirealms.craftengine.fabric.block.CraftEngineBlockState;
-import net.momirealms.craftengine.fabric.client.block.CraftEngineBlockClientProperties;
 import net.momirealms.craftengine.fabric.mixin.BlockBehaviourAccessor;
 import net.momirealms.craftengine.fabric.mixin.BlockStateBaseAccessor;
 import net.momirealms.craftengine.fabric.network.ModPacket;
 import net.momirealms.craftengine.fabric.registries.BuiltInRegistries;
+import net.momirealms.craftengine.fabric.util.BlockRenderUtils;
 
 @Environment(EnvType.CLIENT)
 public record VisualBlockStatePacket(int[] data) implements ModPacket {
@@ -40,7 +37,7 @@ public record VisualBlockStatePacket(int[] data) implements ModPacket {
 
     @Override
     public ResourceKey<StreamCodec<FriendlyByteBuf, ? extends ModPacket>> type() {
-        return null;
+        return TYPE;
     }
 
     @Override
@@ -58,11 +55,8 @@ public record VisualBlockStatePacket(int[] data) implements ModPacket {
             if (vanillaState == null) continue;
             craftEngineBlockState.setVisualBlockState(vanillaState);
             Block vanillaBlock = vanillaState.getBlock();
-            CraftEngineBlockClientProperties.registerRenderLayer(craftEngineBlock, vanillaState);
-            BlockColor blockColor = ColorProviderRegistry.BLOCK.get(vanillaBlock);
-            if (blockColor != null) {
-                CraftEngineBlockClientProperties.registerColor(craftEngineBlock);
-            }
+            BlockRenderUtils.registerRenderLayer(craftEngineBlock, vanillaState);
+            BlockRenderUtils.registerColor(craftEngineBlock, vanillaBlock);
             BlockBehaviourAccessor customBlockAccessor = (BlockBehaviourAccessor) craftEngineBlock;
             BlockBehaviourAccessor vanillaBlockAccessor = (BlockBehaviourAccessor) vanillaBlock;
             customBlockAccessor.hasCollision(vanillaBlockAccessor.hasCollision());
@@ -108,6 +102,5 @@ public record VisualBlockStatePacket(int[] data) implements ModPacket {
             customStateAccessor.propagatesSkylightDown(vanillaStateAccessor.propagatesSkylightDown());
             customStateAccessor.lightBlock(vanillaStateAccessor.lightBlock());
         }
-        BlockManager.instance().setMappings(data);
     }
 }

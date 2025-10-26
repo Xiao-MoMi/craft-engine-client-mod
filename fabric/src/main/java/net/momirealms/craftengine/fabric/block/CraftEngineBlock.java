@@ -8,12 +8,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.momirealms.craftengine.fabric.client.block.CraftEngineBlockClientProperties;
 import net.momirealms.craftengine.fabric.mixin.BlockAccessor;
 import net.momirealms.craftengine.fabric.mixin.PropertiesAccessor;
 
 @Environment(EnvType.CLIENT)
-public class CraftEngineBlock extends Block implements CraftEngineBlockClientProperties {
+public class CraftEngineBlock extends Block {
 
     public CraftEngineBlock(Properties properties) {
         super(properties);
