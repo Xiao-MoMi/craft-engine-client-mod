@@ -3,10 +3,9 @@ package net.momirealms.craftengine.fabric;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.momirealms.craftengine.fabric.block.BlockManager;
-import net.momirealms.craftengine.fabric.commands.ReloadCommands;
+import net.momirealms.craftengine.fabric.commands.CommandManager;
 import net.momirealms.craftengine.fabric.config.ModConfig;
 import net.momirealms.craftengine.fabric.logger.LoggerFilter;
 import net.momirealms.craftengine.fabric.logger.ModLogger;
@@ -25,6 +24,7 @@ public class CraftEngineFabricMod implements ModInitializer {
     private ModLogger logger;
     private NetworkManager networkManager;
     private BlockManager blockManager;
+    private CommandManager commandManager;
 
     @Override
     public void onInitialize() {
@@ -34,7 +34,7 @@ public class CraftEngineFabricMod implements ModInitializer {
         ModConfig.INSTANCE.loadConfig();
         this.networkManager = new NetworkManager(this);
         this.blockManager = new BlockManager(this);
-        ClientCommandRegistrationCallback.EVENT.register(ReloadCommands::register);
+        this.commandManager = new CommandManager(this);
     }
 
     public static CraftEngineFabricMod instance() {
@@ -67,5 +67,12 @@ public class CraftEngineFabricMod implements ModInitializer {
             throw new IllegalStateException("BlockManager not initialized");
         }
         return blockManager;
+    }
+
+    public CommandManager commandManager() {
+        if (commandManager == null) {
+            throw new IllegalStateException("CommandManager not initialized");
+        }
+        return commandManager;
     }
 }

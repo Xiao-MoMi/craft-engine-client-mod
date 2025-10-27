@@ -94,7 +94,6 @@ public class NetworkManager {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeByte(BuiltInRegistries.MOD_PACKET.getId(codec));
         codec.encode(buf, data);
-        // 获取当前处于什么连接阶段
         if (Minecraft.getInstance().player != null) {
             ClientPlayNetworking.send(new CraftEnginePayload(buf.array()));
         } else if (ClientNetworkingImpl.getClientConfigurationAddon() != null) {

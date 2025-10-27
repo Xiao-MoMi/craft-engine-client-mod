@@ -7,7 +7,10 @@ import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.momirealms.craftengine.fabric.network.NetworkManager;
@@ -18,6 +21,9 @@ public class ModMenuIntegration implements ModMenuApi {
 
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
+        if (!FabricLoader.getInstance().isModLoaded("cloth-config")) {
+            return ClothConfigMissingScreen::new;
+        }
         return ConfigScreen.INSTANCE;
     }
 
@@ -71,6 +77,35 @@ public class ModMenuIntegration implements ModMenuApi {
                     .build()
             );
             return builder.build();
+        }
+    }
+
+    private static class ClothConfigMissingScreen extends Screen {
+        private final Screen parent;
+
+        protected ClothConfigMissingScreen(Screen parent) {
+            super(Component.translatable("title.craftengine.config"));
+            this.parent = parent;
+        }
+
+        @Override
+        protected void init() {
+            super.init();
+            this.addRenderableWidget(Button.builder(Component.translatable("gui.back"), button -> this.onClose()).pos(this.width / 2 - 100, this.height - 30).size(200, 20).build());
+        }
+
+        @Override
+        public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+            super.render(guiGraphics, mouseX, mouseY, partialTick);
+            guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 17, -1);
+            Component message = Component.translatable("warning.craftengine.config");
+            guiGraphics.drawCenteredString(this.font, message, this.width / 2, this.height / 2, -1);
+        }
+
+        @Override
+        public void onClose() {
+            if (this.minecraft == null) return;
+            this.minecraft.setScreen(this.parent);
         }
     }
 }
