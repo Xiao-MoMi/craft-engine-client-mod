@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.codec.StreamDecoder;
@@ -15,7 +16,7 @@ public interface ModPacket {
 
     ResourceKey<StreamCodec<FriendlyByteBuf, ? extends ModPacket>> type();
 
-    default void handle(ClientConfigurationNetworking.Context context) {
+    default void handle(Context context) {
     }
 
     static <B extends ByteBuf, T extends ModPacket> StreamCodec<B, T> codec(StreamMemberEncoder<B, T> streamMemberEncoder, StreamDecoder<B, T> streamDecoder) {

@@ -9,5 +9,6 @@
   "tooltip.craftengine.server_side_blocks": "修改后需要重启客户端才能生效",
   "disconnect.craftengine.vanilla_block_registry_mismatch": "原版方块注册表大小不匹配. 当前: %s. 预期: %s \n 1. 确保客户端mod配置与服务端配置一致. \n 2. 不要安装任何会注册新方块的mod. \n 3. 不要使用ViaVersion.",
   "disconnect.craftengine.current_block_registry_mismatch": "当前方块注册表大小不匹配. 当前: %s. 预期: %s \n 1. 确保客户端mod配置与服务端配置一致. \n 2. 不要安装任何会注册新方块的mod. \n 3. 不要使用ViaVersion.",
-  "disconnect.craftengine.invalid_payload": "因发送无效通讯包而断开连接 \n 请确保客户端mod和服务端插件为最新版本"
+  "disconnect.craftengine.invalid_payload": "因发送无效通讯包而断开连接 \n 请确保客户端mod和服务端插件为最新版本",
+  "craftengine.reload.success": "已重新加载配置文件"
 }

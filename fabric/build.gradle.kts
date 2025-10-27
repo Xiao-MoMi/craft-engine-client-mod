@@ -15,24 +15,11 @@ base {
     archivesName.set("craft-engine-fabric-mod")
 }
 
-sourceSets {
-    create("client") {
-        compileClasspath += sourceSets.main.get().compileClasspath
-        runtimeClasspath += sourceSets.main.get().runtimeClasspath
-    }
-    main {
-        compileClasspath += sourceSets["client"].output
-        runtimeClasspath += sourceSets["client"].output
-        output.dir(sourceSets["client"].output)
-    }
-}
-
 tasks.shadowJar {
     relocate("org.yaml", "net.momirealms.craftengine.libraries.org.yaml")
     configurations = listOf(project.configurations.getByName("shadow"))
     archiveFileName.set("${base.archivesName.get()}-${project.version}-shadow.jar")
     from(sourceSets.main.get().output)
-    from(sourceSets["client"].output)
 }
 
 tasks.remapJar {
@@ -47,7 +34,6 @@ loom {
     mods {
         create("craft-engine-fabric-mod") {
             sourceSet(sourceSets.main.get())
-            sourceSet(sourceSets["client"])
         }
     }
 }

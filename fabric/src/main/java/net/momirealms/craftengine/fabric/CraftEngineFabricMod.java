@@ -3,17 +3,18 @@ package net.momirealms.craftengine.fabric;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.momirealms.craftengine.fabric.block.BlockManager;
-import net.momirealms.craftengine.fabric.client.config.ModConfig;
-import net.momirealms.craftengine.fabric.network.NetworkManager;
+import net.momirealms.craftengine.fabric.commands.ReloadCommands;
+import net.momirealms.craftengine.fabric.config.ModConfig;
 import net.momirealms.craftengine.fabric.logger.LoggerFilter;
 import net.momirealms.craftengine.fabric.logger.ModLogger;
 import net.momirealms.craftengine.fabric.logger.Slf4jModLogger;
+import net.momirealms.craftengine.fabric.network.NetworkManager;
 import net.momirealms.craftengine.fabric.util.ConfigUtils;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 @Environment(EnvType.CLIENT)
@@ -28,15 +29,12 @@ public class CraftEngineFabricMod implements ModInitializer {
     @Override
     public void onInitialize() {
         instance = this;
-        try {
-            LoggerFilter.filter();
-            ConfigUtils.saveDefaultResource();
-            ModConfig.loadConfig();
-            this.networkManager = new NetworkManager(this);
-            this.blockManager = new BlockManager(this);
-        } catch (IOException e) {
-            logger().severe("Failed to initialize the mod", e);
-        }
+        LoggerFilter.filter();
+        ConfigUtils.saveDefaultResource();
+        ModConfig.INSTANCE.loadConfig();
+        this.networkManager = new NetworkManager(this);
+        this.blockManager = new BlockManager(this);
+        ClientCommandRegistrationCallback.EVENT.register(ReloadCommands::register);
     }
 
     public static CraftEngineFabricMod instance() {

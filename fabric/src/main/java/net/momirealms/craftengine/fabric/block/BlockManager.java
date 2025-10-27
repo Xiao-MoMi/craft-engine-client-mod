@@ -8,7 +8,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.momirealms.craftengine.fabric.CraftEngineFabricMod;
-import net.momirealms.craftengine.fabric.client.config.ModConfig;
+import net.momirealms.craftengine.fabric.config.ModConfig;
 import net.momirealms.craftengine.fabric.mixin.HolderReferenceInvoker;
 import net.momirealms.craftengine.fabric.util.BlockStateUtils;
 
@@ -26,11 +26,11 @@ public class BlockManager {
     public BlockManager(CraftEngineFabricMod mod) {
         instance = this;
         this.mod = mod;
-        this.customBlocks = new CraftEngineBlock[ModConfig.serverSideBlocks];
-        this.customBlockStates = new CraftEngineBlockState[ModConfig.serverSideBlocks];
-        this.customBlockHolders = new Holder.Reference[ModConfig.serverSideBlocks];
+        this.customBlocks = new CraftEngineBlock[ModConfig.INSTANCE.serverSideBlocks()];
+        this.customBlockStates = new CraftEngineBlockState[ModConfig.INSTANCE.serverSideBlocks()];
+        this.customBlockHolders = new Holder.Reference[ModConfig.INSTANCE.serverSideBlocks()];
         this.initVanillaRegistry();
-        this.registerServerSideCustomBlocks(ModConfig.serverSideBlocks);
+        this.registerServerSideCustomBlocks(ModConfig.INSTANCE.serverSideBlocks());
     }
 
     public static BlockManager instance() {
@@ -58,14 +58,17 @@ public class BlockManager {
             CraftEngineBlockState newBlockState = (CraftEngineBlockState) customBlock.defaultBlockState();
             this.customBlockStates[i] = newBlockState;
         }
+        this.mod.logger().info("Registered " + count + " custom blocks.");
     }
 
     public CraftEngineBlock[] customBlocks() {
         return this.customBlocks;
     }
+
     public CraftEngineBlockState[] customBlockStates() {
         return this.customBlockStates;
     }
+
     public Holder.Reference<Block>[] customBlockHolders() {
         return this.customBlockHolders;
     }
