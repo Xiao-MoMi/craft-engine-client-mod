@@ -62,10 +62,6 @@ public interface BlockBehaviourAccessor {
     Optional<ResourceKey<LootTable>> drops();
 
     @Mutable
-    @Accessor("descriptionId")
-    String descriptionId();
-
-    @Mutable
     @Accessor("hasCollision")
     void hasCollision(boolean hasCollision);
 
@@ -109,8 +105,4 @@ public interface BlockBehaviourAccessor {
     @Mutable
     @Accessor("drops")
     void drops(Optional<ResourceKey<LootTable>> drops);
-
-    @Mutable
-    @Accessor("descriptionId")
-    void descriptionId(String descriptionId);
 }

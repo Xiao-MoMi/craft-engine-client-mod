@@ -69,7 +69,6 @@ public record VisualBlockStatePacket(int[] data) implements ModPacket {
             customBlockAccessor.requiredFeatures(vanillaBlockAccessor.requiredFeatures());
             customBlockAccessor.properties(vanillaBlockAccessor.properties());
             customBlockAccessor.drops(vanillaBlockAccessor.drops());
-            customBlockAccessor.descriptionId(vanillaBlockAccessor.descriptionId());
             BlockStateBaseAccessor customStateAccessor = (BlockStateBaseAccessor) customState;
             BlockStateBaseAccessor vanillaStateAccessor = (BlockStateBaseAccessor) vanillaState;
             customStateAccessor.lightEmission(vanillaStateAccessor.lightEmission());
