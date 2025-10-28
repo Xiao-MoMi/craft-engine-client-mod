@@ -1,6 +1,5 @@
 package net.momirealms.craftengine.fabric.network.protocol;
 
-import io.netty.handler.codec.DecoderException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.FriendlyByteBuf;
@@ -84,7 +83,7 @@ public record VisualBlockStatePacket(int[] data) implements ModPacket {
             if (tag == RLE_TAG) {
                 int value = buf.readVarInt();
                 int count = buf.readVarInt();
-                if (i + count > length) throw new DecoderException("RLE count exceeds array bounds");
+                if (i + count > length) throw new RuntimeException("RLE count exceeds array bounds");
                 for (int j = 0; j < count; j++) data[i++] = value;
                 previousValue = value;
             } else if (tag == DELTA_TAG) {
@@ -93,10 +92,10 @@ public record VisualBlockStatePacket(int[] data) implements ModPacket {
                 data[i++] = currentValue;
                 previousValue = currentValue;
             } else {
-                throw new DecoderException("Unknown encoding tag: " + tag);
+                throw new RuntimeException("Unknown encoding tag: " + tag);
             }
         }
-        if (i != length) throw new DecoderException("Decoded length mismatch");
+        if (i != length) throw new RuntimeException("Decoded length mismatch");
         return data;
     }
 
@@ -150,7 +149,7 @@ public record VisualBlockStatePacket(int[] data) implements ModPacket {
             customStateAccessor.isViewBlocking(vanillaStateAccessor.isViewBlocking());
             customStateAccessor.hasPostProcess(vanillaStateAccessor.hasPostProcess());
             customStateAccessor.emissiveRendering(vanillaStateAccessor.emissiveRendering());
-            customStateAccessor.spawnTerrainParticles(vanillaStateAccessor.spawnTerrainParticles());
+            customStateAccessor.spawnParticlesOnBreak(vanillaStateAccessor.spawnParticlesOnBreak());
             customStateAccessor.instrument(vanillaStateAccessor.instrument());
             customStateAccessor.replaceable(vanillaStateAccessor.replaceable());
             customStateAccessor.isRandomlyTicking(vanillaStateAccessor.isRandomlyTicking());

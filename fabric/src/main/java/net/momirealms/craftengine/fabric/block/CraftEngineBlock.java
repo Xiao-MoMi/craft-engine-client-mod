@@ -7,7 +7,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -25,7 +24,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.momirealms.craftengine.fabric.mixin.BlockAccessor;
 import net.momirealms.craftengine.fabric.util.BlockStateUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -88,9 +86,9 @@ public class CraftEngineBlock extends Block implements BonemealableBlock, Simple
 
     // SimpleWaterloggedBlock start
     @Override
-    public boolean canPlaceLiquid(@Nullable Player player, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
+    public boolean canPlaceLiquid(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
         if (visualBlock == this || !(visualBlock instanceof SimpleWaterloggedBlock simpleWaterloggedBlock)) return false;
-        return simpleWaterloggedBlock.canPlaceLiquid(player, blockGetter, blockPos, BlockStateUtils.remap(blockState), fluid);
+        return simpleWaterloggedBlock.canPlaceLiquid(blockGetter, blockPos, BlockStateUtils.remap(blockState), fluid);
     }
 
     @Override
@@ -100,9 +98,9 @@ public class CraftEngineBlock extends Block implements BonemealableBlock, Simple
     }
 
     @Override
-    public @NotNull ItemStack pickupBlock(@Nullable Player player, LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState) {
+    public @NotNull ItemStack pickupBlock(LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState) {
         if (visualBlock == this || !(visualBlock instanceof SimpleWaterloggedBlock simpleWaterloggedBlock)) return ItemStack.EMPTY;
-        return simpleWaterloggedBlock.pickupBlock(player, levelAccessor, blockPos, BlockStateUtils.remap(blockState));
+        return simpleWaterloggedBlock.pickupBlock(levelAccessor, blockPos, BlockStateUtils.remap(blockState));
     }
 
     @Override
@@ -114,9 +112,9 @@ public class CraftEngineBlock extends Block implements BonemealableBlock, Simple
 
     // BonemealableBlock start
     @Override
-    public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
+    public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState, boolean bl) {
         if (visualBlock == this || !(visualBlock instanceof BonemealableBlock bonemealableBlock)) return false;
-        return bonemealableBlock.isValidBonemealTarget(levelReader, blockPos, BlockStateUtils.remap(blockState));
+        return bonemealableBlock.isValidBonemealTarget(levelReader, blockPos, BlockStateUtils.remap(blockState), bl);
     }
 
     @Override
