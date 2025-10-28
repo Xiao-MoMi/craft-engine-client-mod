@@ -17,6 +17,7 @@ public class LoggerFilter {
             public Result filter(LogEvent event) {
                 String message = event.getMessage().getFormattedMessage();
                 return message.contains("Missing model for variant:") && message.contains("craftengine:")
+                        || message.contains("Exception loading blockstate definition: 'craftengine:")
                         ? Result.DENY : Result.NEUTRAL;
             }
         });
