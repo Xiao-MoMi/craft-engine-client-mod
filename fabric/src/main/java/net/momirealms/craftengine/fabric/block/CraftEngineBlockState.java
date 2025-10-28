@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -34,13 +35,13 @@ public class CraftEngineBlockState extends BlockState {
     }
 
     @Override
-    public @NotNull VoxelShape getFaceOcclusionShape(Direction direction) {
-        return visualBlockState.getFaceOcclusionShape(direction);
+    public @NotNull VoxelShape getFaceOcclusionShape(BlockGetter blockGetter, BlockPos blockPos, Direction direction) {
+        return visualBlockState.getFaceOcclusionShape(blockGetter, blockPos, direction);
     }
 
     @Override
-    public @NotNull VoxelShape getOcclusionShape() {
-        return visualBlockState.getOcclusionShape();
+    public @NotNull VoxelShape getOcclusionShape(BlockGetter blockGetter, BlockPos blockPos) {
+        return visualBlockState.getOcclusionShape(blockGetter, blockPos);
     }
 
     @Override
@@ -64,11 +65,6 @@ public class CraftEngineBlockState extends BlockState {
     }
 
     @Override
-    public @NotNull VoxelShape getEntityInsideCollisionShape(Level level, BlockPos blockPos) {
-        return visualBlockState.getEntityInsideCollisionShape(level, blockPos);
-    }
-
-    @Override
     public @NotNull VoxelShape getBlockSupportShape(BlockGetter blockGetter, BlockPos blockPos) {
         return visualBlockState.getBlockSupportShape(blockGetter, blockPos);
     }
@@ -84,12 +80,27 @@ public class CraftEngineBlockState extends BlockState {
     }
 
     @Override
-    public @NotNull InteractionResult useItemOn(ItemStack itemStack, Level level, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    public @NotNull ItemInteractionResult useItemOn(ItemStack itemStack, Level level, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         return visualBlockState.useItemOn(itemStack, level, player, interactionHand, blockHitResult);
     }
 
     @Override
     public @NotNull InteractionResult useWithoutItem(Level level, Player player, BlockHitResult blockHitResult) {
         return visualBlockState.useWithoutItem(level, player, blockHitResult);
+    }
+
+    @Override
+    public boolean isSolidRender(BlockGetter blockGetter, BlockPos blockPos) {
+        return visualBlockState.isSolidRender(blockGetter, blockPos);
+    }
+
+    @Override
+    public boolean propagatesSkylightDown(BlockGetter blockGetter, BlockPos blockPos) {
+        return visualBlockState.propagatesSkylightDown(blockGetter, blockPos);
+    }
+
+    @Override
+    public int getLightBlock(BlockGetter blockGetter, BlockPos blockPos) {
+        return visualBlockState.getLightBlock(blockGetter, blockPos);
     }
 }

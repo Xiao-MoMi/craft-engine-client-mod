@@ -2,16 +2,12 @@ package net.momirealms.craftengine.fabric.mixin;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.storage.loot.LootTable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
-
-import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 @Mixin(BlockBehaviour.class)
@@ -58,10 +54,6 @@ public interface BlockBehaviourAccessor {
     BlockBehaviour.Properties properties();
 
     @Mutable
-    @Accessor("drops")
-    Optional<ResourceKey<LootTable>> drops();
-
-    @Mutable
     @Accessor("hasCollision")
     void hasCollision(boolean hasCollision);
 
@@ -100,9 +92,4 @@ public interface BlockBehaviourAccessor {
     @Mutable
     @Accessor("properties")
     void properties(BlockBehaviour.Properties properties);
-
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    @Mutable
-    @Accessor("drops")
-    void drops(Optional<ResourceKey<LootTable>> drops);
 }

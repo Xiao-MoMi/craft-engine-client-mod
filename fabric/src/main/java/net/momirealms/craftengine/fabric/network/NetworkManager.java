@@ -86,7 +86,7 @@ public class NetworkManager {
 
     @SuppressWarnings({"UnstableApiUsage", "unchecked"})
     public void sendData(ModPacket data) {
-        StreamCodec<FriendlyByteBuf, ModPacket> codec = (StreamCodec<FriendlyByteBuf, ModPacket>) BuiltInRegistries.MOD_PACKET.getValue(data.type());
+        StreamCodec<FriendlyByteBuf, ModPacket> codec = (StreamCodec<FriendlyByteBuf, ModPacket>) BuiltInRegistries.MOD_PACKET.get(data.type());
         if (codec == null) {
             this.mod.logger().warn("Unknown data type class: " + data.getClass().getName());
             return;

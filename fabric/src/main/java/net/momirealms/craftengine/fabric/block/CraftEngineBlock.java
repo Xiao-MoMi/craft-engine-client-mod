@@ -3,8 +3,6 @@ package net.momirealms.craftengine.fabric.block;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -26,7 +24,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.momirealms.craftengine.fabric.mixin.BlockAccessor;
 import net.momirealms.craftengine.fabric.mixin.BlockBehaviourInvoker;
-import net.momirealms.craftengine.fabric.mixin.PropertiesAccessor;
 import net.momirealms.craftengine.fabric.util.BlockStateUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,9 +44,9 @@ public class CraftEngineBlock extends Block implements BonemealableBlock, Simple
 
     // BlockBehaviour start
     @Override
-    protected @NotNull VoxelShape getOcclusionShape(BlockState blockState) {
-        if (visualBlock == this) return super.getOcclusionShape(blockState);
-        return ((BlockBehaviourInvoker) visualBlock).getOcclusionShape(BlockStateUtils.remap(blockState));
+    protected @NotNull VoxelShape getOcclusionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+        if (visualBlock == this) return super.getOcclusionShape(blockState, blockGetter, blockPos);
+        return ((BlockBehaviourInvoker) visualBlock).getOcclusionShape(BlockStateUtils.remap(blockState), blockGetter, blockPos);
     }
 
     @Override
@@ -77,15 +74,15 @@ public class CraftEngineBlock extends Block implements BonemealableBlock, Simple
     }
 
     @Override
-    protected @NotNull VoxelShape getEntityInsideCollisionShape(BlockState blockState, Level level, BlockPos blockPos) {
-        if (visualBlock == this) return super.getEntityInsideCollisionShape(blockState, level, blockPos);
-        return ((BlockBehaviourInvoker) visualBlock).getEntityInsideCollisionShape(BlockStateUtils.remap(blockState), level, blockPos);
-    }
-
-    @Override
     protected @NotNull VoxelShape getVisualShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
         if (visualBlock == this) return super.getVisualShape(blockState, blockGetter, blockPos, collisionContext);
         return ((BlockBehaviourInvoker) visualBlock).getVisualShape(BlockStateUtils.remap(blockState), blockGetter, blockPos, collisionContext);
+    }
+
+    @Override
+    protected @NotNull FluidState getFluidState(BlockState blockState) {
+        if (visualBlock == this) return super.getFluidState(blockState);
+        return ((BlockBehaviourInvoker) visualBlock).getFluidState(BlockStateUtils.remap(blockState));
     }
     // BlockBehaviour end
 
@@ -157,10 +154,8 @@ public class CraftEngineBlock extends Block implements BonemealableBlock, Simple
         return newBlockInstance;
     }
 
+    @SuppressWarnings("unused")
     private static Properties createEmptyBlockProperties(ResourceLocation id) {
-        Properties blockProperties = Properties.of();
-        ResourceKey<Block> resourceKey = ResourceKey.create(Registries.BLOCK, id);
-        ((PropertiesAccessor) blockProperties).setId(resourceKey);
-        return blockProperties;
+        return Properties.of();
     }
 }

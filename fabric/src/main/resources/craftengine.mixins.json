@@ -10,8 +10,7 @@
     "BlockStateBaseAccessor",
     "BlockStateBaseMixin",
     "FluidStateMixin",
-    "HolderReferenceInvoker",
-    "PropertiesAccessor"
+    "HolderReferenceInvoker"
   ],
   "injectors": {
     "defaultRequire": 1
