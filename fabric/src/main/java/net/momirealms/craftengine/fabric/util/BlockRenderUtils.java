@@ -1,11 +1,11 @@
 package net.momirealms.craftengine.fabric.util;
 
-import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.FoliageColor;
@@ -18,10 +18,10 @@ public final class BlockRenderUtils {
     private BlockRenderUtils() {}
 
     public static void registerRenderLayer(Block block, BlockState vanillaState) {
-        BlockRenderLayerMap.putBlock(
+        BlockRenderLayerMap.INSTANCE.putBlock(
                 block,
                 vanillaState.getBlock() instanceof LeavesBlock
-                        ? ChunkSectionLayer.CUTOUT_MIPPED
+                        ? RenderType.cutoutMipped()
                         : ItemBlockRenderTypes.getChunkRenderType(vanillaState)
         );
     }
