@@ -9,8 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -78,9 +77,9 @@ public class CraftEngineBlock extends Block implements BonemealableBlock, Simple
     }
 
     @Override
-    protected @NotNull VoxelShape getEntityInsideCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, Entity entity) {
-        if (visualBlock == this) return super.getEntityInsideCollisionShape(blockState, blockGetter, blockPos, entity);
-        return ((BlockBehaviourInvoker) visualBlock).getEntityInsideCollisionShape(BlockStateUtils.remap(blockState), blockGetter, blockPos, entity);
+    protected @NotNull VoxelShape getEntityInsideCollisionShape(BlockState blockState, Level level, BlockPos blockPos) {
+        if (visualBlock == this) return super.getEntityInsideCollisionShape(blockState, level, blockPos);
+        return ((BlockBehaviourInvoker) visualBlock).getEntityInsideCollisionShape(BlockStateUtils.remap(blockState), level, blockPos);
     }
 
     @Override
@@ -92,9 +91,9 @@ public class CraftEngineBlock extends Block implements BonemealableBlock, Simple
 
     // SimpleWaterloggedBlock start
     @Override
-    public boolean canPlaceLiquid(@Nullable LivingEntity livingEntity, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
+    public boolean canPlaceLiquid(@Nullable Player player, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
         if (visualBlock == this || !(visualBlock instanceof SimpleWaterloggedBlock simpleWaterloggedBlock)) return false;
-        return simpleWaterloggedBlock.canPlaceLiquid(livingEntity, blockGetter, blockPos, BlockStateUtils.remap(blockState), fluid);
+        return simpleWaterloggedBlock.canPlaceLiquid(player, blockGetter, blockPos, BlockStateUtils.remap(blockState), fluid);
     }
 
     @Override
@@ -104,9 +103,9 @@ public class CraftEngineBlock extends Block implements BonemealableBlock, Simple
     }
 
     @Override
-    public @NotNull ItemStack pickupBlock(@Nullable LivingEntity livingEntity, LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState) {
+    public @NotNull ItemStack pickupBlock(@Nullable Player player, LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState) {
         if (visualBlock == this || !(visualBlock instanceof SimpleWaterloggedBlock simpleWaterloggedBlock)) return ItemStack.EMPTY;
-        return simpleWaterloggedBlock.pickupBlock(livingEntity, levelAccessor, blockPos, BlockStateUtils.remap(blockState));
+        return simpleWaterloggedBlock.pickupBlock(player, levelAccessor, blockPos, BlockStateUtils.remap(blockState));
     }
 
     @Override
