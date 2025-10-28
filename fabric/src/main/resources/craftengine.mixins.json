@@ -6,7 +6,6 @@
     "BaseRailBlockMixin",
     "BlockAccessor",
     "BlockBehaviourAccessor",
-    "BlockBehaviourInvoker",
     "BlockStateBaseAccessor",
     "BlockStateBaseMixin",
     "FluidStateMixin",
