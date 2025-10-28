@@ -16,9 +16,8 @@
   "icon": "assets/craft-engine-fabric-mod/icon.png",
   "environment": "client",
   "entrypoints": {
-    "client": ["net.momirealms.craftengine.fabric.client.CraftEngineFabricModClient"],
     "main": ["net.momirealms.craftengine.fabric.CraftEngineFabricMod"],
-    "modmenu": ["net.momirealms.craftengine.fabric.client.config.ModMenuIntegration"]
+    "modmenu": ["net.momirealms.craftengine.fabric.config.ModMenuIntegration"]
   },
   "mixins": [
     "craftengine.mixins.json"
@@ -26,8 +25,6 @@
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
-    "minecraft": ">=${minecraft_version}",
-    "modmenu": ">=${modmenu_version}",
-    "cloth-config": ">=${cloth_version}"
+    "minecraft": ">=${minecraft_version}"
   }
 }

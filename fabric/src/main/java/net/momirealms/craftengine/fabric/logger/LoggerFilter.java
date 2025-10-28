@@ -1,10 +1,13 @@
 package net.momirealms.craftengine.fabric.logger;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.filter.AbstractFilter;
 
+@Environment(EnvType.CLIENT)
 public class LoggerFilter {
 
     public static void filter() {

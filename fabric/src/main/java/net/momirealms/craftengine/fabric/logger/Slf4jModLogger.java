@@ -1,7 +1,10 @@
 package net.momirealms.craftengine.fabric.logger;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import org.slf4j.Logger;
 
+@Environment(EnvType.CLIENT)
 public class Slf4jModLogger implements ModLogger {
     private final Logger logger;
 

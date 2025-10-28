@@ -5,15 +5,15 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.momirealms.craftengine.fabric.block.BlockManager;
-import net.momirealms.craftengine.fabric.client.config.ModConfig;
-import net.momirealms.craftengine.fabric.network.NetworkManager;
+import net.momirealms.craftengine.fabric.commands.CommandManager;
+import net.momirealms.craftengine.fabric.config.ModConfig;
 import net.momirealms.craftengine.fabric.logger.LoggerFilter;
 import net.momirealms.craftengine.fabric.logger.ModLogger;
 import net.momirealms.craftengine.fabric.logger.Slf4jModLogger;
+import net.momirealms.craftengine.fabric.network.NetworkManager;
 import net.momirealms.craftengine.fabric.util.ConfigUtils;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 @Environment(EnvType.CLIENT)
@@ -24,19 +24,17 @@ public class CraftEngineFabricMod implements ModInitializer {
     private ModLogger logger;
     private NetworkManager networkManager;
     private BlockManager blockManager;
+    private CommandManager commandManager;
 
     @Override
     public void onInitialize() {
         instance = this;
-        try {
-            LoggerFilter.filter();
-            ConfigUtils.saveDefaultResource();
-            ModConfig.loadConfig();
-            this.networkManager = new NetworkManager(this);
-            this.blockManager = new BlockManager(this);
-        } catch (IOException e) {
-            logger().severe("Failed to initialize the mod", e);
-        }
+        LoggerFilter.filter();
+        ConfigUtils.saveDefaultResource();
+        ModConfig.INSTANCE.loadConfig();
+        this.networkManager = new NetworkManager(this);
+        this.blockManager = new BlockManager(this);
+        this.commandManager = new CommandManager(this);
     }
 
     public static CraftEngineFabricMod instance() {
@@ -69,5 +67,12 @@ public class CraftEngineFabricMod implements ModInitializer {
             throw new IllegalStateException("BlockManager not initialized");
         }
         return blockManager;
+    }
+
+    public CommandManager commandManager() {
+        if (commandManager == null) {
+            throw new IllegalStateException("CommandManager not initialized");
+        }
+        return commandManager;
     }
 }

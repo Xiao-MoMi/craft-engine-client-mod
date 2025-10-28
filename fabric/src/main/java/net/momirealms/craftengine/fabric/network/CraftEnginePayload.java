@@ -1,11 +1,14 @@
 package net.momirealms.craftengine.fabric.network;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
+@Environment(EnvType.CLIENT)
 public record CraftEnginePayload(byte[] data) implements CustomPacketPayload {
     public static final ResourceLocation CRAFTENGINE_PAYLOAD = ResourceLocation.fromNamespaceAndPath("craftengine", "payload");
     public static final Type<CraftEnginePayload> TYPE = new Type<>(CraftEnginePayload.CRAFTENGINE_PAYLOAD);
