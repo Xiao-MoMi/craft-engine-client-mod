@@ -4,13 +4,14 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "BaseRailBlockMixin",
+    "BlockAccessor",
+    "BlockBehaviourAccessor",
+    "BlockBehaviourInvoker",
+    "BlockStateBaseAccessor",
     "BlockStateBaseMixin",
     "FluidStateMixin",
-    "BlockBehaviourAccessor",
-    "PropertiesAccessor",
-    "BlockAccessor",
     "HolderReferenceInvoker",
-    "BlockStateBaseAccessor"
+    "PropertiesAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

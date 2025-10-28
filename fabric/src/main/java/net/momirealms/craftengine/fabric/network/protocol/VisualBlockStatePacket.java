@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.momirealms.craftengine.fabric.block.BlockManager;
 import net.momirealms.craftengine.fabric.block.CraftEngineBlock;
 import net.momirealms.craftengine.fabric.block.CraftEngineBlockState;
 import net.momirealms.craftengine.fabric.mixin.BlockBehaviourAccessor;
@@ -16,6 +17,7 @@ import net.momirealms.craftengine.fabric.network.Context;
 import net.momirealms.craftengine.fabric.network.ModPacket;
 import net.momirealms.craftengine.fabric.registries.BuiltInRegistries;
 import net.momirealms.craftengine.fabric.util.BlockRenderUtils;
+import net.momirealms.craftengine.fabric.util.BlockStateUtils;
 
 @Environment(EnvType.CLIENT)
 public record VisualBlockStatePacket(int[] data) implements ModPacket {
@@ -42,12 +44,10 @@ public record VisualBlockStatePacket(int[] data) implements ModPacket {
 
     @Override
     public void handle(Context context) {
-        for (int customId = 0; customId < data.length; customId++) {
-            int vanillaId = data[customId];
-            if (vanillaId == 0) {
-                data[customId] = customId;
-                continue;
-            }
+        for (int i = 0; i < data.length; i++) {
+            int customId = i + BlockStateUtils.vanillaStateSize();
+            int vanillaId = data[i];
+            BlockManager.instance().remapState(customId, vanillaId);
             BlockState customState = Block.BLOCK_STATE_REGISTRY.byId(customId);
             if (!(customState instanceof CraftEngineBlockState craftEngineBlockState)) continue;
             if (!(craftEngineBlockState.getBlock() instanceof CraftEngineBlock craftEngineBlock)) continue;
@@ -55,6 +55,7 @@ public record VisualBlockStatePacket(int[] data) implements ModPacket {
             if (vanillaState == null) continue;
             craftEngineBlockState.setVisualBlockState(vanillaState);
             Block vanillaBlock = vanillaState.getBlock();
+            craftEngineBlock.setVisualBlock(vanillaBlock);
             BlockRenderUtils.registerRenderLayer(craftEngineBlock, vanillaState);
             BlockRenderUtils.registerColor(craftEngineBlock, vanillaBlock);
             BlockBehaviourAccessor customBlockAccessor = (BlockBehaviourAccessor) craftEngineBlock;
