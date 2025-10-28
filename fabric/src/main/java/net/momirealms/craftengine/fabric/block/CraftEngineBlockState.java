@@ -96,4 +96,19 @@ public class CraftEngineBlockState extends BlockState {
     public int getLightBlock(BlockGetter blockGetter, BlockPos blockPos) {
         return visualBlockState.getLightBlock(blockGetter, blockPos);
     }
+
+    @Override
+    public boolean isSolidRender(BlockGetter blockGetter, BlockPos blockPos) {
+        return visualBlockState.isSolidRender(blockGetter, blockPos);
+    }
+
+    @Override
+    public boolean propagatesSkylightDown(BlockGetter blockGetter, BlockPos blockPos) {
+        return visualBlockState.propagatesSkylightDown(blockGetter, blockPos);
+    }
+
+    @Override
+    public int getLightBlock(BlockGetter blockGetter, BlockPos blockPos) {
+        return visualBlockState.getLightBlock(blockGetter, blockPos);
+    }
 }
