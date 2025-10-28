@@ -4,21 +4,21 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 
 @Environment(EnvType.CLIENT)
 public class Context {
     private final Minecraft client;
-    private final ClientCommonPacketListenerImpl packetListener;
+    private final ClientPacketListener packetListener;
     private final PacketSender responseSender;
 
-    private Context(Minecraft client, ClientCommonPacketListenerImpl packetListener, PacketSender responseSender) {
+    private Context(Minecraft client, ClientPacketListener packetListener, PacketSender responseSender) {
         this.client = client;
         this.packetListener = packetListener;
         this.responseSender = responseSender;
     }
 
-    public static Context of(Minecraft client, ClientCommonPacketListenerImpl handler, PacketSender responseSender) {
+    public static Context of(Minecraft client, ClientPacketListener handler, PacketSender responseSender) {
         return new Context(client, handler, responseSender);
     }
 
@@ -26,7 +26,7 @@ public class Context {
         return client;
     }
 
-    public ClientCommonPacketListenerImpl packetListener() {
+    public ClientPacketListener packetListener() {
         return packetListener;
     }
 

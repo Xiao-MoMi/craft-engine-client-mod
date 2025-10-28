@@ -4,18 +4,15 @@ import com.mojang.serialization.Lifecycle;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.impl.networking.client.ClientNetworkingImpl;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
-import net.minecraft.client.multiplayer.ClientConfigurationPacketListenerImpl;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.momirealms.craftengine.fabric.CraftEngineFabricMod;
 import net.momirealms.craftengine.fabric.config.ModConfig;
@@ -27,8 +24,11 @@ import net.momirealms.craftengine.fabric.network.protocol.VisualBlockStatePacket
 import net.momirealms.craftengine.fabric.registries.BuiltInRegistries;
 import net.momirealms.craftengine.fabric.util.BlockStateUtils;
 
+import java.util.Objects;
+
 @Environment(EnvType.CLIENT)
 public class NetworkManager {
+    public static final ResourceLocation CRAFTENGINE_PAYLOAD = Objects.requireNonNull(ResourceLocation.tryBuild("craftengine", "payload"));
     private static NetworkManager instance;
     private final CraftEngineFabricMod mod;
     private boolean serverInstalled = false;
@@ -37,9 +37,8 @@ public class NetworkManager {
         instance = this;
         this.mod = mod;
         registerDataTypes();
-        ClientConfigurationNetworking.registerGlobalReceiver(CraftEnginePayload.CRAFTENGINE_PAYLOAD, this::handleReceiver);
-        ClientPlayNetworking.registerGlobalReceiver(CraftEnginePayload.CRAFTENGINE_PAYLOAD, this::handleReceiver);
-        ClientConfigurationConnectionEvents.INIT.register(this::initChannel);
+        ClientPlayNetworking.registerGlobalReceiver(CRAFTENGINE_PAYLOAD, this::handleReceiver);
+        ClientPlayConnectionEvents.JOIN.register(this::initChannel);
         ClientPlayConnectionEvents.DISCONNECT.register((client, handler) -> serverInstalled(false));
     }
 
@@ -67,7 +66,7 @@ public class NetworkManager {
         ((WritableRegistry<NetworkCodec<FriendlyByteBuf, ? extends ModPacket>>) BuiltInRegistries.MOD_PACKET).register(key, codec, Lifecycle.stable());
     }
 
-    private void initChannel(ClientConfigurationPacketListenerImpl handler, Minecraft client) {
+    private void initChannel(ClientPacketListener handler, PacketSender sender, Minecraft client) {
         sendData(new ClientBlockStateSizePacket(Block.BLOCK_STATE_REGISTRY.size()));
 
         if (!ModConfig.INSTANCE.enableNetwork() && !ModConfig.INSTANCE.enableCancelBlockUpdate()) {
@@ -81,7 +80,7 @@ public class NetworkManager {
         }
     }
 
-    @SuppressWarnings({"UnstableApiUsage", "unchecked"})
+    @SuppressWarnings({"unchecked"})
     public void sendData(ModPacket data) {
         NetworkCodec<FriendlyByteBuf, ModPacket> codec = (NetworkCodec<FriendlyByteBuf, ModPacket>) BuiltInRegistries.MOD_PACKET.get(data.type());
         if (codec == null) {
@@ -92,13 +91,11 @@ public class NetworkManager {
         buf.writeByte(BuiltInRegistries.MOD_PACKET.getId(codec));
         codec.encode(buf, data);
         if (Minecraft.getInstance().player != null) {
-            ClientPlayNetworking.getSender().sendPacket(new CraftEnginePayload(buf.array()));
-        } else if (ClientNetworkingImpl.getClientConfigurationAddon() != null) {
-            ClientConfigurationNetworking.getSender().sendPacket(new CraftEnginePayload(buf.array()));
+            ClientPlayNetworking.send(CRAFTENGINE_PAYLOAD, buf);
         }
     }
 
-    private void handleReceiver(Minecraft client, ClientCommonPacketListenerImpl handler, FriendlyByteBuf byteBuf, PacketSender responseSender) {
+    private void handleReceiver(Minecraft client, ClientPacketListener handler, FriendlyByteBuf byteBuf, PacketSender responseSender) {
         byte type = byteBuf.readByte();
         @SuppressWarnings("unchecked")
         NetworkCodec<FriendlyByteBuf, ModPacket> codec = (NetworkCodec<FriendlyByteBuf, ModPacket>) BuiltInRegistries.MOD_PACKET.byId(type);

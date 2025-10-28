@@ -154,12 +154,12 @@ public interface BlockStateBaseAccessor {
     void offsetFunction(Optional<BlockBehaviour.OffsetFunction> offsetFunction);
 
     @Mutable
-    @Accessor("spawnTerrainParticles")
-    boolean spawnTerrainParticles();
+    @Accessor("spawnParticlesOnBreak")
+    boolean spawnParticlesOnBreak();
 
     @Mutable
-    @Accessor("spawnTerrainParticles")
-    void spawnTerrainParticles(boolean spawnTerrainParticles);
+    @Accessor("spawnParticlesOnBreak")
+    void spawnParticlesOnBreak(boolean spawnParticlesOnBreak);
 
     @Mutable
     @Accessor("instrument")
