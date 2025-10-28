@@ -3,8 +3,7 @@ package net.momirealms.craftengine.fabric.mixin;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FluidState;
 import net.momirealms.craftengine.fabric.config.ModConfig;
 import net.momirealms.craftengine.fabric.network.NetworkManager;
@@ -18,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class FluidStateMixin {
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
-    private void cancelScheduledTick(ServerLevel serverLevel, BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
+    private void cancelScheduledTick(Level level, BlockPos blockPos, CallbackInfo ci) {
         if (!ModConfig.INSTANCE.enableCancelBlockUpdate() || !NetworkManager.instance().serverInstalled()) return;
         ci.cancel();
     }

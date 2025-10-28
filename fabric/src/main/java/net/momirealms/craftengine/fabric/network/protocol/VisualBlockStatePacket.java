@@ -133,7 +133,6 @@ public record VisualBlockStatePacket(int[] data) implements ModPacket {
             customBlockAccessor.dynamicShape(vanillaBlockAccessor.dynamicShape());
             customBlockAccessor.requiredFeatures(vanillaBlockAccessor.requiredFeatures());
             customBlockAccessor.properties(vanillaBlockAccessor.properties());
-            customBlockAccessor.drops(vanillaBlockAccessor.drops());
             BlockStateBaseAccessor customStateAccessor = (BlockStateBaseAccessor) customState;
             BlockStateBaseAccessor vanillaStateAccessor = (BlockStateBaseAccessor) vanillaState;
             customStateAccessor.lightEmission(vanillaStateAccessor.lightEmission());
@@ -160,11 +159,6 @@ public record VisualBlockStatePacket(int[] data) implements ModPacket {
             customStateAccessor.fluidState(vanillaStateAccessor.fluidState());
             customBlockAccessor.isRandomlyTicking(vanillaBlockAccessor.isRandomlyTicking());
             customStateAccessor.legacySolid(vanillaStateAccessor.legacySolid());
-            customStateAccessor.occlusionShape(vanillaStateAccessor.occlusionShape());
-            customStateAccessor.solidRender(vanillaStateAccessor.solidRender());
-            customStateAccessor.occlusionShapesByFace(vanillaStateAccessor.occlusionShapesByFace());
-            customStateAccessor.propagatesSkylightDown(vanillaStateAccessor.propagatesSkylightDown());
-            customStateAccessor.lightBlock(vanillaStateAccessor.lightBlock());
         }
     }
 }

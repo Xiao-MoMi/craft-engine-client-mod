@@ -7,7 +7,6 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
@@ -190,44 +189,4 @@ public interface BlockStateBaseAccessor {
     @Mutable
     @Accessor("isRandomlyTicking")
     void isRandomlyTicking(boolean isRandomlyTicking);
-
-    @Mutable
-    @Accessor("solidRender")
-    boolean solidRender();
-
-    @Mutable
-    @Accessor("solidRender")
-    void solidRender(boolean solidRender);
-
-    @Mutable
-    @Accessor("occlusionShape")
-    VoxelShape occlusionShape();
-
-    @Mutable
-    @Accessor("occlusionShape")
-    void occlusionShape(VoxelShape occlusionShape);
-
-    @Mutable
-    @Accessor("occlusionShapesByFace")
-    VoxelShape[] occlusionShapesByFace();
-
-    @Mutable
-    @Accessor("occlusionShapesByFace")
-    void occlusionShapesByFace(VoxelShape[] occlusionShapesByFace);
-
-    @Mutable
-    @Accessor("propagatesSkylightDown")
-    boolean propagatesSkylightDown();
-
-    @Mutable
-    @Accessor("propagatesSkylightDown")
-    void propagatesSkylightDown(boolean propagatesSkylightDown);
-
-    @Mutable
-    @Accessor("lightBlock")
-    int lightBlock();
-
-    @Mutable
-    @Accessor("lightBlock")
-    void lightBlock(int lightBlock);
 }
