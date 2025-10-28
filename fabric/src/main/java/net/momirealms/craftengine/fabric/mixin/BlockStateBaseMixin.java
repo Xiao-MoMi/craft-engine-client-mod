@@ -30,7 +30,7 @@ public abstract class BlockStateBaseMixin {
         cir.setReturnValue(this);
     }
 
-    @Inject(method = "handleNeighborChanged", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "neighborChanged", at = @At("HEAD"), cancellable = true)
     private void cancelNeighborUpdate(Level level, BlockPos blockPos, Block block, BlockPos blockPos2, boolean bl, CallbackInfo ci) {
         if (!ModConfig.INSTANCE.enableCancelBlockUpdate() || !NetworkManager.instance().serverInstalled()) return;
         ci.cancel();

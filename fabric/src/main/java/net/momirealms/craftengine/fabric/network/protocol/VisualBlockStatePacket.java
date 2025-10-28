@@ -4,7 +4,6 @@ import io.netty.handler.codec.DecoderException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -16,16 +15,17 @@ import net.momirealms.craftengine.fabric.mixin.BlockBehaviourAccessor;
 import net.momirealms.craftengine.fabric.mixin.BlockStateBaseAccessor;
 import net.momirealms.craftengine.fabric.network.Context;
 import net.momirealms.craftengine.fabric.network.ModPacket;
+import net.momirealms.craftengine.fabric.network.codec.NetworkCodec;
 import net.momirealms.craftengine.fabric.registries.BuiltInRegistries;
 import net.momirealms.craftengine.fabric.util.BlockRenderUtils;
 import net.momirealms.craftengine.fabric.util.BlockStateUtils;
 
 @Environment(EnvType.CLIENT)
 public record VisualBlockStatePacket(int[] data) implements ModPacket {
-    public static final ResourceKey<StreamCodec<FriendlyByteBuf, ? extends ModPacket>> TYPE = ResourceKey.create(
+    public static final ResourceKey<NetworkCodec<FriendlyByteBuf, ? extends ModPacket>> TYPE = ResourceKey.create(
             BuiltInRegistries.MOD_PACKET.key(), ResourceLocation.tryBuild("craftengine", "visual_block_state")
     );
-    public static final StreamCodec<FriendlyByteBuf, VisualBlockStatePacket> CODEC = ModPacket.codec(
+    public static final NetworkCodec<FriendlyByteBuf, VisualBlockStatePacket> CODEC = ModPacket.codec(
             VisualBlockStatePacket::encode,
             VisualBlockStatePacket::new
     );
@@ -101,7 +101,7 @@ public record VisualBlockStatePacket(int[] data) implements ModPacket {
     }
 
     @Override
-    public ResourceKey<StreamCodec<FriendlyByteBuf, ? extends ModPacket>> type() {
+    public ResourceKey<NetworkCodec<FriendlyByteBuf, ? extends ModPacket>> type() {
         return TYPE;
     }
 
