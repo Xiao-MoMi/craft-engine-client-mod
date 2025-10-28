@@ -40,7 +40,7 @@ public final class BlockRenderUtils {
             if (blockAndTintGetter != null && blockPos != null) {
                 return BiomeColors.getAverageFoliageColor(blockAndTintGetter, blockPos);
             }
-            return FoliageColor.FOLIAGE_DEFAULT;
+            return FoliageColor.getDefaultColor();
         }
     }
 }
