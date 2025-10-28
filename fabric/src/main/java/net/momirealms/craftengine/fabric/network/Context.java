@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworkin
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
 import net.minecraft.client.player.LocalPlayer;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,13 +13,11 @@ import org.jetbrains.annotations.Nullable;
 public class Context {
     private final Minecraft client;
     private final PacketSender responseSender;
-    private final ClientCommonPacketListenerImpl networkHandler;
     @Nullable
     private final LocalPlayer player;
 
     private Context(ClientConfigurationNetworking.Context context) {
         this.client = context.client();
-        this.networkHandler = context.networkHandler();
         this.responseSender = context.responseSender();
         this.player = null;
     }
@@ -29,7 +26,6 @@ public class Context {
         this.client = context.client();
         this.player = context.player();
         this.responseSender = context.responseSender();
-        this.networkHandler = this.player.connection;
     }
 
     public static Context of(Object o) {
@@ -48,10 +44,6 @@ public class Context {
         return responseSender;
     }
 
-    public ClientCommonPacketListenerImpl networkHandler() {
-        return networkHandler;
-    }
-
     @Nullable
     public LocalPlayer player() {
         return player;
@@ -62,7 +54,6 @@ public class Context {
         return "Context{" +
                 "client=" + client +
                 ", responseSender=" + responseSender +
-                ", networkHandler=" + networkHandler +
                 ", player=" + player +
                 '}';
     }

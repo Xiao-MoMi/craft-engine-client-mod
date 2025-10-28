@@ -23,7 +23,7 @@ import net.momirealms.craftengine.fabric.util.BlockStateUtils;
 @Environment(EnvType.CLIENT)
 public record VisualBlockStatePacket(int[] data) implements ModPacket {
     public static final ResourceKey<StreamCodec<FriendlyByteBuf, ? extends ModPacket>> TYPE = ResourceKey.create(
-            BuiltInRegistries.MOD_PACKET.key(), ResourceLocation.fromNamespaceAndPath("craftengine", "visual_block_state")
+            BuiltInRegistries.MOD_PACKET.key(), ResourceLocation.tryBuild("craftengine", "visual_block_state")
     );
     public static final StreamCodec<FriendlyByteBuf, VisualBlockStatePacket> CODEC = ModPacket.codec(
             VisualBlockStatePacket::encode,

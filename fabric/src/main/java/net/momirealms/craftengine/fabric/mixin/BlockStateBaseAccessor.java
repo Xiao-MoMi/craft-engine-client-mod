@@ -11,6 +11,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
+import java.util.Optional;
+
 @Environment(EnvType.CLIENT)
 @Mixin(BlockBehaviour.BlockStateBase.class)
 public interface BlockStateBaseAccessor {
@@ -144,11 +146,12 @@ public interface BlockStateBaseAccessor {
 
     @Mutable
     @Accessor("offsetFunction")
-    BlockBehaviour.OffsetFunction offsetFunction();
+    Optional<BlockBehaviour.OffsetFunction> offsetFunction();
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @Mutable
     @Accessor("offsetFunction")
-    void offsetFunction(BlockBehaviour.OffsetFunction offsetFunction);
+    void offsetFunction(Optional<BlockBehaviour.OffsetFunction> offsetFunction);
 
     @Mutable
     @Accessor("spawnTerrainParticles")
