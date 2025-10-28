@@ -1,8 +1,8 @@
 package net.momirealms.craftengine.fabric.mixin;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -29,7 +29,7 @@ public interface BlockBehaviourInvoker {
     VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext);
 
     @Invoker("getEntityInsideCollisionShape")
-    VoxelShape getEntityInsideCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, Entity entity);
+    VoxelShape getEntityInsideCollisionShape(BlockState blockState, Level level, BlockPos blockPos);
 
     @Invoker("getVisualShape")
     VoxelShape getVisualShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext);

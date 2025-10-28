@@ -8,7 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -65,8 +64,8 @@ public class CraftEngineBlockState extends BlockState {
     }
 
     @Override
-    public @NotNull VoxelShape getEntityInsideCollisionShape(BlockGetter blockGetter, BlockPos blockPos, Entity entity) {
-        return visualBlockState.getEntityInsideCollisionShape(blockGetter, blockPos, entity);
+    public @NotNull VoxelShape getEntityInsideCollisionShape(Level level, BlockPos blockPos) {
+        return visualBlockState.getEntityInsideCollisionShape(level, blockPos);
     }
 
     @Override
