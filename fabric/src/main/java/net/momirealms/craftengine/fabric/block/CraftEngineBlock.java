@@ -90,7 +90,8 @@ public class CraftEngineBlock extends Block implements BonemealableBlock, Simple
 
     @Override
     public @NotNull ItemStack getCloneItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
-        return new ItemStack(visualBlock);
+        if (visualBlock == this) return super.getCloneItemStack(levelReader, blockPos, blockState);
+        return visualBlock.getCloneItemStack(levelReader, blockPos, BlockStateUtils.remap(blockState));
     }
     // BlockBehaviour end
 
