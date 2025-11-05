@@ -82,6 +82,12 @@ public class CraftEngineBlock extends Block implements BonemealableBlock, Simple
         if (visualBlock == this) return super.getFluidState(blockState);
         return visualBlock.getFluidState(BlockStateUtils.remap(blockState));
     }
+
+    @Override
+    public @NotNull ItemStack getCloneItemStack(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState) {
+        if (visualBlock == this) return super.getCloneItemStack(blockGetter, blockPos, blockState);
+        return visualBlock.getCloneItemStack(blockGetter, blockPos, BlockStateUtils.remap(blockState));
+    }
     // BlockBehaviour end
 
     // SimpleWaterloggedBlock start
