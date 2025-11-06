@@ -68,7 +68,7 @@ public class ModMenuIntegration implements ModMenuApi {
                             Component.translatable("option.craftengine.server_side_blocks")
                                     .withStyle(ChatFormatting.WHITE),
                             ModConfig.INSTANCE.serverSideBlocks())
-                    .setDefaultValue(2000)
+                    .setDefaultValue(10000)
                     .setSaveConsumer(ModConfig.INSTANCE::serverSideBlocks)
                     .setTooltip(
                             Component.translatable("tooltip.craftengine.server_side_blocks")
