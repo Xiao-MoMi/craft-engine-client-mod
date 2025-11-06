@@ -7,8 +7,8 @@
   "tooltip.craftengine.enable_network": "Changes requires re-entering the server to take effect",
   "tooltip.craftengine.enable_cancel_block_update": "Only works on servers with CraftEngine installed.",
   "tooltip.craftengine.server_side_blocks": "Changes will take effect only after restarting the client.",
-  "disconnect.craftengine.vanilla_block_registry_mismatch": "Vanilla Block registry size mismatch. Current: %s. Expected: %s. \n 1. Make sure that the configs are the same as the server's. \n 2. Do not use any mod that might register new block. \n 3. Do not install ViaVersion.",
-  "disconnect.craftengine.current_block_registry_mismatch": "Current Block registry size mismatch. Current: %s. Expected: %s. \n 1. Make sure that the configs are the same as the server's. \n 2. Do not use any mod that might register new block. \n 3. Do not install ViaVersion.",
+  "disconnect.craftengine.vanilla_block_registry_mismatch": "Vanilla block registry size mismatch. Current: %s. Expected: %s.",
+  "disconnect.craftengine.current_block_registry_mismatch": "Client block registry is smaller than the server registry. \n Client: %s. Server: %s. \n Please increase the value of the 'Number of registered blocks' option and restart the client.",
   "disconnect.craftengine.invalid_payload": "Connection terminated due to transmission of invalid payload. \n Please ensure that the client mod and server plugin are the latest version.",
   "craftengine.reload.success": "The configuration file has been reloaded.",
   "warning.craftengine.config": "Please install the Cloth Config API mod"
