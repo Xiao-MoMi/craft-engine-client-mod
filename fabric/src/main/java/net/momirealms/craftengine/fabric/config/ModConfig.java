@@ -21,7 +21,7 @@ public class ModConfig {
     public static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("craft-engine-fabric-mod").resolve("config.yml");
     private boolean enableNetwork = false;
     private boolean enableCancelBlockUpdate = false;
-    private int serverSideBlocks = 2000;
+    private int serverSideBlocks = 10000;
 
     private ModConfig() {
     }
@@ -69,7 +69,7 @@ public class ModConfig {
         if (!Files.exists(CONFIG_PATH)) {
             enableNetwork(false);
             enableCancelBlockUpdate(false);
-            serverSideBlocks(2000);
+            serverSideBlocks(10000);
             return;
         }
         try (InputStream inputStream = Files.newInputStream(CONFIG_PATH)) {
@@ -78,12 +78,12 @@ public class ModConfig {
             if (config == null) {
                 enableNetwork(false);
                 enableCancelBlockUpdate(false);
-                serverSideBlocks(2000);
+                serverSideBlocks(10000);
                 return;
             }
             enableNetwork((boolean) config.getOrDefault("enable-network", false));
             enableCancelBlockUpdate((boolean) config.getOrDefault("enable-cancel-block-update", false));
-            serverSideBlocks((int) config.getOrDefault("server-side-blocks", 2000));
+            serverSideBlocks((int) config.getOrDefault("server-side-blocks", 10000));
         } catch (IOException e) {
             CraftEngineFabricMod.instance().logger().severe("Failed to load config", e);
         }
