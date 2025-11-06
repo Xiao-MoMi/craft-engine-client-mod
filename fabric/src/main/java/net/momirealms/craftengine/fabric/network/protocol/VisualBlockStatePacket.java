@@ -3,6 +3,7 @@ package net.momirealms.craftengine.fabric.network.protocol;
 import io.netty.handler.codec.DecoderException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.core.Holder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
@@ -14,6 +15,7 @@ import net.momirealms.craftengine.fabric.block.CraftEngineBlock;
 import net.momirealms.craftengine.fabric.block.CraftEngineBlockState;
 import net.momirealms.craftengine.fabric.mixin.BlockBehaviourAccessor;
 import net.momirealms.craftengine.fabric.mixin.BlockStateBaseAccessor;
+import net.momirealms.craftengine.fabric.mixin.HolderReferenceInvoker;
 import net.momirealms.craftengine.fabric.network.Context;
 import net.momirealms.craftengine.fabric.network.ModPacket;
 import net.momirealms.craftengine.fabric.registries.BuiltInRegistries;
@@ -21,6 +23,7 @@ import net.momirealms.craftengine.fabric.util.BlockRenderUtils;
 import net.momirealms.craftengine.fabric.util.BlockStateUtils;
 
 @Environment(EnvType.CLIENT)
+@SuppressWarnings({"unchecked", "DuplicatedCode"})
 public record VisualBlockStatePacket(int[] data) implements ModPacket {
     public static final ResourceKey<StreamCodec<FriendlyByteBuf, ? extends ModPacket>> TYPE = ResourceKey.create(
             BuiltInRegistries.MOD_PACKET.key(), ResourceLocation.tryBuild("craftengine", "visual_block_state")
@@ -32,9 +35,11 @@ public record VisualBlockStatePacket(int[] data) implements ModPacket {
     private static final int RLE_THRESHOLD = 3;
     private static final int RLE_TAG = 0;
     private static final int DELTA_TAG = 1;
+    private static VisualBlockStatePacket previousPacket;
 
     private VisualBlockStatePacket(FriendlyByteBuf buf) {
         this(decode(buf));
+        previousPacket = this;
     }
 
     private void encode(FriendlyByteBuf buf) {
@@ -159,6 +164,27 @@ public record VisualBlockStatePacket(int[] data) implements ModPacket {
             customStateAccessor.fluidState(vanillaStateAccessor.fluidState());
             customBlockAccessor.isRandomlyTicking(vanillaBlockAccessor.isRandomlyTicking());
             customStateAccessor.legacySolid(vanillaStateAccessor.legacySolid());
+            Holder<Block> vanillaBlockHolder = net.minecraft.core.registries.BuiltInRegistries.BLOCK.wrapAsHolder(vanillaBlock);
+            Holder<Block> customBlockHolder = net.minecraft.core.registries.BuiltInRegistries.BLOCK.wrapAsHolder(craftEngineBlock);
+            ((HolderReferenceInvoker<Block>) customBlockHolder).tags(((HolderReferenceInvoker<Block>) vanillaBlockHolder).tags());
+        }
+    }
+
+    public static void handleTags() {
+        if (previousPacket == null) return;
+        for (int i = 0; i < previousPacket.data.length; i++) {
+            int customId = i + BlockStateUtils.vanillaStateSize();
+            int vanillaId = previousPacket.data[i];
+            if (vanillaId == 0) continue;
+            BlockState vanillaState = Block.BLOCK_STATE_REGISTRY.byId(vanillaId);
+            if (vanillaState == null) continue;
+            Block vanillaBlock = vanillaState.getBlock();
+            BlockState customState = Block.BLOCK_STATE_REGISTRY.byId(customId);
+            if (customState == null) continue;
+            if (!(customState.getBlock() instanceof CraftEngineBlock craftEngineBlock)) continue;
+            Holder<Block> vanillaBlockHolder = net.minecraft.core.registries.BuiltInRegistries.BLOCK.wrapAsHolder(vanillaBlock);
+            Holder<Block> customBlockHolder = net.minecraft.core.registries.BuiltInRegistries.BLOCK.wrapAsHolder(craftEngineBlock);
+            ((HolderReferenceInvoker<Block>) customBlockHolder).tags(((HolderReferenceInvoker<Block>) vanillaBlockHolder).tags());
         }
     }
 }
