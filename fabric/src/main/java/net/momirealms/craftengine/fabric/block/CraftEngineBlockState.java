@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
@@ -91,5 +93,40 @@ public class CraftEngineBlockState extends BlockState {
     @Override
     public @NotNull InteractionResult useWithoutItem(Level level, Player player, BlockHitResult blockHitResult) {
         return visualBlockState.useWithoutItem(level, player, blockHitResult);
+    }
+
+    @Override
+    public boolean isValidSpawn(BlockGetter blockGetter, BlockPos blockPos, EntityType<?> entityType) {
+        return visualBlockState.isValidSpawn(blockGetter, blockPos, entityType);
+    }
+
+    @Override
+    public boolean emissiveRendering(BlockGetter blockGetter, BlockPos blockPos) {
+        return visualBlockState.emissiveRendering(blockGetter, blockPos);
+    }
+
+    @Override
+    public boolean isRedstoneConductor(BlockGetter blockGetter, BlockPos blockPos) {
+        return visualBlockState.isRedstoneConductor(blockGetter, blockPos);
+    }
+
+    @Override
+    public boolean isSuffocating(BlockGetter blockGetter, BlockPos blockPos) {
+        return visualBlockState.isSuffocating(blockGetter, blockPos);
+    }
+
+    @Override
+    public boolean isViewBlocking(BlockGetter blockGetter, BlockPos blockPos) {
+        return visualBlockState.isViewBlocking(blockGetter, blockPos);
+    }
+
+    @Override
+    public boolean hasPostProcess(BlockGetter blockGetter, BlockPos blockPos) {
+        return visualBlockState.hasPostProcess(blockGetter, blockPos);
+    }
+
+    @Override
+    public @NotNull Vec3 getOffset(BlockPos blockPos) {
+        return visualBlockState.getOffset(blockPos);
     }
 }
