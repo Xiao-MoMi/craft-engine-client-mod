@@ -7,6 +7,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.momirealms.craftengine.fabric.CraftEngineFabricMod;
 import net.momirealms.craftengine.fabric.config.ModConfig;
 import net.momirealms.craftengine.fabric.mixin.HolderReferenceInvoker;
@@ -50,6 +51,7 @@ public class BlockManager {
 
 
     private void registerServerSideCustomBlocks(int count) {
+        int nextStateId = BlockStateUtils.vanillaStateSize();
         for (int i = 0; i < count; i++) {
             ResourceLocation customBlockId = ResourceLocation.fromNamespaceAndPath("craftengine", "custom_" + i);
             CraftEngineBlock customBlock = CraftEngineBlock.generateBlock(customBlockId);
@@ -59,9 +61,15 @@ public class BlockManager {
             @SuppressWarnings("unchecked")
             HolderReferenceInvoker<Block> holderReferenceInvoker = (HolderReferenceInvoker<Block>) blockHolder;
             holderReferenceInvoker.callBindValue(customBlock);
-            holderReferenceInvoker.setTags(Set.of());
+            holderReferenceInvoker.tags(Set.of());
             CraftEngineBlockState newBlockState = (CraftEngineBlockState) customBlock.defaultBlockState();
+            int newBlockStateId = Block.BLOCK_STATE_REGISTRY.getId(newBlockState);
+            if (nextStateId != newBlockStateId) {
+                BlockState actualState = Block.BLOCK_STATE_REGISTRY.byId(nextStateId);
+                throw new IllegalStateException("BlockState ID mismatch for " + newBlockState + " (expected " + nextStateId + ", got " + newBlockStateId + ", actual state: " + actualState + ")");
+            }
             this.customBlockStates[i] = newBlockState;
+            nextStateId++;
         }
         this.mod.logger().info("Registered " + count + " custom blocks.");
     }

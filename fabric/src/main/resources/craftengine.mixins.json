@@ -11,7 +11,8 @@
     "BlockStateBaseMixin",
     "FluidStateMixin",
     "HolderReferenceInvoker",
-    "PropertiesAccessor"
+    "PropertiesAccessor",
+    "MappedRegistryMixin"
   ],
   "injectors": {
     "defaultRequire": 1
