@@ -18,6 +18,8 @@ public interface HolderReferenceInvoker<T> {
     void callBindValue(T object);
 
     @Accessor("tags")
-    void setTags(Set<TagKey<T>> tags);
-}
+    Set<TagKey<T>> tags();
 
+    @Accessor("tags")
+    void tags(Set<TagKey<T>> tags);
+}
