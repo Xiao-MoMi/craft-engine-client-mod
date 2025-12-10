@@ -11,8 +11,10 @@
     "BlockStateBaseMixin",
     "FluidStateMixin",
     "HolderReferenceInvoker",
-    "PropertiesAccessor",
-    "MappedRegistryMixin"
+    "LoadingOverlayAccessor",
+    "MappedRegistryMixin",
+    "MinecraftMixin",
+    "PropertiesAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
