@@ -6,8 +6,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.core.Holder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.momirealms.craftengine.fabric.block.BlockManager;
@@ -26,7 +26,7 @@ import net.momirealms.craftengine.fabric.util.BlockStateUtils;
 @SuppressWarnings({"unchecked", "DuplicatedCode"})
 public record VisualBlockStatePacket(int[] data) implements ModPacket {
     public static final ResourceKey<StreamCodec<FriendlyByteBuf, ? extends ModPacket>> TYPE = ResourceKey.create(
-            BuiltInRegistries.MOD_PACKET.key(), ResourceLocation.fromNamespaceAndPath("craftengine", "visual_block_state")
+            BuiltInRegistries.MOD_PACKET.key(), Identifier.fromNamespaceAndPath("craftengine", "visual_block_state")
     );
     public static final StreamCodec<FriendlyByteBuf, VisualBlockStatePacket> CODEC = ModPacket.codec(
             VisualBlockStatePacket::encode,

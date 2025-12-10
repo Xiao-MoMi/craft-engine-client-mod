@@ -12,6 +12,7 @@ import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class BlockRenderUtils {
@@ -21,7 +22,7 @@ public final class BlockRenderUtils {
         BlockRenderLayerMap.putBlock(
                 block,
                 vanillaState.getBlock() instanceof LeavesBlock
-                        ? ChunkSectionLayer.CUTOUT_MIPPED
+                        ? ChunkSectionLayer.CUTOUT
                         : ItemBlockRenderTypes.getChunkRenderType(vanillaState)
         );
     }
@@ -36,7 +37,7 @@ public final class BlockRenderUtils {
         public static final CustomBlockColor INSTANCE = new CustomBlockColor();
 
         @Override
-        public int getColor(BlockState blockState, @Nullable BlockAndTintGetter blockAndTintGetter, @Nullable BlockPos blockPos, int i) {
+        public int getColor(@NotNull BlockState blockState, @Nullable BlockAndTintGetter blockAndTintGetter, @Nullable BlockPos blockPos, int i) {
             if (blockAndTintGetter != null && blockPos != null) {
                 return BiomeColors.getAverageFoliageColor(blockAndTintGetter, blockPos);
             }

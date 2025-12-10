@@ -4,8 +4,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.momirealms.craftengine.fabric.config.ModConfig;
 import net.momirealms.craftengine.fabric.network.Context;
 import net.momirealms.craftengine.fabric.network.ModPacket;
@@ -15,7 +15,7 @@ import net.momirealms.craftengine.fabric.registries.BuiltInRegistries;
 @Environment(EnvType.CLIENT)
 public record CancelBlockUpdatePacket(boolean enabled) implements ModPacket {
     public static final ResourceKey<StreamCodec<FriendlyByteBuf, ? extends ModPacket>> TYPE = ResourceKey.create(
-            BuiltInRegistries.MOD_PACKET.key(), ResourceLocation.fromNamespaceAndPath("craftengine", "cancel_block_update")
+            BuiltInRegistries.MOD_PACKET.key(), Identifier.fromNamespaceAndPath("craftengine", "cancel_block_update")
     );
     public static final StreamCodec<FriendlyByteBuf, CancelBlockUpdatePacket> CODEC = ModPacket.codec(
             CancelBlockUpdatePacket::encode,

@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.momirealms.craftengine.fabric.CraftEngineFabricMod;
@@ -53,7 +53,7 @@ public class BlockManager {
     private void registerServerSideCustomBlocks(int count) {
         int nextStateId = BlockStateUtils.vanillaStateSize();
         for (int i = 0; i < count; i++) {
-            ResourceLocation customBlockId = ResourceLocation.fromNamespaceAndPath("craftengine", "custom_" + i);
+            Identifier customBlockId = Identifier.fromNamespaceAndPath("craftengine", "custom_" + i);
             CraftEngineBlock customBlock = CraftEngineBlock.generateBlock(customBlockId);
             this.customBlocks[i] = customBlock;
             Holder.Reference<Block> blockHolder = Registry.registerForHolder(BuiltInRegistries.BLOCK, customBlockId, customBlock);
