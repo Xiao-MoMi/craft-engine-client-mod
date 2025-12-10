@@ -79,7 +79,7 @@ public class ModMenuIntegration implements ModMenuApi {
             general.addEntry(entryBuilder.startBooleanToggle(
                             Component.translatable("option.craftengine.disable_resourcepack_loading_screen")
                                     .withStyle(ChatFormatting.WHITE),
-                            ModConfig.INSTANCE.enableCancelBlockUpdate())
+                            ModConfig.INSTANCE.disableResourcePackLoadingScreen())
                     .setDefaultValue(false)
                     .setSaveConsumer(ModConfig.INSTANCE::disableResourcePackLoadingScreen)
                     .setTooltip(
