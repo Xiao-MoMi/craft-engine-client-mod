@@ -76,6 +76,18 @@ public class ModMenuIntegration implements ModMenuApi {
                     )
                     .build()
             );
+            general.addEntry(entryBuilder.startBooleanToggle(
+                            Component.translatable("option.craftengine.disable_resourcepack_loading_screen")
+                                    .withStyle(ChatFormatting.WHITE),
+                            ModConfig.INSTANCE.enableCancelBlockUpdate())
+                    .setDefaultValue(false)
+                    .setSaveConsumer(ModConfig.INSTANCE::disableResourcePackLoadingScreen)
+                    .setTooltip(
+                            Component.translatable("tooltip.craftengine.disable_resourcepack_loading_screen")
+                                    .withStyle(ChatFormatting.GRAY)
+                    )
+                    .build()
+            );
             return builder.build();
         }
     }
