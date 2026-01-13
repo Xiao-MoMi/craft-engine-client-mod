@@ -149,11 +149,6 @@ public record VisualBlockStatePacket(int[] data) implements ModPacket {
             customStateAccessor.destroySpeed(vanillaStateAccessor.destroySpeed());
             customStateAccessor.requiresCorrectToolForDrops(vanillaStateAccessor.requiresCorrectToolForDrops());
             customStateAccessor.canOcclude(vanillaStateAccessor.canOcclude());
-            customStateAccessor.isRedstoneConductor(vanillaStateAccessor.isRedstoneConductor());
-            customStateAccessor.isSuffocating(vanillaStateAccessor.isSuffocating());
-            customStateAccessor.isViewBlocking(vanillaStateAccessor.isViewBlocking());
-            customStateAccessor.hasPostProcess(vanillaStateAccessor.hasPostProcess());
-            customStateAccessor.emissiveRendering(vanillaStateAccessor.emissiveRendering());
             customStateAccessor.spawnParticlesOnBreak(vanillaStateAccessor.spawnParticlesOnBreak());
             customStateAccessor.instrument(vanillaStateAccessor.instrument());
             customStateAccessor.replaceable(vanillaStateAccessor.replaceable());

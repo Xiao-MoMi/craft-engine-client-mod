@@ -20,6 +20,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.momirealms.craftengine.fabric.util.ReflectionUtil;
 import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
@@ -105,32 +106,25 @@ public class CraftEngineBlockState extends BlockState {
     }
 
     @Override
-    public boolean emissiveRendering(BlockGetter blockGetter, BlockPos blockPos) {
-        return visualBlockState.emissiveRendering(blockGetter, blockPos);
-    }
-
-    @Override
-    public boolean isRedstoneConductor(BlockGetter blockGetter, BlockPos blockPos) {
-        return visualBlockState.isRedstoneConductor(blockGetter, blockPos);
-    }
-
-    @Override
-    public boolean isSuffocating(BlockGetter blockGetter, BlockPos blockPos) {
-        return visualBlockState.isSuffocating(blockGetter, blockPos);
-    }
-
-    @Override
-    public boolean isViewBlocking(BlockGetter blockGetter, BlockPos blockPos) {
-        return visualBlockState.isViewBlocking(blockGetter, blockPos);
-    }
-
-    @Override
-    public boolean hasPostProcess(BlockGetter blockGetter, BlockPos blockPos) {
-        return visualBlockState.hasPostProcess(blockGetter, blockPos);
-    }
-
-    @Override
     public @NotNull Vec3 getOffset(BlockGetter blockGetter, BlockPos blockPos) {
         return visualBlockState.getOffset(blockGetter, blockPos);
+    }
+
+    @Override
+    public <T extends Comparable<T>> T getValue(Property<@NotNull T> property) {
+        try {
+            return visualBlockState.getValue(property);
+        } catch (Throwable e) {
+            try {
+                return property.getValueClass().cast(ReflectionUtil.UNSAFE.allocateInstance(property.getValueClass()));
+            } catch (InstantiationException ex) {
+                throw new RuntimeException("Failed to get value of property " + property.getName() + " for block " + this.getBlock().getName(), ex);
+            }
+        }
+    }
+
+    @Override
+    public <T extends Comparable<T>, V extends T> @NotNull BlockState setValue(Property<@NotNull T> property, V comparable) {
+        return this;
     }
 }
