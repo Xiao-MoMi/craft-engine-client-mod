@@ -104,46 +104,6 @@ public interface BlockStateBaseAccessor {
     void canOcclude(boolean canOcclude);
 
     @Mutable
-    @Accessor("isRedstoneConductor")
-    BlockBehaviour.StatePredicate isRedstoneConductor();
-
-    @Mutable
-    @Accessor("isRedstoneConductor")
-    void isRedstoneConductor(BlockBehaviour.StatePredicate isRedstoneConductor);
-
-    @Mutable
-    @Accessor("isSuffocating")
-    BlockBehaviour.StatePredicate isSuffocating();
-
-    @Mutable
-    @Accessor("isSuffocating")
-    void isSuffocating(BlockBehaviour.StatePredicate isSuffocating);
-
-    @Mutable
-    @Accessor("isViewBlocking")
-    BlockBehaviour.StatePredicate isViewBlocking();
-
-    @Mutable
-    @Accessor("isViewBlocking")
-    void isViewBlocking(BlockBehaviour.StatePredicate isViewBlocking);
-
-    @Mutable
-    @Accessor("hasPostProcess")
-    BlockBehaviour.StatePredicate hasPostProcess();
-
-    @Mutable
-    @Accessor("hasPostProcess")
-    void hasPostProcess(BlockBehaviour.StatePredicate hasPostProcess);
-
-    @Mutable
-    @Accessor("emissiveRendering")
-    BlockBehaviour.StatePredicate emissiveRendering();
-
-    @Mutable
-    @Accessor("emissiveRendering")
-    void emissiveRendering(BlockBehaviour.StatePredicate emissiveRendering);
-
-    @Mutable
     @Accessor("offsetFunction")
     BlockBehaviour.OffsetFunction offsetFunction();
 
