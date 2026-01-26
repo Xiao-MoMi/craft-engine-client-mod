@@ -5,7 +5,6 @@ import net.momirealms.craftengine.fabric.config.ModConfig;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Coerce;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(GhostSlots.class)
@@ -20,7 +19,7 @@ public class GhostSlotsMixin {
                     ordinal = 1
             )
     )
-    private boolean modifyIsResultSlot(@Coerce Object instance) {
-        return ModConfig.INSTANCE.forceGhostRecipeShowInputItemStackCount() || ((GhostSlotAccessor) instance).craftengine$isResultSlot();
+    private boolean modifyIsResultSlot(GhostSlots.GhostSlot instance) {
+        return ModConfig.INSTANCE.forceGhostRecipeShowInputItemStackCount() || instance.isResultSlot;
     }
 }

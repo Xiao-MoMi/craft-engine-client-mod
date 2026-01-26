@@ -10,7 +10,6 @@
     "BlockStateBaseAccessor",
     "BlockStateBaseMixin",
     "FluidStateMixin",
-    "GhostSlotAccessor",
     "GhostSlotsMixin",
     "HolderReferenceInvoker",
     "LoadingOverlayAccessor",
