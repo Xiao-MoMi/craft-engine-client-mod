@@ -23,6 +23,7 @@ public class ModConfig {
     private boolean enableCancelBlockUpdate = false;
     private int serverSideBlocks = 10000;
     private boolean disableResourcePackLoadingScreen = false;
+    private boolean forceGhostRecipeShowInputItemStackCount = false;
 
     private ModConfig() {
     }
@@ -59,6 +60,14 @@ public class ModConfig {
         this.disableResourcePackLoadingScreen = disableResourcePackLoadingScreen;
     }
 
+    public boolean forceGhostRecipeShowInputItemStackCount() {
+        return forceGhostRecipeShowInputItemStackCount;
+    }
+
+    public void forceGhostRecipeShowInputItemStackCount(boolean forceGhostRecipeShowInputItemStackCount) {
+        this.forceGhostRecipeShowInputItemStackCount = forceGhostRecipeShowInputItemStackCount;
+    }
+
     public void saveConfig() {
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -68,6 +77,7 @@ public class ModConfig {
         data.put("enable-cancel-block-update", enableCancelBlockUpdate());
         data.put("server-side-blocks", serverSideBlocks());
         data.put("disable-resource-pack-loading-screen", disableResourcePackLoadingScreen());
+        data.put("force-ghost-recipe-show-input-itemstack-count", forceGhostRecipeShowInputItemStackCount());
         try (Writer writer = Files.newBufferedWriter(CONFIG_PATH)) {
             yaml.dump(data, writer);
         } catch (IOException e) {
@@ -81,6 +91,7 @@ public class ModConfig {
             enableCancelBlockUpdate(false);
             serverSideBlocks(10000);
             disableResourcePackLoadingScreen(false);
+            forceGhostRecipeShowInputItemStackCount(false);
             return;
         }
         try (InputStream inputStream = Files.newInputStream(CONFIG_PATH)) {
@@ -91,13 +102,15 @@ public class ModConfig {
                 enableCancelBlockUpdate(false);
                 serverSideBlocks(10000);
                 disableResourcePackLoadingScreen(false);
+                forceGhostRecipeShowInputItemStackCount(false);
                 return;
             }
             enableNetwork((boolean) config.getOrDefault("enable-network", false));
             enableCancelBlockUpdate((boolean) config.getOrDefault("enable-cancel-block-update", false));
             serverSideBlocks((int) config.getOrDefault("server-side-blocks", 10000));
             disableResourcePackLoadingScreen((boolean) config.getOrDefault("disable-resource-pack-loading-screen", false));
-        } catch (IOException e) {
+            forceGhostRecipeShowInputItemStackCount((boolean) config.getOrDefault("force-ghost-recipe-show-input-itemstack-count", false));
+        } catch (Throwable e) {
             CraftEngineFabricMod.instance().logger().severe("Failed to load config", e);
         }
     }
