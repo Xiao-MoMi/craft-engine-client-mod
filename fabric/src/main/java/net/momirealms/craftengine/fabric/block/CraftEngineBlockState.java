@@ -20,7 +20,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.momirealms.craftengine.fabric.util.ReflectionUtil;
 import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
@@ -110,11 +109,7 @@ public class CraftEngineBlockState extends BlockState {
         try {
             return visualBlockState.getValue(property);
         } catch (Throwable e) {
-            try {
-                return property.getValueClass().cast(ReflectionUtil.UNSAFE.allocateInstance(property.getValueClass()));
-            } catch (InstantiationException | ClassCastException ex) {
-                throw new RuntimeException("Failed to get value of property " + property.getName() + " for block " + this.getBlock().getName(), ex);
-            }
+            return property.getPossibleValues().getFirst();
         }
     }
 

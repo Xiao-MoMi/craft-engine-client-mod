@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class GhostSlotsMixin {
 
     @Redirect(
-            method = "method_62030",
+            method = "lambda$extractRenderState$0",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/client/gui/screens/recipebook/GhostSlots$GhostSlot;isResultSlot:Z",
