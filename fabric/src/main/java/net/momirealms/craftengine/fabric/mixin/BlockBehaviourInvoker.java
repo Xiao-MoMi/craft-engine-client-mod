@@ -14,24 +14,24 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface BlockBehaviourInvoker {
 
     @Invoker("getOcclusionShape")
-    VoxelShape getOcclusionShape(BlockState blockState);
+    VoxelShape ce$getOcclusionShape(BlockState blockState);
 
     @Invoker("getBlockSupportShape")
-    VoxelShape getBlockSupportShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos);
+    VoxelShape ce$getBlockSupportShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos);
 
     @Invoker("getInteractionShape")
-    VoxelShape getInteractionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos);
+    VoxelShape ce$getInteractionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos);
 
     @Invoker("getShape")
-    VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext);
+    VoxelShape ce$getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext);
 
     @Invoker("getCollisionShape")
-    VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext);
+    VoxelShape ce$getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext);
 
     @Invoker("getEntityInsideCollisionShape")
-    VoxelShape getEntityInsideCollisionShape(BlockState blockState, Level level, BlockPos blockPos);
+    VoxelShape ce$getEntityInsideCollisionShape(BlockState blockState, Level level, BlockPos blockPos);
 
     @Invoker("getVisualShape")
-    VoxelShape getVisualShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext);
+    VoxelShape ce$getVisualShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext);
 
 }

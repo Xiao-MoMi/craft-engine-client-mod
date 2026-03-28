@@ -12,24 +12,24 @@ import java.util.function.Consumer;
 public interface LoadingOverlayAccessor {
 
     @Accessor("reload")
-    ReloadInstance reload();
+    ReloadInstance ce$reload();
 
     @Accessor("onFinish")
-    Consumer<Optional<Throwable>> onFinish();
+    Consumer<Optional<Throwable>> ce$onFinish();
 
     @Accessor("fadeIn")
-    boolean fadeIn();
+    boolean ce$fadeIn();
 
     @Accessor("fadeOutStart")
-    long fadeOutStart();
+    long ce$fadeOutStart();
 
     @Accessor("fadeOutStart")
-    void fadeOutStart(long fadeOutStart);
+    void ce$fadeOutStart(long fadeOutStart);
 
     @Accessor("fadeInStart")
-    long fadeInStart();
+    long ce$fadeInStart();
 
     @Accessor("fadeInStart")
-    void fadeInStart(long fadeInStart);
+    void ce$fadeInStart(long fadeInStart);
 
 }
