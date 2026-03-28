@@ -46,43 +46,43 @@ public class CraftEngineBlock extends Block implements BonemealableBlock, Simple
     @Override
     protected @NotNull VoxelShape getOcclusionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
         if (visualBlock == this) return super.getOcclusionShape(blockState, blockGetter, blockPos);
-        return ((BlockBehaviourInvoker) visualBlock).getOcclusionShape(BlockStateUtils.remap(blockState), blockGetter, blockPos);
+        return ((BlockBehaviourInvoker) visualBlock).ce$getOcclusionShape(BlockStateUtils.remap(blockState), blockGetter, blockPos);
     }
 
     @Override
     protected @NotNull VoxelShape getBlockSupportShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
         if (visualBlock == this) return super.getBlockSupportShape(blockState, blockGetter, blockPos);
-        return ((BlockBehaviourInvoker) visualBlock).getBlockSupportShape(BlockStateUtils.remap(blockState), blockGetter, blockPos);
+        return ((BlockBehaviourInvoker) visualBlock).ce$getBlockSupportShape(BlockStateUtils.remap(blockState), blockGetter, blockPos);
     }
 
     @Override
     protected @NotNull VoxelShape getInteractionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
         if (visualBlock == this) return super.getInteractionShape(blockState, blockGetter, blockPos);
-        return ((BlockBehaviourInvoker) visualBlock).getInteractionShape(BlockStateUtils.remap(blockState), blockGetter, blockPos);
+        return ((BlockBehaviourInvoker) visualBlock).ce$getInteractionShape(BlockStateUtils.remap(blockState), blockGetter, blockPos);
     }
 
     @Override
     protected @NotNull VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
         if (visualBlock == this) return super.getShape(blockState, blockGetter, blockPos, collisionContext);
-        return ((BlockBehaviourInvoker) visualBlock).getShape(BlockStateUtils.remap(blockState), blockGetter, blockPos, collisionContext);
+        return ((BlockBehaviourInvoker) visualBlock).ce$getShape(BlockStateUtils.remap(blockState), blockGetter, blockPos, collisionContext);
     }
 
     @Override
     protected @NotNull VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
         if (visualBlock == this) return super.getCollisionShape(blockState, blockGetter, blockPos, collisionContext);
-        return ((BlockBehaviourInvoker) visualBlock).getCollisionShape(BlockStateUtils.remap(blockState), blockGetter, blockPos, collisionContext);
+        return ((BlockBehaviourInvoker) visualBlock).ce$getCollisionShape(BlockStateUtils.remap(blockState), blockGetter, blockPos, collisionContext);
     }
 
     @Override
     protected @NotNull VoxelShape getVisualShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
         if (visualBlock == this) return super.getVisualShape(blockState, blockGetter, blockPos, collisionContext);
-        return ((BlockBehaviourInvoker) visualBlock).getVisualShape(BlockStateUtils.remap(blockState), blockGetter, blockPos, collisionContext);
+        return ((BlockBehaviourInvoker) visualBlock).ce$getVisualShape(BlockStateUtils.remap(blockState), blockGetter, blockPos, collisionContext);
     }
 
     @Override
     protected @NotNull FluidState getFluidState(BlockState blockState) {
         if (visualBlock == this) return super.getFluidState(blockState);
-        return ((BlockBehaviourInvoker) visualBlock).getFluidState(BlockStateUtils.remap(blockState));
+        return ((BlockBehaviourInvoker) visualBlock).ce$getFluidState(BlockStateUtils.remap(blockState));
     }
 
     @Override
@@ -155,8 +155,8 @@ public class CraftEngineBlock extends Block implements BonemealableBlock, Simple
         StateDefinition.Builder<Block, BlockState> stateDefinitionBuilder = new StateDefinition.Builder<>(newBlockInstance);
         StateDefinition<Block, BlockState> stateDefinition = stateDefinitionBuilder.create(Block::defaultBlockState, CraftEngineStateFactory.INSTANCE);
         BlockAccessor blockAccessor = (BlockAccessor) newBlockInstance;
-        blockAccessor.setStateDefinition(stateDefinition);
-        blockAccessor.setDefaultBlockState(stateDefinition.getPossibleStates().getFirst());
+        blockAccessor.ce$setStateDefinition(stateDefinition);
+        blockAccessor.ce$setDefaultBlockState(stateDefinition.getPossibleStates().getFirst());
         return newBlockInstance;
     }
 

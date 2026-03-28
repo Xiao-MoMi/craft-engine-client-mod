@@ -1,15 +1,12 @@
 plugins {
-    id("fabric-loom") version "1.10-SNAPSHOT"
-    id("com.gradleup.shadow") version "9.0.0-beta13"
+    id("net.fabricmc.fabric-loom-remap") version "1.14-SNAPSHOT"
+    id("com.gradleup.shadow") version "9.4.1"
 }
 
 version = property("project_version")!!
 group = property("project_group")!!
 val project_version: String by project
 val latest_minecraft_version: String by project
-val loader_version: String by project
-var modmenu_version = property("modmenu_version")
-var cloth_version = property("cloth_version")
 
 base {
     archivesName.set("craft-engine-fabric-mod")
@@ -61,7 +58,6 @@ dependencies {
 tasks.processResources {
     inputs.property("version", project_version)
     inputs.property("minecraft_version", latest_minecraft_version)
-    inputs.property("loader_version", loader_version)
 
     filteringCharset = "UTF-8"
 
@@ -69,9 +65,6 @@ tasks.processResources {
         expand(
             "version" to project_version,
             "minecraft_version" to latest_minecraft_version,
-            "loader_version" to loader_version,
-            "modmenu_version" to modmenu_version,
-            "cloth_version" to cloth_version
         )
     }
 }

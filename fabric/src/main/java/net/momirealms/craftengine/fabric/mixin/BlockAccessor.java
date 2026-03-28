@@ -15,8 +15,8 @@ public interface BlockAccessor {
 
     @Mutable
     @Accessor("stateDefinition")
-    void setStateDefinition(StateDefinition<Block, BlockState> stateDefinition);
+    void ce$setStateDefinition(StateDefinition<Block, BlockState> stateDefinition);
 
     @Accessor("defaultBlockState")
-    void setDefaultBlockState(BlockState defaultBlockState);
+    void ce$setDefaultBlockState(BlockState defaultBlockState);
 }

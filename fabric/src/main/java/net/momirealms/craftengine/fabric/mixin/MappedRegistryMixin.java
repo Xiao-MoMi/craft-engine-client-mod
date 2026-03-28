@@ -19,7 +19,7 @@ public abstract class MappedRegistryMixin<T> {
     @Shadow @Nullable public abstract T byId(int i);
 
     @Inject(method = "bindTags", at = @At("TAIL"))
-    public void afterHandle(CallbackInfo ci) {
+    public void ce$afterHandle(CallbackInfo ci) {
         if (byId(0) instanceof Block) {
             VisualBlockStatePacket.handleTags();
         }
