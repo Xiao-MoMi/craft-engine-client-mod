@@ -13,5 +13,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface PropertiesAccessor {
 
     @Accessor("id")
-    void setId(ResourceKey<Block> id);
+    void ce$setId(ResourceKey<Block> id);
 }

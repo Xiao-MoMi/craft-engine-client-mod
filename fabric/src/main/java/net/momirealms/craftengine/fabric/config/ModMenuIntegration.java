@@ -88,6 +88,18 @@ public class ModMenuIntegration implements ModMenuApi {
                     )
                     .build()
             );
+            general.addEntry(entryBuilder.startBooleanToggle(
+                            Component.translatable("option.craftengine.force_ghost_recipe_show_input_itemstack_count")
+                                    .withStyle(ChatFormatting.WHITE),
+                            ModConfig.INSTANCE.forceGhostRecipeShowInputItemStackCount())
+                    .setDefaultValue(false)
+                    .setSaveConsumer(ModConfig.INSTANCE::forceGhostRecipeShowInputItemStackCount)
+                    .setTooltip(
+                            Component.translatable("tooltip.craftengine.force_ghost_recipe_show_input_itemstack_count")
+                                    .withStyle(ChatFormatting.GRAY)
+                    )
+                    .build()
+            );
             return builder.build();
         }
     }
