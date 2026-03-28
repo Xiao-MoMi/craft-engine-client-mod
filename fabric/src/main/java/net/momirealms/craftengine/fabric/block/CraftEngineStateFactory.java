@@ -15,7 +15,7 @@ public class CraftEngineStateFactory implements StateDefinition.Factory<Block, B
     public static final CraftEngineStateFactory INSTANCE = new CraftEngineStateFactory();
 
     @Override
-    public @NotNull BlockState create(Block block, Reference2ObjectArrayMap<Property<?>, Comparable<?>> reference2ObjectArrayMap, MapCodec<BlockState> mapCodec) {
+    public @NotNull BlockState create(@NotNull Block block, @NotNull Reference2ObjectArrayMap<Property<?>, Comparable<?>> reference2ObjectArrayMap, @NotNull MapCodec<BlockState> mapCodec) {
         return new CraftEngineBlockState(block, reference2ObjectArrayMap, mapCodec);
     }
 }

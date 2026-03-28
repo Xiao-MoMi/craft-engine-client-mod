@@ -19,7 +19,7 @@ public class GhostSlotsMixin {
                     ordinal = 1
             )
     )
-    private boolean modifyIsResultSlot(GhostSlots.GhostSlot instance) {
+    private boolean ce$modifyIsResultSlot(GhostSlots.GhostSlot instance) {
         return ModConfig.INSTANCE.forceGhostRecipeShowInputItemStackCount() || instance.isResultSlot;
     }
 }

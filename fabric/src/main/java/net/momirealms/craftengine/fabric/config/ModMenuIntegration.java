@@ -15,6 +15,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.momirealms.craftengine.fabric.network.NetworkManager;
 import net.momirealms.craftengine.fabric.network.protocol.CancelBlockUpdatePacket;
+import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class ModMenuIntegration implements ModMenuApi {
@@ -27,7 +28,7 @@ public class ModMenuIntegration implements ModMenuApi {
         return ConfigScreen.INSTANCE;
     }
 
-    private static class ConfigScreen implements ConfigScreenFactory<Screen> {
+    private static class ConfigScreen implements ConfigScreenFactory<@NotNull Screen> {
         private static final ConfigScreen INSTANCE = new ConfigScreen();
 
         @Override
@@ -119,7 +120,7 @@ public class ModMenuIntegration implements ModMenuApi {
         }
 
         @Override
-        public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
             super.render(guiGraphics, mouseX, mouseY, partialTick);
             guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 17, -1);
             Component message = Component.translatable("warning.craftengine.config");
@@ -128,7 +129,6 @@ public class ModMenuIntegration implements ModMenuApi {
 
         @Override
         public void onClose() {
-            if (this.minecraft == null) return;
             this.minecraft.setScreen(this.parent);
         }
     }

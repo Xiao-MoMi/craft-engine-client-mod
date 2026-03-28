@@ -8,15 +8,15 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface LoadingOverlayAccessor {
 
     @Accessor("fadeIn")
-    boolean fadeIn();
+    boolean ce$fadeIn();
 
     @Accessor("fadeOutStart")
-    long fadeOutStart();
+    long ce$fadeOutStart();
 
     @Accessor("fadeInStart")
-    long fadeInStart();
+    long ce$fadeInStart();
 
     @Accessor("fadeInStart")
-    void fadeInStart(long fadeInStart);
+    void ce$fadeInStart(long fadeInStart);
 
 }

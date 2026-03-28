@@ -12,17 +12,17 @@ import org.spongepowered.asm.mixin.injection.At;
 public class MinecraftMixin {
 
     @ModifyReturnValue(method = "getOverlay", at = @At(value = "RETURN"))
-    public Overlay blockOverlay(Overlay original) {
+    public Overlay ce$blockOverlay(Overlay original) {
         if (!ModConfig.INSTANCE.disableResourcePackLoadingScreen()) {
             return original;
         }
         if (!(original instanceof LoadingOverlayAccessor accessor)) {
             return original;
         }
-        if (accessor.fadeIn() && accessor.fadeInStart() == -1L) {
-            accessor.fadeInStart(Util.getMillis());
+        if (accessor.ce$fadeIn() && accessor.ce$fadeInStart() == -1L) {
+            accessor.ce$fadeInStart(Util.getMillis());
         }
-        if (accessor.fadeOutStart() != -1) {
+        if (accessor.ce$fadeOutStart() != -1) {
             Minecraft.getInstance().setOverlay(null);
         }
         return null;

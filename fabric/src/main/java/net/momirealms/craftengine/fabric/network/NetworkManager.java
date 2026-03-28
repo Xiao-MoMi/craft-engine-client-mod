@@ -84,7 +84,7 @@ public class NetworkManager {
         }
     }
 
-    @SuppressWarnings({"UnstableApiUsage", "unchecked"})
+    @SuppressWarnings({"unchecked"})
     public void sendData(ModPacket data) {
         StreamCodec<FriendlyByteBuf, ModPacket> codec = (StreamCodec<FriendlyByteBuf, ModPacket>) BuiltInRegistries.MOD_PACKET.getValue(data.type());
         if (codec == null) {

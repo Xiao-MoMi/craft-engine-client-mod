@@ -7,9 +7,6 @@ version = property("project_version")!!
 group = property("project_group")!!
 val project_version: String by project
 val latest_minecraft_version: String by project
-val loader_version: String by project
-var modmenu_version = property("modmenu_version") as String
-var cloth_version = property("cloth_version") as String
 
 base {
     archivesName.set("craft-engine-fabric-mod")
@@ -62,7 +59,6 @@ dependencies {
 tasks.processResources {
     inputs.property("version", project_version)
     inputs.property("minecraft_version", latest_minecraft_version)
-    inputs.property("loader_version", loader_version)
 
     filteringCharset = "UTF-8"
 
@@ -70,9 +66,6 @@ tasks.processResources {
         expand(
             "version" to project_version,
             "minecraft_version" to latest_minecraft_version,
-            "loader_version" to loader_version,
-            "modmenu_version" to modmenu_version,
-            "cloth_version" to cloth_version
         )
     }
 }
