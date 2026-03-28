@@ -15,81 +15,81 @@ public interface BlockBehaviourAccessor {
 
     @Mutable
     @Accessor("hasCollision")
-    boolean hasCollision();
+    boolean ce$hasCollision();
 
     @Mutable
     @Accessor("explosionResistance")
-    float explosionResistance();
+    float ce$explosionResistance();
 
     @Mutable
     @Accessor("isRandomlyTicking")
-    boolean isRandomlyTicking();
+    boolean ce$isRandomlyTicking();
 
     @Mutable
     @Accessor("soundType")
-    SoundType soundType();
+    SoundType ce$soundType();
 
     @Mutable
     @Accessor("friction")
-    float friction();
+    float ce$friction();
 
     @Mutable
     @Accessor("speedFactor")
-    float speedFactor();
+    float ce$speedFactor();
 
     @Mutable
     @Accessor("jumpFactor")
-    float jumpFactor();
+    float ce$jumpFactor();
 
     @Mutable
     @Accessor("dynamicShape")
-    boolean dynamicShape();
+    boolean ce$dynamicShape();
 
     @Mutable
     @Accessor("requiredFeatures")
-    FeatureFlagSet requiredFeatures();
+    FeatureFlagSet ce$requiredFeatures();
 
     @Mutable
     @Accessor("properties")
-    BlockBehaviour.Properties properties();
+    BlockBehaviour.Properties ce$properties();
 
     @Mutable
     @Accessor("hasCollision")
-    void hasCollision(boolean hasCollision);
+    void ce$hasCollision(boolean hasCollision);
 
     @Mutable
     @Accessor("explosionResistance")
-    void explosionResistance(float explosionResistance);
+    void ce$explosionResistance(float explosionResistance);
 
     @Mutable
     @Accessor("isRandomlyTicking")
-    void isRandomlyTicking(boolean isRandomlyTicking);
+    void ce$isRandomlyTicking(boolean isRandomlyTicking);
 
     @Mutable
     @Accessor("soundType")
-    void soundType(SoundType soundType);
+    void ce$soundType(SoundType soundType);
 
     @Mutable
     @Accessor("friction")
-    void friction(float friction);
+    void ce$friction(float friction);
 
     @Mutable
     @Accessor("speedFactor")
-    void speedFactor(float speedFactor);
+    void ce$speedFactor(float speedFactor);
 
     @Mutable
     @Accessor("jumpFactor")
-    void jumpFactor(float jumpFactor);
+    void ce$jumpFactor(float jumpFactor);
 
     @Mutable
     @Accessor("dynamicShape")
-    void dynamicShape(boolean dynamicShape);
+    void ce$dynamicShape(boolean dynamicShape);
 
     @Mutable
     @Accessor("requiredFeatures")
-    void requiredFeatures(FeatureFlagSet requiredFeatures);
+    void ce$requiredFeatures(FeatureFlagSet requiredFeatures);
 
     @Mutable
     @Accessor("properties")
-    void properties(BlockBehaviour.Properties properties);
+    void ce$properties(BlockBehaviour.Properties properties);
 }

@@ -77,28 +77,31 @@ public class ModConfig {
 
     public void loadConfig() {
         if (!Files.exists(CONFIG_PATH)) {
-            enableNetwork(false);
-            enableCancelBlockUpdate(false);
-            serverSideBlocks(10000);
-            disableResourcePackLoadingScreen(false);
+            setDefaultConfig();
+            saveConfig();
             return;
         }
         try (InputStream inputStream = Files.newInputStream(CONFIG_PATH)) {
             Yaml yaml = new Yaml();
             Map<Object, Object> config = yaml.loadAs(inputStream, Map.class);
             if (config == null) {
-                enableNetwork(false);
-                enableCancelBlockUpdate(false);
-                serverSideBlocks(10000);
-                disableResourcePackLoadingScreen(false);
+                setDefaultConfig();
+                saveConfig();
                 return;
             }
             enableNetwork((boolean) config.getOrDefault("enable-network", false));
             enableCancelBlockUpdate((boolean) config.getOrDefault("enable-cancel-block-update", false));
             serverSideBlocks((int) config.getOrDefault("server-side-blocks", 10000));
             disableResourcePackLoadingScreen((boolean) config.getOrDefault("disable-resource-pack-loading-screen", false));
-        } catch (IOException e) {
+        } catch (Throwable e) {
             CraftEngineFabricMod.instance().logger().severe("Failed to load config", e);
         }
+    }
+
+    private void setDefaultConfig() {
+        enableNetwork(false);
+        enableCancelBlockUpdate(false);
+        serverSideBlocks(10000);
+        disableResourcePackLoadingScreen(false);
     }
 }
