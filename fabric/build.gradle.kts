@@ -1,6 +1,6 @@
 plugins {
     id("net.fabricmc.fabric-loom-remap") version "1.14-SNAPSHOT"
-    id("com.gradleup.shadow") version "9.3.0"
+    id("com.gradleup.shadow") version "9.4.1"
 }
 
 version = property("project_version")!!
