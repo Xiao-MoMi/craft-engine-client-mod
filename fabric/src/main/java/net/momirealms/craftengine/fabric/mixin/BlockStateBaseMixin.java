@@ -25,37 +25,37 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class BlockStateBaseMixin {
 
     @Inject(method = "updateShape", at = @At("HEAD"), cancellable = true)
-    private void cancelUpdateShape(Direction direction, BlockState blockState, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2, CallbackInfoReturnable<BlockStateBaseMixin> cir) {
+    private void ce$cancelUpdateShape(Direction direction, BlockState blockState, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2, CallbackInfoReturnable<BlockStateBaseMixin> cir) {
         if (!ModConfig.INSTANCE.enableCancelBlockUpdate() || !NetworkManager.instance().serverInstalled()) return;
         cir.setReturnValue(this);
     }
 
     @Inject(method = "neighborChanged", at = @At("HEAD"), cancellable = true)
-    private void cancelNeighborUpdate(Level level, BlockPos blockPos, Block block, BlockPos blockPos2, boolean bl, CallbackInfo ci) {
+    private void ce$cancelNeighborUpdate(Level level, BlockPos blockPos, Block block, BlockPos blockPos2, boolean bl, CallbackInfo ci) {
         if (!ModConfig.INSTANCE.enableCancelBlockUpdate() || !NetworkManager.instance().serverInstalled()) return;
         ci.cancel();
     }
 
     @Inject(method = "updateNeighbourShapes*", at = @At("HEAD"), cancellable = true)
-    private void cancelUpdateNeighbors(LevelAccessor world, BlockPos pos, int flags, CallbackInfo ci) {
+    private void ce$cancelUpdateNeighbors(LevelAccessor world, BlockPos pos, int flags, CallbackInfo ci) {
         if (!ModConfig.INSTANCE.enableCancelBlockUpdate() || !NetworkManager.instance().serverInstalled()) return;
         ci.cancel();
     }
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
-    private void cancelScheduledTick(ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource, CallbackInfo ci) {
+    private void ce$cancelScheduledTick(ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource, CallbackInfo ci) {
         if (!ModConfig.INSTANCE.enableCancelBlockUpdate() || !NetworkManager.instance().serverInstalled()) return;
         ci.cancel();
     }
 
     @Inject(method = "canSurvive", at = @At("HEAD"), cancellable = true)
-    private void passCanPlaceAt(LevelReader levelReader, BlockPos blockPos, CallbackInfoReturnable<Boolean> cir) {
+    private void ce$passCanPlaceAt(LevelReader levelReader, BlockPos blockPos, CallbackInfoReturnable<Boolean> cir) {
         if (!ModConfig.INSTANCE.enableCancelBlockUpdate() || !NetworkManager.instance().serverInstalled()) return;
         cir.setReturnValue(true);
     }
 
     @Inject(method = "randomTick", at = @At("HEAD"), cancellable = true)
-    private void cancelRandomTick(ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource, CallbackInfo ci) {
+    private void ce$cancelRandomTick(ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource, CallbackInfo ci) {
         if (!ModConfig.INSTANCE.enableCancelBlockUpdate() || !NetworkManager.instance().serverInstalled()) return;
         ci.cancel();
     }

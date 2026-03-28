@@ -15,11 +15,11 @@ import java.util.Set;
 public interface HolderReferenceInvoker<T> {
 
     @Invoker("bindValue")
-    void callBindValue(T object);
+    void ce$callBindValue(T object);
 
     @Accessor("tags")
-    Set<TagKey<T>> tags();
+    Set<TagKey<T>> ce$tags();
 
     @Accessor("tags")
-    void tags(Set<TagKey<T>> tags);
+    void ce$tags(Set<TagKey<T>> tags);
 }
