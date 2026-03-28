@@ -15,7 +15,7 @@ import java.util.Optional;
 public class MinecraftMixin {
 
     @ModifyReturnValue(method = "getOverlay", at = @At(value = "RETURN"))
-    public Overlay blockOverlay(Overlay original) {
+    public Overlay ce$blockOverlay(Overlay original) {
         if (!ModConfig.INSTANCE.disableResourcePackLoadingScreen()) {
             return original;
         }
@@ -23,22 +23,22 @@ public class MinecraftMixin {
             return original;
         }
         long millis = Util.getMillis();
-        if (accessor.fadeIn() && accessor.fadeInStart() == -1L) {
-            accessor.fadeInStart(millis);
+        if (accessor.ce$fadeIn() && accessor.ce$fadeInStart() == -1L) {
+            accessor.ce$fadeInStart(millis);
         }
-        if (accessor.fadeOutStart() != -1) {
+        if (accessor.ce$fadeOutStart() != -1) {
             Minecraft.getInstance().setOverlay(null);
         }
-        float fadeInProgress = accessor.fadeInStart() > -1L ? (millis - accessor.fadeInStart()) / 500.0F : -1.0F;
-        if (accessor.fadeOutStart() == -1L && accessor.reload().isDone() && (!accessor.fadeIn() || fadeInProgress >= 2.0F)) {
+        float fadeInProgress = accessor.ce$fadeInStart() > -1L ? (millis - accessor.ce$fadeInStart()) / 500.0F : -1.0F;
+        if (accessor.ce$fadeOutStart() == -1L && accessor.ce$reload().isDone() && (!accessor.ce$fadeIn() || fadeInProgress >= 2.0F)) {
             try {
-                accessor.reload().checkExceptions();
-                accessor.onFinish().accept(Optional.empty());
+                accessor.ce$reload().checkExceptions();
+                accessor.ce$onFinish().accept(Optional.empty());
             } catch (Throwable throwable) {
-                accessor.onFinish().accept(Optional.of(throwable));
+                accessor.ce$onFinish().accept(Optional.of(throwable));
             }
 
-            accessor.fadeOutStart(Util.getMillis());
+            accessor.ce$fadeOutStart(Util.getMillis());
             if (Minecraft.getInstance().screen != null) {
                 Window window = Minecraft.getInstance().getWindow();
                 Minecraft.getInstance().screen.init(Minecraft.getInstance(), window.getGuiScaledWidth(), window.getGuiScaledHeight());
