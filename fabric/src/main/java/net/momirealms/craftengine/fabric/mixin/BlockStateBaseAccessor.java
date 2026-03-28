@@ -18,138 +18,138 @@ import java.util.Optional;
 public interface BlockStateBaseAccessor {
     @Mutable
     @Accessor("lightEmission")
-    int lightEmission();
+    int ce$lightEmission();
 
     @Mutable
     @Accessor("lightEmission")
-    void lightEmission(int lightEmission);
+    void ce$lightEmission(int lightEmission);
 
     @Mutable
     @Accessor("useShapeForLightOcclusion")
-    boolean useShapeForLightOcclusion();
+    boolean ce$useShapeForLightOcclusion();
 
     @Mutable
     @Accessor("useShapeForLightOcclusion")
-    void useShapeForLightOcclusion(boolean useShapeForLightOcclusion);
+    void ce$useShapeForLightOcclusion(boolean useShapeForLightOcclusion);
 
     @Mutable
     @Accessor("isAir")
-    boolean isAir();
+    boolean ce$isAir();
 
     @Mutable
     @Accessor("isAir")
-    void isAir(boolean isAir);
+    void ce$isAir(boolean isAir);
 
     @Mutable
     @Accessor("ignitedByLava")
-    boolean ignitedByLava();
+    boolean ce$ignitedByLava();
 
     @Mutable
     @Accessor("ignitedByLava")
-    void ignitedByLava(boolean ignitedByLava);
+    void ce$ignitedByLava(boolean ignitedByLava);
 
     @Mutable
     @Accessor("liquid")
-    boolean liquid();
+    boolean ce$liquid();
 
     @Mutable
     @Accessor("liquid")
-    void liquid(boolean liquid);
+    void ce$liquid(boolean liquid);
 
     @Mutable
     @Accessor("legacySolid")
-    boolean legacySolid();
+    boolean ce$legacySolid();
 
     @Mutable
     @Accessor("legacySolid")
-    void legacySolid(boolean legacySolid);
+    void ce$legacySolid(boolean legacySolid);
 
     @Mutable
     @Accessor("pushReaction")
-    PushReaction pushReaction();
+    PushReaction ce$pushReaction();
 
     @Mutable
     @Accessor("pushReaction")
-    void pushReaction(PushReaction pushReaction);
+    void ce$pushReaction(PushReaction pushReaction);
 
     @Mutable
     @Accessor("mapColor")
-    MapColor mapColor();
+    MapColor ce$mapColor();
 
     @Mutable
     @Accessor("mapColor")
-    void mapColor(MapColor mapColor);
+    void ce$mapColor(MapColor mapColor);
 
     @Mutable
     @Accessor("destroySpeed")
-    float destroySpeed();
+    float ce$destroySpeed();
 
     @Mutable
     @Accessor("destroySpeed")
-    void destroySpeed(float destroySpeed);
+    void ce$destroySpeed(float destroySpeed);
 
     @Mutable
     @Accessor("requiresCorrectToolForDrops")
-    boolean requiresCorrectToolForDrops();
+    boolean ce$requiresCorrectToolForDrops();
 
     @Mutable
     @Accessor("requiresCorrectToolForDrops")
-    void requiresCorrectToolForDrops(boolean requiresCorrectToolForDrops);
+    void ce$requiresCorrectToolForDrops(boolean requiresCorrectToolForDrops);
 
     @Mutable
     @Accessor("canOcclude")
-    boolean canOcclude();
+    boolean ce$canOcclude();
 
     @Mutable
     @Accessor("canOcclude")
-    void canOcclude(boolean canOcclude);
+    void ce$canOcclude(boolean canOcclude);
 
     @Mutable
     @Accessor("offsetFunction")
-    Optional<BlockBehaviour.OffsetFunction> offsetFunction();
+    Optional<BlockBehaviour.OffsetFunction> ce$offsetFunction();
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @Mutable
     @Accessor("offsetFunction")
-    void offsetFunction(Optional<BlockBehaviour.OffsetFunction> offsetFunction);
+    void ce$offsetFunction(Optional<BlockBehaviour.OffsetFunction> offsetFunction);
 
     @Mutable
     @Accessor("spawnParticlesOnBreak")
-    boolean spawnParticlesOnBreak();
+    boolean ce$spawnParticlesOnBreak();
 
     @Mutable
     @Accessor("spawnParticlesOnBreak")
-    void spawnParticlesOnBreak(boolean spawnParticlesOnBreak);
+    void ce$spawnParticlesOnBreak(boolean spawnParticlesOnBreak);
 
     @Mutable
     @Accessor("instrument")
-    NoteBlockInstrument instrument();
+    NoteBlockInstrument ce$instrument();
 
     @Mutable
     @Accessor("instrument")
-    void instrument(NoteBlockInstrument instrument);
+    void ce$instrument(NoteBlockInstrument instrument);
 
     @Mutable
     @Accessor("replaceable")
-    boolean replaceable();
+    boolean ce$replaceable();
 
     @Mutable
     @Accessor("replaceable")
-    void replaceable(boolean replaceable);
+    void ce$replaceable(boolean replaceable);
 
     @Mutable
     @Accessor("fluidState")
-    FluidState fluidState();
+    FluidState ce$fluidState();
 
     @Mutable
     @Accessor("fluidState")
-    void fluidState(FluidState fluidState);
+    void ce$fluidState(FluidState fluidState);
 
     @Mutable
     @Accessor("isRandomlyTicking")
-    boolean isRandomlyTicking();
+    boolean ce$isRandomlyTicking();
 
     @Mutable
     @Accessor("isRandomlyTicking")
-    void isRandomlyTicking(boolean isRandomlyTicking);
+    void ce$isRandomlyTicking(boolean isRandomlyTicking);
 }

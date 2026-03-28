@@ -141,8 +141,8 @@ public class CraftEngineBlock extends Block implements BonemealableBlock, Simple
         StateDefinition.Builder<Block, BlockState> stateDefinitionBuilder = new StateDefinition.Builder<>(newBlockInstance);
         StateDefinition<Block, BlockState> stateDefinition = stateDefinitionBuilder.create(Block::defaultBlockState, CraftEngineStateFactory.INSTANCE);
         BlockAccessor blockAccessor = (BlockAccessor) newBlockInstance;
-        blockAccessor.setStateDefinition(stateDefinition);
-        blockAccessor.setDefaultBlockState(stateDefinition.getPossibleStates().get(0));
+        blockAccessor.ce$setStateDefinition(stateDefinition);
+        blockAccessor.ce$setDefaultBlockState(stateDefinition.getPossibleStates().get(0));
         return newBlockInstance;
     }
 

@@ -60,8 +60,8 @@ public class BlockManager {
             this.customBlockHolders[i] = blockHolder;
             @SuppressWarnings("unchecked")
             HolderReferenceInvoker<Block> holderReferenceInvoker = (HolderReferenceInvoker<Block>) blockHolder;
-            holderReferenceInvoker.callBindValue(customBlock);
-            holderReferenceInvoker.tags(Set.of());
+            holderReferenceInvoker.ce$callBindValue(customBlock);
+            holderReferenceInvoker.ce$tags(Set.of());
             CraftEngineBlockState newBlockState = (CraftEngineBlockState) customBlock.defaultBlockState();
             int newBlockStateId = Block.BLOCK_STATE_REGISTRY.getId(newBlockState);
             if (nextStateId != newBlockStateId) {
