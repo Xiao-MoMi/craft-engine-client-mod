@@ -1,7 +1,5 @@
 package net.momirealms.craftengine.fabric.block;
 
-import com.mojang.serialization.MapCodec;
-import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
@@ -29,8 +27,8 @@ import org.jetbrains.annotations.NotNull;
 public class CraftEngineBlockState extends BlockState {
     private BlockState visualBlockState = Blocks.STONE.defaultBlockState();
 
-    public CraftEngineBlockState(Block block, Reference2ObjectArrayMap<Property<?>, Comparable<?>> reference2ObjectArrayMap, MapCodec<BlockState> mapCodec) {
-        super(block, reference2ObjectArrayMap, mapCodec);
+    public CraftEngineBlockState(Block owner, Property<?>[] propertyKeys, Comparable<?>[] propertyValues) {
+        super(owner, propertyKeys, propertyValues);
     }
 
     public void setVisualBlockState(BlockState visualBlockState) {
@@ -38,7 +36,7 @@ public class CraftEngineBlockState extends BlockState {
     }
 
     @Override
-    public @NotNull VoxelShape getFaceOcclusionShape(Direction direction) {
+    public @NotNull VoxelShape getFaceOcclusionShape(@NotNull Direction direction) {
         return visualBlockState.getFaceOcclusionShape(direction);
     }
 
@@ -48,80 +46,80 @@ public class CraftEngineBlockState extends BlockState {
     }
 
     @Override
-    public @NotNull VoxelShape getShape(BlockGetter blockGetter, BlockPos blockPos) {
+    public @NotNull VoxelShape getShape(@NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos) {
         return visualBlockState.getShape(blockGetter, blockPos);
     }
 
     @Override
-    public @NotNull VoxelShape getShape(BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
+    public @NotNull VoxelShape getShape(@NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos, @NotNull CollisionContext collisionContext) {
         return visualBlockState.getShape(blockGetter, blockPos, collisionContext);
     }
 
     @Override
-    public @NotNull VoxelShape getCollisionShape(BlockGetter blockGetter, BlockPos blockPos) {
+    public @NotNull VoxelShape getCollisionShape(@NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos) {
         return visualBlockState.getCollisionShape(blockGetter, blockPos);
     }
 
     @Override
-    public @NotNull VoxelShape getCollisionShape(BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
+    public @NotNull VoxelShape getCollisionShape(@NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos, @NotNull CollisionContext collisionContext) {
         return visualBlockState.getCollisionShape(blockGetter, blockPos, collisionContext);
     }
 
     @Override
-    public @NotNull VoxelShape getEntityInsideCollisionShape(BlockGetter blockGetter, BlockPos blockPos, Entity entity) {
+    public @NotNull VoxelShape getEntityInsideCollisionShape(@NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos, @NotNull Entity entity) {
         return visualBlockState.getEntityInsideCollisionShape(blockGetter, blockPos, entity);
     }
 
     @Override
-    public @NotNull VoxelShape getBlockSupportShape(BlockGetter blockGetter, BlockPos blockPos) {
+    public @NotNull VoxelShape getBlockSupportShape(@NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos) {
         return visualBlockState.getBlockSupportShape(blockGetter, blockPos);
     }
 
     @Override
-    public @NotNull VoxelShape getVisualShape(BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
+    public @NotNull VoxelShape getVisualShape(@NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos, @NotNull CollisionContext collisionContext) {
         return visualBlockState.getVisualShape(blockGetter, blockPos, collisionContext);
     }
 
     @Override
-    public @NotNull VoxelShape getInteractionShape(BlockGetter blockGetter, BlockPos blockPos) {
+    public @NotNull VoxelShape getInteractionShape(@NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos) {
         return visualBlockState.getInteractionShape(blockGetter, blockPos);
     }
 
     @Override
-    public @NotNull InteractionResult useItemOn(ItemStack itemStack, Level level, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    public @NotNull InteractionResult useItemOn(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand interactionHand, @NotNull BlockHitResult blockHitResult) {
         return visualBlockState.useItemOn(itemStack, level, player, interactionHand, blockHitResult);
     }
 
     @Override
-    public @NotNull InteractionResult useWithoutItem(Level level, Player player, BlockHitResult blockHitResult) {
+    public @NotNull InteractionResult useWithoutItem(@NotNull Level level, @NotNull Player player, @NotNull BlockHitResult blockHitResult) {
         return visualBlockState.useWithoutItem(level, player, blockHitResult);
     }
 
     @Override
-    public boolean isValidSpawn(BlockGetter blockGetter, BlockPos blockPos, EntityType<?> entityType) {
+    public boolean isValidSpawn(@NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos, @NotNull EntityType<?> entityType) {
         return visualBlockState.isValidSpawn(blockGetter, blockPos, entityType);
     }
 
     @Override
-    public @NotNull Vec3 getOffset(BlockPos blockPos) {
+    public @NotNull Vec3 getOffset(@NotNull BlockPos blockPos) {
         return visualBlockState.getOffset(blockPos);
     }
 
     @Override
-    public <T extends Comparable<T>> T getValue(Property<@NotNull T> property) {
+    public <T extends Comparable<T>> T getValue(@NotNull Property<@NotNull T> property) {
         try {
             return visualBlockState.getValue(property);
         } catch (Throwable e) {
             try {
                 return property.getValueClass().cast(ReflectionUtil.UNSAFE.allocateInstance(property.getValueClass()));
-            } catch (InstantiationException ex) {
+            } catch (InstantiationException | ClassCastException ex) {
                 throw new RuntimeException("Failed to get value of property " + property.getName() + " for block " + this.getBlock().getName(), ex);
             }
         }
     }
 
     @Override
-    public <T extends Comparable<T>, V extends T> @NotNull BlockState setValue(Property<@NotNull T> property, V comparable) {
+    public <T extends Comparable<T>, V extends T> @NotNull BlockState setValue(@NotNull Property<@NotNull T> property, V comparable) {
         return this;
     }
 }

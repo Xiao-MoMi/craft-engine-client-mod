@@ -36,13 +36,13 @@ import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class CraftEngineBlock extends Block implements BonemealableBlock, SimpleWaterloggedBlock {
-    private Block visualBlock = this;
+    private @NotNull Block visualBlock = this;
 
     public CraftEngineBlock(Properties properties) {
         super(properties);
     }
 
-    public void setVisualBlock(Block visualBlock) {
+    public void setVisualBlock(@NotNull Block visualBlock) {
         this.visualBlock = visualBlock;
     }
 
@@ -50,43 +50,43 @@ public class CraftEngineBlock extends Block implements BonemealableBlock, Simple
     @Override
     protected @NotNull VoxelShape getOcclusionShape(@NotNull BlockState blockState) {
         if (visualBlock == this) return super.getOcclusionShape(blockState);
-        return ((BlockBehaviourInvoker) visualBlock).getOcclusionShape(BlockStateUtils.remap(blockState));
+        return ((BlockBehaviourInvoker) visualBlock).ce$getOcclusionShape(BlockStateUtils.remap(blockState));
     }
 
     @Override
     protected @NotNull VoxelShape getBlockSupportShape(@NotNull BlockState blockState, @NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos) {
         if (visualBlock == this) return super.getBlockSupportShape(blockState, blockGetter, blockPos);
-        return ((BlockBehaviourInvoker) visualBlock).getBlockSupportShape(BlockStateUtils.remap(blockState), blockGetter, blockPos);
+        return ((BlockBehaviourInvoker) visualBlock).ce$getBlockSupportShape(BlockStateUtils.remap(blockState), blockGetter, blockPos);
     }
 
     @Override
     protected @NotNull VoxelShape getInteractionShape(@NotNull BlockState blockState, @NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos) {
         if (visualBlock == this) return super.getInteractionShape(blockState, blockGetter, blockPos);
-        return ((BlockBehaviourInvoker) visualBlock).getInteractionShape(BlockStateUtils.remap(blockState), blockGetter, blockPos);
+        return ((BlockBehaviourInvoker) visualBlock).ce$getInteractionShape(BlockStateUtils.remap(blockState), blockGetter, blockPos);
     }
 
     @Override
     protected @NotNull VoxelShape getShape(@NotNull BlockState blockState, @NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos, @NotNull CollisionContext collisionContext) {
         if (visualBlock == this) return super.getShape(blockState, blockGetter, blockPos, collisionContext);
-        return ((BlockBehaviourInvoker) visualBlock).getShape(BlockStateUtils.remap(blockState), blockGetter, blockPos, collisionContext);
+        return ((BlockBehaviourInvoker) visualBlock).ce$getShape(BlockStateUtils.remap(blockState), blockGetter, blockPos, collisionContext);
     }
 
     @Override
     protected @NotNull VoxelShape getCollisionShape(@NotNull BlockState blockState, @NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos, @NotNull CollisionContext collisionContext) {
         if (visualBlock == this) return super.getCollisionShape(blockState, blockGetter, blockPos, collisionContext);
-        return ((BlockBehaviourInvoker) visualBlock).getCollisionShape(BlockStateUtils.remap(blockState), blockGetter, blockPos, collisionContext);
+        return ((BlockBehaviourInvoker) visualBlock).ce$getCollisionShape(BlockStateUtils.remap(blockState), blockGetter, blockPos, collisionContext);
     }
 
     @Override
     protected @NotNull VoxelShape getEntityInsideCollisionShape(@NotNull BlockState blockState, @NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos, @NotNull Entity entity) {
         if (visualBlock == this) return super.getEntityInsideCollisionShape(blockState, blockGetter, blockPos, entity);
-        return ((BlockBehaviourInvoker) visualBlock).getEntityInsideCollisionShape(BlockStateUtils.remap(blockState), blockGetter, blockPos, entity);
+        return ((BlockBehaviourInvoker) visualBlock).ce$getEntityInsideCollisionShape(BlockStateUtils.remap(blockState), blockGetter, blockPos, entity);
     }
 
     @Override
     protected @NotNull VoxelShape getVisualShape(@NotNull BlockState blockState, @NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos, @NotNull CollisionContext collisionContext) {
         if (visualBlock == this) return super.getVisualShape(blockState, blockGetter, blockPos, collisionContext);
-        return ((BlockBehaviourInvoker) visualBlock).getVisualShape(BlockStateUtils.remap(blockState), blockGetter, blockPos, collisionContext);
+        return ((BlockBehaviourInvoker) visualBlock).ce$getVisualShape(BlockStateUtils.remap(blockState), blockGetter, blockPos, collisionContext);
     }
     // BlockBehaviour end
 
@@ -153,15 +153,15 @@ public class CraftEngineBlock extends Block implements BonemealableBlock, Simple
         StateDefinition.Builder<Block, @NotNull BlockState> stateDefinitionBuilder = new StateDefinition.Builder<>(newBlockInstance);
         StateDefinition<Block, @NotNull BlockState> stateDefinition = stateDefinitionBuilder.create(Block::defaultBlockState, CraftEngineStateFactory.INSTANCE);
         BlockAccessor blockAccessor = (BlockAccessor) newBlockInstance;
-        blockAccessor.setStateDefinition(stateDefinition);
-        blockAccessor.setDefaultBlockState(stateDefinition.getPossibleStates().getFirst());
+        blockAccessor.ce$setStateDefinition(stateDefinition);
+        blockAccessor.ce$setDefaultBlockState(stateDefinition.getPossibleStates().getFirst());
         return newBlockInstance;
     }
 
     private static Properties createEmptyBlockProperties(Identifier id) {
         Properties blockProperties = Properties.of();
         ResourceKey<Block> resourceKey = ResourceKey.create(Registries.BLOCK, id);
-        ((PropertiesAccessor) blockProperties).setId(resourceKey);
+        ((PropertiesAccessor) blockProperties).ce$setId(resourceKey);
         return blockProperties;
     }
 }

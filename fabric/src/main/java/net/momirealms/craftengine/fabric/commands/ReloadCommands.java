@@ -4,7 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -14,8 +14,8 @@ import net.momirealms.craftengine.fabric.config.ModConfig;
 public class ReloadCommands {
 
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
-        dispatcher.register(ClientCommandManager.literal("craftengine-client").then(ClientCommandManager.literal("reload").executes(ReloadCommands::reloadConfig)));
-        dispatcher.register(ClientCommandManager.literal("cec").then(ClientCommandManager.literal("reload").executes(ReloadCommands::reloadConfig)));
+        dispatcher.register(ClientCommands.literal("craftengine-client").then(ClientCommands.literal("reload").executes(ReloadCommands::reloadConfig)));
+        dispatcher.register(ClientCommands.literal("cec").then(ClientCommands.literal("reload").executes(ReloadCommands::reloadConfig)));
     }
 
     private static int reloadConfig(CommandContext<FabricClientCommandSource> context) {

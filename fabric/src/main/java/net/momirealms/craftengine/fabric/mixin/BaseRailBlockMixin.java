@@ -20,13 +20,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class BaseRailBlockMixin {
 
     @Inject(method = "updateState(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Z)Lnet/minecraft/world/level/block/state/BlockState;", at = @At("HEAD"), cancellable = true)
-    private void cancelUpdateCurves(BlockState blockState, Level level, BlockPos blockPos, boolean bl, CallbackInfoReturnable<BlockState> cir) {
+    private void ce$cancelUpdateCurves(BlockState blockState, Level level, BlockPos blockPos, boolean bl, CallbackInfoReturnable<BlockState> cir) {
         if (!ModConfig.INSTANCE.enableCancelBlockUpdate() || !NetworkManager.instance().serverInstalled()) return;
         cir.setReturnValue(blockState);
     }
 
     @Inject(method = "updateState(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/Block;)V", at = @At("HEAD"), cancellable = true)
-    private void cancelUpdateCurves(BlockState blockState, Level level, BlockPos blockPos, Block block, CallbackInfo ci) {
+    private void ce$cancelUpdateCurves(BlockState blockState, Level level, BlockPos blockPos, Block block, CallbackInfo ci) {
         if (!ModConfig.INSTANCE.enableCancelBlockUpdate() || !NetworkManager.instance().serverInstalled()) return;
         ci.cancel();
     }

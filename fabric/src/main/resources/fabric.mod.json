@@ -23,9 +23,10 @@
     "craftengine.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=${loader_version}",
-    "fabric": "*",
-    "minecraft": ">=${minecraft_version}"
+    "fabricloader": "*",
+    "minecraft": ">=${minecraft_version}",
+    "java": ">=25",
+    "fabric-api": "*"
   },
   "accessWidener": "craftengine.accesswidener"
 }

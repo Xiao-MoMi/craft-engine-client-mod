@@ -9,12 +9,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.momirealms.craftengine.fabric.network.NetworkManager;
 import net.momirealms.craftengine.fabric.network.protocol.CancelBlockUpdatePacket;
+import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class ModMenuIntegration implements ModMenuApi {
@@ -27,7 +28,7 @@ public class ModMenuIntegration implements ModMenuApi {
         return ConfigScreen.INSTANCE;
     }
 
-    private static class ConfigScreen implements ConfigScreenFactory<Screen> {
+    private static class ConfigScreen implements ConfigScreenFactory<@NotNull Screen> {
         private static final ConfigScreen INSTANCE = new ConfigScreen();
 
         @Override
@@ -115,20 +116,19 @@ public class ModMenuIntegration implements ModMenuApi {
         @Override
         protected void init() {
             super.init();
-            this.addRenderableWidget(Button.builder(Component.translatable("gui.back"), button -> this.onClose()).pos(this.width / 2 - 100, this.height - 30).size(200, 20).build());
+            this.addRenderableWidget(Button.builder(Component.translatable("gui.back"), _ -> this.onClose()).pos(this.width / 2 - 100, this.height - 30).size(200, 20).build());
         }
 
         @Override
-        public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-            super.render(guiGraphics, mouseX, mouseY, partialTick);
-            guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 17, -1);
+        public void extractBackground(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+            super.extractBackground(graphics, mouseX, mouseY, partialTick);
+            graphics.text(this.font, this.title, this.width / 2, 17, -1);
             Component message = Component.translatable("warning.craftengine.config");
-            guiGraphics.drawCenteredString(this.font, message, this.width / 2, this.height / 2, -1);
+            graphics.text(this.font, message, this.width / 2, this.height / 2, -1);
         }
 
         @Override
         public void onClose() {
-            if (this.minecraft == null) return;
             this.minecraft.setScreen(this.parent);
         }
     }

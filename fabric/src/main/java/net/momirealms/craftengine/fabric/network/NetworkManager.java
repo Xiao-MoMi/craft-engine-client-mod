@@ -36,14 +36,14 @@ public class NetworkManager {
         instance = this;
         this.mod = mod;
         registerDataTypes();
-        PayloadTypeRegistry.configurationS2C().register(CraftEnginePayload.TYPE, CraftEnginePayload.CODEC);
-        PayloadTypeRegistry.configurationC2S().register(CraftEnginePayload.TYPE, CraftEnginePayload.CODEC);
+        PayloadTypeRegistry.clientboundConfiguration().register(CraftEnginePayload.TYPE, CraftEnginePayload.CODEC);
+        PayloadTypeRegistry.serverboundConfiguration().register(CraftEnginePayload.TYPE, CraftEnginePayload.CODEC);
         ClientConfigurationNetworking.registerGlobalReceiver(CraftEnginePayload.TYPE, this::handleReceiver);
-        PayloadTypeRegistry.playS2C().register(CraftEnginePayload.TYPE, CraftEnginePayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(CraftEnginePayload.TYPE, CraftEnginePayload.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(CraftEnginePayload.TYPE, CraftEnginePayload.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(CraftEnginePayload.TYPE, CraftEnginePayload.CODEC);
         ClientPlayNetworking.registerGlobalReceiver(CraftEnginePayload.TYPE, this::handleReceiver);
         ClientConfigurationConnectionEvents.START.register(this::initChannel);
-        ClientPlayConnectionEvents.DISCONNECT.register((client, handler) -> serverInstalled(false));
+        ClientPlayConnectionEvents.DISCONNECT.register((_, _) -> serverInstalled(false));
     }
 
     public static NetworkManager instance() {

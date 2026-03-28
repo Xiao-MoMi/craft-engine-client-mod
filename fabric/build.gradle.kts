@@ -1,15 +1,12 @@
 plugins {
-    id("net.fabricmc.fabric-loom-remap") version "1.14-SNAPSHOT"
-    id("com.gradleup.shadow") version "9.3.0"
+    id("net.fabricmc.fabric-loom") version "1.15-SNAPSHOT"
+    id("com.gradleup.shadow") version "9.4.1"
 }
 
 version = property("project_version")!!
 group = property("project_group")!!
 val project_version: String by project
 val latest_minecraft_version: String by project
-val loader_version: String by project
-var modmenu_version = property("modmenu_version") as String
-var cloth_version = property("cloth_version") as String
 
 base {
     archivesName.set("craft-engine-fabric-mod")
@@ -18,16 +15,9 @@ base {
 tasks.shadowJar {
     relocate("org.yaml", "net.momirealms.craftengine.libraries.org.yaml")
     configurations = listOf(project.configurations.getByName("shadow"))
-    archiveFileName.set("${base.archivesName.get()}-${project.version}-shadow.jar")
     from(sourceSets.main.get().output)
-}
-
-tasks.remapJar {
-    dependsOn(tasks.shadowJar)
-    inputFile.set(tasks.shadowJar.get().archiveFile)
-
-    destinationDirectory.set(file("$rootDir/target"))
     archiveFileName.set("${base.archivesName.get()}-${project.version}+mc${rootProject.properties["latest_minecraft_version"]}.jar")
+    destinationDirectory.set(file("$rootDir/target"))
 }
 
 loom {
@@ -46,23 +36,16 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:${property("latest_minecraft_version")}")
-    mappings(
-        @Suppress("UnstableApiUsage")
-        loom.layered {
-            officialMojangMappings()
-        }
-    )
-    modImplementation("net.fabricmc:fabric-loader:${property("loader_version")}")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_version")}")
-    modApi("me.shedaniel.cloth:cloth-config-fabric:${property("cloth_version")}")
-    modApi("com.terraformersmc:modmenu:${property("modmenu_version")}")
+    implementation("net.fabricmc:fabric-loader:${property("loader_version")}")
+    implementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_version")}")
+    implementation("me.shedaniel.cloth:cloth-config-fabric:${property("cloth_version")}")
+    implementation("com.terraformersmc:modmenu:${property("modmenu_version")}")
     add("shadow", "org.yaml:snakeyaml:2.4")
 }
 
 tasks.processResources {
     inputs.property("version", project_version)
     inputs.property("minecraft_version", latest_minecraft_version)
-    inputs.property("loader_version", loader_version)
 
     filteringCharset = "UTF-8"
 
@@ -70,24 +53,21 @@ tasks.processResources {
         expand(
             "version" to project_version,
             "minecraft_version" to latest_minecraft_version,
-            "loader_version" to loader_version,
-            "modmenu_version" to modmenu_version,
-            "cloth_version" to cloth_version
         )
     }
 }
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
-    options.release.set(21)
+    options.release.set(25)
     dependsOn(tasks.clean)
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(25)
     }
     withSourcesJar()
 }

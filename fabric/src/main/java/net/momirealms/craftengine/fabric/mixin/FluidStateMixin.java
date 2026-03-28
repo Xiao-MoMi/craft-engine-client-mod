@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class FluidStateMixin {
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
-    private void cancelScheduledTick(ServerLevel serverLevel, BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
+    private void ce$cancelScheduledTick(ServerLevel serverLevel, BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
         if (!ModConfig.INSTANCE.enableCancelBlockUpdate() || !NetworkManager.instance().serverInstalled()) return;
         ci.cancel();
     }

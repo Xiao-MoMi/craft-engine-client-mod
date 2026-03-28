@@ -16,11 +16,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MappedRegistry.class)
 public abstract class MappedRegistryMixin<T> {
 
-    @Shadow @Nullable public abstract T byId(int i);
+    @Shadow @Nullable public abstract T ce$byId(int i);
 
     @Inject(method = "refreshTagsInHolders", at = @At("TAIL"))
-    public void afterHandle(CallbackInfo ci) {
-        if (byId(0) instanceof Block) {
+    public void ce$afterHandle(CallbackInfo ci) {
+        if (ce$byId(0) instanceof Block) {
             VisualBlockStatePacket.handleTags();
         }
     }

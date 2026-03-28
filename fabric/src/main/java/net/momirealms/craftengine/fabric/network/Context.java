@@ -20,7 +20,7 @@ public class Context {
 
     private Context(ClientConfigurationNetworking.Context context) {
         this.client = context.client();
-        this.networkHandler = context.networkHandler();
+        this.networkHandler = context.packetListener();
         this.responseSender = context.responseSender();
         this.player = null;
     }
