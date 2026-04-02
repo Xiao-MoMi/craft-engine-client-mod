@@ -40,7 +40,7 @@ dependencies {
     implementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_version")}")
     implementation("me.shedaniel.cloth:cloth-config-fabric:${property("cloth_version")}")
     implementation("com.terraformersmc:modmenu:${property("modmenu_version")}")
-    add("shadow", "org.yaml:snakeyaml:2.4")
+    shadow("org.yaml:snakeyaml:2.4")
 }
 
 tasks.processResources {
