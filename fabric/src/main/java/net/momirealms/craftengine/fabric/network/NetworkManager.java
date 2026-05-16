@@ -20,10 +20,7 @@ import net.minecraft.world.level.block.Block;
 import net.momirealms.craftengine.fabric.CraftEngineFabricMod;
 import net.momirealms.craftengine.fabric.config.ModConfig;
 import net.momirealms.craftengine.fabric.network.codec.NetworkCodec;
-import net.momirealms.craftengine.fabric.network.protocol.CancelBlockUpdatePacket;
-import net.momirealms.craftengine.fabric.network.protocol.ClientBlockStateSizePacket;
-import net.momirealms.craftengine.fabric.network.protocol.ClientCustomBlockPacket;
-import net.momirealms.craftengine.fabric.network.protocol.VisualBlockStatePacket;
+import net.momirealms.craftengine.fabric.network.protocol.*;
 import net.momirealms.craftengine.fabric.registries.BuiltInRegistries;
 import net.momirealms.craftengine.fabric.util.BlockStateUtils;
 
@@ -61,6 +58,7 @@ public class NetworkManager {
         registerDataType(CancelBlockUpdatePacket.TYPE, CancelBlockUpdatePacket.CODEC);
         registerDataType(ClientBlockStateSizePacket.TYPE, ClientBlockStateSizePacket.CODEC);
         registerDataType(VisualBlockStatePacket.TYPE, VisualBlockStatePacket.CODEC);
+        registerDataType(CreativeModeTabItemsPacket.TYPE, CreativeModeTabItemsPacket.CODEC);
     }
 
     public static <T extends ModPacket> void registerDataType(ResourceKey<NetworkCodec<FriendlyByteBuf, ? extends ModPacket>> key, NetworkCodec<FriendlyByteBuf, T> codec) {
