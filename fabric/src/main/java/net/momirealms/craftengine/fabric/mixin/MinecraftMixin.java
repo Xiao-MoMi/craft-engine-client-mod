@@ -1,6 +1,8 @@
 package net.momirealms.craftengine.fabric.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import com.mojang.blaze3d.platform.Window;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -11,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.Optional;
 
+@Environment(EnvType.CLIENT)
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
 

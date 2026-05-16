@@ -7,6 +7,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.momirealms.craftengine.fabric.block.BlockManager;
 import net.momirealms.craftengine.fabric.commands.CommandManager;
 import net.momirealms.craftengine.fabric.config.ModConfig;
+import net.momirealms.craftengine.fabric.item.ItemManager;
 import net.momirealms.craftengine.fabric.logger.LoggerFilter;
 import net.momirealms.craftengine.fabric.logger.ModLogger;
 import net.momirealms.craftengine.fabric.logger.Slf4jModLogger;
@@ -25,6 +26,7 @@ public class CraftEngineFabricMod implements ModInitializer {
     private NetworkManager networkManager;
     private BlockManager blockManager;
     private CommandManager commandManager;
+    private ItemManager itemManager;
 
     @Override
     public void onInitialize() {
@@ -35,6 +37,7 @@ public class CraftEngineFabricMod implements ModInitializer {
         this.networkManager = new NetworkManager(this);
         this.blockManager = new BlockManager(this);
         this.commandManager = new CommandManager(this);
+        this.itemManager = new ItemManager(this);
     }
 
     public static CraftEngineFabricMod instance() {
@@ -74,5 +77,12 @@ public class CraftEngineFabricMod implements ModInitializer {
             throw new IllegalStateException("CommandManager not initialized");
         }
         return commandManager;
+    }
+
+    public ItemManager itemManager() {
+        if (itemManager == null) {
+            throw new IllegalStateException("ItemManager not initialized");
+        }
+        return itemManager;
     }
 }
