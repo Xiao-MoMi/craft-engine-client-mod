@@ -10,9 +10,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.momirealms.craftengine.fabric.CraftEngineFabricMod;
+import net.momirealms.craftengine.fabric.mixin.CreativeModeInventoryScreenAccessor;
 import net.momirealms.craftengine.fabric.mixin.CreativeModeTabAccessor;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,6 +53,9 @@ public final class ItemManager {
     }
 
     public void loadFromNetwork(@NotNull List<ItemStack> creativeTabItems) {
+        if (creativeTabItems.isEmpty()) {
+            CreativeModeInventoryScreenAccessor.setSelectedTab(CreativeModeTabs.getDefaultTab());
+        }
         this.creativeTabItems = creativeTabItems;
         ((CreativeModeTabAccessor) this.tab).ce$displayItems(creativeTabItems);
         ((CreativeModeTabAccessor) this.tab).ce$displayItemsSearchTab(new HashSet<>(creativeTabItems));
@@ -62,5 +67,6 @@ public final class ItemManager {
 
     public void clearCreativeTabItems() {
         this.creativeTabItems = List.of();
+        CreativeModeInventoryScreenAccessor.setSelectedTab(CreativeModeTabs.getDefaultTab());
     }
 }
