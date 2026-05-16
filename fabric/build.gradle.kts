@@ -7,6 +7,7 @@ version = property("project_version")!!
 group = property("project_group")!!
 val project_version: String by project
 val latest_minecraft_version: String by project
+val min_supported_minecraft_version: String by project
 
 base {
     archivesName.set("craft-engine-fabric-mod")
@@ -16,7 +17,8 @@ tasks.shadowJar {
     relocate("org.yaml", "net.momirealms.craftengine.libraries.org.yaml")
     configurations = listOf(project.configurations.getByName("shadow"))
     from(sourceSets.main.get().output)
-    archiveFileName.set("${base.archivesName.get()}-${project.version}+mc${rootProject.properties["latest_minecraft_version"]}.jar")
+    val ver = if (latest_minecraft_version == min_supported_minecraft_version) latest_minecraft_version else "$min_supported_minecraft_version-$latest_minecraft_version"
+    archiveFileName.set("${base.archivesName.get()}-${project.version}+mc$ver.jar")
     destinationDirectory.set(file("$rootDir/target"))
 }
 
@@ -45,14 +47,14 @@ dependencies {
 
 tasks.processResources {
     inputs.property("version", project_version)
-    inputs.property("minecraft_version", latest_minecraft_version)
+    inputs.property("minecraft_version", min_supported_minecraft_version)
 
     filteringCharset = "UTF-8"
 
     filesMatching("fabric.mod.json") {
         expand(
             "version" to project_version,
-            "minecraft_version" to latest_minecraft_version,
+            "minecraft_version" to min_supported_minecraft_version,
         )
     }
 }

@@ -1,5 +1,7 @@
 package net.momirealms.craftengine.fabric.mixin;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.recipebook.GhostSlots;
 import net.momirealms.craftengine.fabric.config.ModConfig;
 import org.objectweb.asm.Opcodes;
@@ -7,6 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+@Environment(EnvType.CLIENT)
 @Mixin(GhostSlots.class)
 public class GhostSlotsMixin {
 
