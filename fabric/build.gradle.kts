@@ -60,14 +60,16 @@ dependencies {
 
 tasks.processResources {
     inputs.property("version", project_version)
-    inputs.property("minecraft_version", min_supported_minecraft_version)
+    inputs.property("min_minecraft_version", min_supported_minecraft_version)
+    inputs.property("max_minecraft_version", latest_minecraft_version)
 
     filteringCharset = "UTF-8"
 
     filesMatching("fabric.mod.json") {
         expand(
             "version" to project_version,
-            "minecraft_version" to min_supported_minecraft_version,
+            "min_minecraft_version" to min_supported_minecraft_version,
+            "max_minecraft_version" to latest_minecraft_version,
         )
     }
 }

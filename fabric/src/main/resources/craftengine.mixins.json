@@ -9,6 +9,7 @@
     "BlockBehaviourInvoker",
     "BlockStateBaseAccessor",
     "BlockStateBaseMixin",
+    "CreativeModeInventoryScreenAccessor",
     "CreativeModeTabAccessor",
     "FluidStateMixin",
     "GhostSlotsMixin",
