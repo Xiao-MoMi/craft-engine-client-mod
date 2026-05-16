@@ -8,6 +8,8 @@
     "BlockBehaviourAccessor",
     "BlockStateBaseAccessor",
     "BlockStateBaseMixin",
+    "CreativeModeInventoryScreenAccessor",
+    "CreativeModeTabAccessor",
     "FluidStateMixin",
     "HolderReferenceInvoker",
     "LoadingOverlayAccessor",
