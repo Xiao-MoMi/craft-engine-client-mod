@@ -2,41 +2,39 @@ package net.momirealms.craftengine.fabric.network.protocol;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import net.momirealms.craftengine.fabric.item.ItemManager;
+import net.momirealms.craftengine.fabric.network.ClientCustomPacket;
 import net.momirealms.craftengine.fabric.network.Context;
-import net.momirealms.craftengine.fabric.network.ModPacket;
-import net.momirealms.craftengine.fabric.registries.BuiltInRegistries;
 import net.momirealms.craftengine.fabric.util.RegistryUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
-public record CreativeModeTabItemsPacket(Action action, List<ItemStack> itemStacks) implements ModPacket {
-    public static final ResourceKey<StreamCodec<FriendlyByteBuf, ? extends ModPacket>> TYPE = ResourceKey.create(
-            BuiltInRegistries.MOD_PACKET.key(), Identifier.fromNamespaceAndPath("craftengine", "creative_mode_tab_items")
-    );
-    public static final StreamCodec<FriendlyByteBuf, CreativeModeTabItemsPacket> CODEC = ModPacket.codec(
-            CreativeModeTabItemsPacket::encode,
-            CreativeModeTabItemsPacket::decode
+public record ClientboundCreativeModeTabItemsPacket(Action action,
+                                                    List<ItemStack> itemStacks) implements ClientCustomPacket {
+    public static final Identifier ID = Identifier.fromNamespaceAndPath("craftengine", "creative_mode_tab_items");
+    public static final Type<ClientboundCreativeModeTabItemsPacket> TYPE = new Type<>(ID);
+    public static final StreamCodec<FriendlyByteBuf, ClientboundCreativeModeTabItemsPacket> CODEC = ClientCustomPacket.codec(
+            ClientboundCreativeModeTabItemsPacket::encode,
+            ClientboundCreativeModeTabItemsPacket::decode
     );
 
-    private static CreativeModeTabItemsPacket decode(FriendlyByteBuf buf) {
+    private static ClientboundCreativeModeTabItemsPacket decode(FriendlyByteBuf buf) {
         Action action = buf.readEnum(Action.class);
         if (action == Action.CLEAR) {
-            return new CreativeModeTabItemsPacket(Action.CLEAR, List.of());
+            return new ClientboundCreativeModeTabItemsPacket(Action.CLEAR, List.of());
         } else {
             RegistryFriendlyByteBuf byteBuf = new RegistryFriendlyByteBuf(buf, RegistryUtils.getRegistryAccess());
             List<ItemStack> list = byteBuf.readCollection(ArrayList::new, _ -> ItemStack.STREAM_CODEC.decode(byteBuf));
-            return new CreativeModeTabItemsPacket(action, list);
+            return new ClientboundCreativeModeTabItemsPacket(action, list);
         }
     }
 
@@ -47,8 +45,19 @@ public record CreativeModeTabItemsPacket(Action action, List<ItemStack> itemStac
         byteBuf.writeCollection(this.itemStacks, (_, itemStack) -> ItemStack.STREAM_CODEC.encode(byteBuf, itemStack));
     }
 
+
     @Override
-    public ResourceKey<StreamCodec<FriendlyByteBuf, ? extends ModPacket>> type() {
+    public Identifier id() {
+        return ID;
+    }
+
+    @Override
+    public StreamCodec<FriendlyByteBuf, ClientboundCreativeModeTabItemsPacket> codec() {
+        return CODEC;
+    }
+
+    @Override
+    public @NotNull Type<ClientboundCreativeModeTabItemsPacket> type() {
         return TYPE;
     }
 

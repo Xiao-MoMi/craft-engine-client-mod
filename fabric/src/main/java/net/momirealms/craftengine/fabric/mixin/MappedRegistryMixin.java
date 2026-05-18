@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.world.level.block.Block;
-import net.momirealms.craftengine.fabric.network.protocol.VisualBlockStatePacket;
+import net.momirealms.craftengine.fabric.network.protocol.ClientboundVisualBlockStatePacket;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,7 +21,7 @@ public abstract class MappedRegistryMixin<T> {
     @Inject(method = "refreshTagsInHolders", at = @At("TAIL"))
     public void ce$afterHandle(CallbackInfo ci) {
         if (byId(0) instanceof Block) {
-            VisualBlockStatePacket.handleTags();
+            ClientboundVisualBlockStatePacket.handleTags();
         }
     }
 }

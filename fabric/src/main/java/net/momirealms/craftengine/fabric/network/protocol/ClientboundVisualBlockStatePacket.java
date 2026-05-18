@@ -1,13 +1,11 @@
 package net.momirealms.craftengine.fabric.network.protocol;
 
-import io.netty.handler.codec.DecoderException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.Holder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.momirealms.craftengine.fabric.block.BlockManager;
@@ -16,97 +14,53 @@ import net.momirealms.craftengine.fabric.block.CraftEngineBlockState;
 import net.momirealms.craftengine.fabric.mixin.BlockBehaviourAccessor;
 import net.momirealms.craftengine.fabric.mixin.BlockStateBaseAccessor;
 import net.momirealms.craftengine.fabric.mixin.HolderReferenceInvoker;
+import net.momirealms.craftengine.fabric.network.ClientCustomPacket;
 import net.momirealms.craftengine.fabric.network.Context;
-import net.momirealms.craftengine.fabric.network.ModPacket;
-import net.momirealms.craftengine.fabric.registries.BuiltInRegistries;
 import net.momirealms.craftengine.fabric.util.BlockRenderUtils;
 import net.momirealms.craftengine.fabric.util.BlockStateUtils;
+import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 @SuppressWarnings({"unchecked", "DuplicatedCode"})
-public record VisualBlockStatePacket(int[] data) implements ModPacket {
-    public static final ResourceKey<StreamCodec<FriendlyByteBuf, ? extends ModPacket>> TYPE = ResourceKey.create(
-            BuiltInRegistries.MOD_PACKET.key(), Identifier.fromNamespaceAndPath("craftengine", "visual_block_state")
+public record ClientboundVisualBlockStatePacket(int[] data) implements ClientCustomPacket {
+    public static final Identifier ID = Identifier.fromNamespaceAndPath("craftengine", "visual_block_state");
+    public static final Type<ClientboundVisualBlockStatePacket> TYPE = new Type<>(ID);
+    private static ClientboundVisualBlockStatePacket previousPacket;
+    public static final StreamCodec<FriendlyByteBuf, ClientboundVisualBlockStatePacket> CODEC = ClientCustomPacket.codec(
+            (packet, buf) -> buf.writeVarIntArray(packet.data),
+            buf -> previousPacket = new ClientboundVisualBlockStatePacket(buf.readVarIntArray())
     );
-    public static final StreamCodec<FriendlyByteBuf, VisualBlockStatePacket> CODEC = ModPacket.codec(
-            VisualBlockStatePacket::encode,
-            VisualBlockStatePacket::new
-    );
-    private static final int RLE_THRESHOLD = 3;
-    private static final int RLE_TAG = 0;
-    private static final int DELTA_TAG = 1;
-    private static VisualBlockStatePacket previousPacket;
 
-    private VisualBlockStatePacket(FriendlyByteBuf buf) {
-        this(decode(buf));
-        previousPacket = this;
-    }
-
-    private void encode(FriendlyByteBuf buf) {
-        encode(buf, this.data);
-    }
-
-    private static void encode(FriendlyByteBuf buf, int[] data) {
-        if (data.length == 0) {
-            buf.writeVarInt(0);
-            return;
+    public static void handleTags() {
+        if (previousPacket == null) return;
+        for (int i = 0; i < previousPacket.data.length; i++) {
+            int customId = i + BlockStateUtils.vanillaStateSize();
+            int vanillaId = previousPacket.data[i];
+            if (vanillaId == 0) continue;
+            BlockState vanillaState = Block.BLOCK_STATE_REGISTRY.byId(vanillaId);
+            if (vanillaState == null) continue;
+            Block vanillaBlock = vanillaState.getBlock();
+            BlockState customState = Block.BLOCK_STATE_REGISTRY.byId(customId);
+            if (customState == null) continue;
+            if (!(customState.getBlock() instanceof CraftEngineBlock craftEngineBlock)) continue;
+            Holder<Block> vanillaBlockHolder = net.minecraft.core.registries.BuiltInRegistries.BLOCK.wrapAsHolder(vanillaBlock);
+            Holder<Block> customBlockHolder = net.minecraft.core.registries.BuiltInRegistries.BLOCK.wrapAsHolder(craftEngineBlock);
+            ((HolderReferenceInvoker<Block>) customBlockHolder).ce$tags(((HolderReferenceInvoker<Block>) vanillaBlockHolder).ce$tags());
         }
-        buf.writeVarInt(data.length);
-        int i = 0;
-        int previousValue = 0;
-        while (i < data.length) {
-            int currentValue = data[i];
-            int repeatCount = 1;
-            int j = i + 1;
-            while (j < data.length && data[j] == currentValue) {
-                repeatCount++;
-                j++;
-            }
-            if (repeatCount >= RLE_THRESHOLD) {
-                buf.writeVarInt(RLE_TAG);
-                buf.writeVarInt(currentValue);
-                buf.writeVarInt(repeatCount);
-                i += repeatCount;
-                previousValue = currentValue;
-            } else {
-                buf.writeVarInt(DELTA_TAG);
-                int delta = currentValue - previousValue;
-                buf.writeVarInt(delta);
-                previousValue = currentValue;
-                i++;
-            }
-        }
-    }
-
-    private static int[] decode(FriendlyByteBuf buf) {
-        int length = buf.readVarInt();
-        if (length == 0) return new int[0];
-        int[] data = new int[length];
-        int previousValue = 0;
-        int i = 0;
-        while (i < length) {
-            int tag = buf.readVarInt();
-            if (tag == RLE_TAG) {
-                int value = buf.readVarInt();
-                int count = buf.readVarInt();
-                if (i + count > length) throw new DecoderException("RLE count exceeds array bounds");
-                for (int j = 0; j < count; j++) data[i++] = value;
-                previousValue = value;
-            } else if (tag == DELTA_TAG) {
-                int delta = buf.readVarInt();
-                int currentValue = previousValue + delta;
-                data[i++] = currentValue;
-                previousValue = currentValue;
-            } else {
-                throw new DecoderException("Unknown encoding tag: " + tag);
-            }
-        }
-        if (i != length) throw new DecoderException("Decoded length mismatch");
-        return data;
     }
 
     @Override
-    public ResourceKey<StreamCodec<FriendlyByteBuf, ? extends ModPacket>> type() {
+    public Identifier id() {
+        return ID;
+    }
+
+    @Override
+    public StreamCodec<FriendlyByteBuf, ClientboundVisualBlockStatePacket> codec() {
+        return CODEC;
+    }
+
+    @Override
+    public @NotNull Type<ClientboundVisualBlockStatePacket> type() {
         return TYPE;
     }
 
@@ -164,24 +118,6 @@ public record VisualBlockStatePacket(int[] data) implements ModPacket {
             customStateAccessor.ce$occlusionShapesByFace(vanillaStateAccessor.ce$occlusionShapesByFace());
             customStateAccessor.ce$propagatesSkylightDown(vanillaStateAccessor.ce$propagatesSkylightDown());
             customStateAccessor.ce$lightDampening(vanillaStateAccessor.ce$lightDampening());
-            Holder<Block> vanillaBlockHolder = net.minecraft.core.registries.BuiltInRegistries.BLOCK.wrapAsHolder(vanillaBlock);
-            Holder<Block> customBlockHolder = net.minecraft.core.registries.BuiltInRegistries.BLOCK.wrapAsHolder(craftEngineBlock);
-            ((HolderReferenceInvoker<Block>) customBlockHolder).ce$tags(((HolderReferenceInvoker<Block>) vanillaBlockHolder).ce$tags());
-        }
-    }
-
-    public static void handleTags() {
-        if (previousPacket == null) return;
-        for (int i = 0; i < previousPacket.data.length; i++) {
-            int customId = i + BlockStateUtils.vanillaStateSize();
-            int vanillaId = previousPacket.data[i];
-            if (vanillaId == 0) continue;
-            BlockState vanillaState = Block.BLOCK_STATE_REGISTRY.byId(vanillaId);
-            if (vanillaState == null) continue;
-            Block vanillaBlock = vanillaState.getBlock();
-            BlockState customState = Block.BLOCK_STATE_REGISTRY.byId(customId);
-            if (customState == null) continue;
-            if (!(customState.getBlock() instanceof CraftEngineBlock craftEngineBlock)) continue;
             Holder<Block> vanillaBlockHolder = net.minecraft.core.registries.BuiltInRegistries.BLOCK.wrapAsHolder(vanillaBlock);
             Holder<Block> customBlockHolder = net.minecraft.core.registries.BuiltInRegistries.BLOCK.wrapAsHolder(craftEngineBlock);
             ((HolderReferenceInvoker<Block>) customBlockHolder).ce$tags(((HolderReferenceInvoker<Block>) vanillaBlockHolder).ce$tags());
