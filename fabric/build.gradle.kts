@@ -18,7 +18,7 @@ tasks.shadowJar {
     configurations = listOf(project.configurations.getByName("shadow"))
     from(sourceSets.main.get().output)
     val ver = if (latest_minecraft_version == min_supported_minecraft_version) latest_minecraft_version else "$min_supported_minecraft_version-$latest_minecraft_version"
-    archiveFileName.set("${base.archivesName.get()}-fabric-${project.version}+mc$ver.jar")
+    archiveFileName.set("craft-engine-fabric-mod-${project.version}+mc$ver.jar")
     destinationDirectory.set(file("$rootDir/target"))
 }
 
