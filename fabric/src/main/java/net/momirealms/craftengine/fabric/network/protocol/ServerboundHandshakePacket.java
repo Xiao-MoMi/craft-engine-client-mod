@@ -34,7 +34,7 @@ public record ServerboundHandshakePacket(int protocolVersion, int blockListSize)
     }
 
     @Override
-    public @NotNull Type<? extends ServerCustomPacket> type() {
+    public @NotNull Type<ServerboundHandshakePacket> type() {
         return TYPE;
     }
 }
