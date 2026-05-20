@@ -14,6 +14,7 @@
   "disconnect.craftengine.vanilla_block_registry_mismatch": "Vanilla block registry size mismatch. \n Current: %s. Expected: %s.",
   "disconnect.craftengine.current_block_registry_mismatch": "Client block registry is smaller than the server registry. \n Client: %s. Server: %s. \n Please increase the value of the 'Number of registered blocks' option and restart the client.",
   "disconnect.craftengine.invalid_payload": "Connection terminated due to transmission of invalid payload. \n Please ensure that the client mod and server plugin are the latest version.",
+  "disconnect.craftengine.client_outdated": "Please update your CraftEngine Client Mod \n client protocol version %s, server protocol version %s",
   "craftengine.reload.success": "The configuration file has been reloaded.",
   "warning.craftengine.config": "Please install the Cloth Config API mod"
 }
