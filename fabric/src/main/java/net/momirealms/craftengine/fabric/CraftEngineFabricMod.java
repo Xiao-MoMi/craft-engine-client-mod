@@ -53,7 +53,7 @@ public class CraftEngineFabricMod implements ModInitializer {
 
     public Path dataFolderPath() {
         if (configPath == null) {
-            configPath = FabricLoader.getInstance().getConfigDir().resolve("craft-engine-fabric-mod");
+            configPath = FabricLoader.getInstance().getConfigDir().resolve("craftengine");
         }
         return configPath;
     }
