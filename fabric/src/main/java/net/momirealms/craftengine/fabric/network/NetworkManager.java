@@ -1,6 +1,5 @@
 package net.momirealms.craftengine.fabric.network;
 
-import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents;
@@ -15,16 +14,27 @@ import net.minecraft.core.RegistrationInfo;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.momirealms.craftengine.fabric.CraftEngineFabricMod;
 import net.momirealms.craftengine.fabric.config.ModConfig;
 import net.momirealms.craftengine.fabric.network.protocol.*;
 import net.momirealms.craftengine.fabric.registries.BuiltInRegistries;
+import net.momirealms.craftengine.fabric.registries.Registries;
 import net.momirealms.craftengine.fabric.util.BlockStateUtils;
 
 @Environment(EnvType.CLIENT)
 public class NetworkManager {
+    public static final int PROTOCOL_VERSION = 1;
+    public static final StreamCodec<FriendlyByteBuf, ClientboundVisualBlockStateBatchStartPacket> VISUAL_BLOCK_STATE_BATCH_START = registerClientbound(ClientboundVisualBlockStateBatchStartPacket.TYPE, ClientboundVisualBlockStateBatchStartPacket.CODEC);
+    public static final StreamCodec<FriendlyByteBuf, ClientboundVisualBlockStateBatchFinishedPacket> VISUAL_BLOCK_STATE_BATCH_FINISHED = registerClientbound(ClientboundVisualBlockStateBatchFinishedPacket.TYPE, ClientboundVisualBlockStateBatchFinishedPacket.CODEC);
+    public static final StreamCodec<FriendlyByteBuf, ClientboundVisualBlockStatesPacket> VISUAL_BLOCK_STATES = registerClientbound(ClientboundVisualBlockStatesPacket.TYPE, ClientboundVisualBlockStatesPacket.CODEC);
+    public static final StreamCodec<FriendlyByteBuf, ClientboundCancelBlockUpdateResponsePacket> CANCEL_BLOCK_UPDATE_RESPONSE = registerClientbound(ClientboundCancelBlockUpdateResponsePacket.TYPE, ClientboundCancelBlockUpdateResponsePacket.CODEC);
+    public static final StreamCodec<FriendlyByteBuf, ClientboundCreativeModeTabItemsPacket> CREATIVE_MODE_TAB_ITEMS = registerClientbound(ClientboundCreativeModeTabItemsPacket.TYPE, ClientboundCreativeModeTabItemsPacket.CODEC);
+    public static final StreamCodec<FriendlyByteBuf, ServerboundHandshakePacket> HANDSHAKE = registerServerbound(ServerboundHandshakePacket.TYPE, ServerboundHandshakePacket.CODEC);
+    public static final StreamCodec<FriendlyByteBuf, ServerboundEnableClientCustomBlockPacket> ENABLE_CLIENT_CUSTOM_BLOCK = registerServerbound(ServerboundEnableClientCustomBlockPacket.TYPE, ServerboundEnableClientCustomBlockPacket.CODEC);
+    public static final StreamCodec<FriendlyByteBuf, ServerboundCancelBlockUpdateRequestPacket> CANCEL_BLOCK_UPDATE_REQUEST = registerServerbound(ServerboundCancelBlockUpdateRequestPacket.TYPE, ServerboundCancelBlockUpdateRequestPacket.CODEC);
     private static NetworkManager instance;
     private final CraftEngineFabricMod mod;
     private boolean serverInstalled = false;
@@ -32,19 +42,30 @@ public class NetworkManager {
     public NetworkManager(CraftEngineFabricMod mod) {
         instance = this;
         this.mod = mod;
-        registerDataTypes();
-        PayloadTypeRegistry.configurationS2C().register(CraftEnginePayload.TYPE, CraftEnginePayload.CODEC);
-        PayloadTypeRegistry.configurationC2S().register(CraftEnginePayload.TYPE, CraftEnginePayload.CODEC);
-        ClientConfigurationNetworking.registerGlobalReceiver(CraftEnginePayload.TYPE, this::handleReceiver);
-        PayloadTypeRegistry.playS2C().register(CraftEnginePayload.TYPE, CraftEnginePayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(CraftEnginePayload.TYPE, CraftEnginePayload.CODEC);
-        ClientPlayNetworking.registerGlobalReceiver(CraftEnginePayload.TYPE, this::handleReceiver);
         ClientConfigurationConnectionEvents.START.register(this::initChannel);
-        ClientPlayConnectionEvents.DISCONNECT.register((client, handler) -> serverInstalled(false));
+        ClientPlayConnectionEvents.DISCONNECT.register(($, $$) -> serverInstalled(false));
     }
 
     public static NetworkManager instance() {
         return instance;
+    }
+
+    public static <T extends ClientCustomPacket> StreamCodec<FriendlyByteBuf, T> registerClientbound(CustomPacketPayload.Type<T> type, StreamCodec<FriendlyByteBuf, T> codec) {
+        ((WritableRegistry<StreamCodec<FriendlyByteBuf, ? extends ClientCustomPacket>>) BuiltInRegistries.CLIENT_MOD_PACKET)
+                .register(ResourceKey.create(Registries.CLIENT_MOD_PACKET, type.id()), codec, RegistrationInfo.BUILT_IN);
+        PayloadTypeRegistry.configurationS2C().register(type, codec);
+        PayloadTypeRegistry.playS2C().register(type, codec);
+        ClientConfigurationNetworking.registerGlobalReceiver(type, (payload, context) -> payload.handle(Context.of(context)));
+        ClientPlayNetworking.registerGlobalReceiver(type, (payload, context) -> payload.handle(Context.of(context)));
+        return codec;
+    }
+
+    public static <T extends ServerCustomPacket> StreamCodec<FriendlyByteBuf, T> registerServerbound(CustomPacketPayload.Type<T> type, StreamCodec<FriendlyByteBuf, T> codec) {
+        ((WritableRegistry<StreamCodec<FriendlyByteBuf, ? extends ServerCustomPacket>>) BuiltInRegistries.SERVER_MOD_PACKET)
+                .register(ResourceKey.create(Registries.SERVER_MOD_PACKET, type.id()), codec, RegistrationInfo.BUILT_IN);
+        PayloadTypeRegistry.configurationC2S().register(type, codec);
+        PayloadTypeRegistry.playC2S().register(type, codec);
+        return codec;
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -56,61 +77,21 @@ public class NetworkManager {
         this.serverInstalled = serverInstalled;
     }
 
-    private void registerDataTypes() {
-        registerDataType(ClientCustomBlockPacket.TYPE, ClientCustomBlockPacket.CODEC);
-        registerDataType(CancelBlockUpdatePacket.TYPE, CancelBlockUpdatePacket.CODEC);
-        registerDataType(ClientBlockStateSizePacket.TYPE, ClientBlockStateSizePacket.CODEC);
-        registerDataType(VisualBlockStatePacket.TYPE, VisualBlockStatePacket.CODEC);
-        registerDataType(CreativeModeTabItemsPacket.TYPE, CreativeModeTabItemsPacket.CODEC);
-    }
-
-    public static <T extends ModPacket> void registerDataType(ResourceKey<StreamCodec<FriendlyByteBuf, ? extends ModPacket>> key, StreamCodec<FriendlyByteBuf, T> codec) {
-        ((WritableRegistry<StreamCodec<FriendlyByteBuf, ? extends ModPacket>>) BuiltInRegistries.MOD_PACKET).register(key, codec, RegistrationInfo.BUILT_IN);
-    }
-
     private void initChannel(ClientConfigurationPacketListenerImpl handler, Minecraft client) {
-        sendData(new ClientBlockStateSizePacket(Block.BLOCK_STATE_REGISTRY.size()));
-
-        if (!ModConfig.INSTANCE.enableNetwork() && !ModConfig.INSTANCE.enableCancelBlockUpdate()) {
-            return;
-        }
-
-        if (ModConfig.INSTANCE.enableNetwork()) {
-            sendData(new ClientCustomBlockPacket(BlockStateUtils.vanillaStateSize(), Block.BLOCK_STATE_REGISTRY.size()));
-        } else {
-            sendData(new CancelBlockUpdatePacket(true));
+        sendCustomPacket(new ServerboundHandshakePacket(PROTOCOL_VERSION, Block.BLOCK_STATE_REGISTRY.size()));
+        if (ModConfig.INSTANCE.enableClientCustomBlock()) {
+            sendCustomPacket(new ServerboundEnableClientCustomBlockPacket(BlockStateUtils.vanillaStateSize(), Block.BLOCK_STATE_REGISTRY.size()));
+        } else if (ModConfig.INSTANCE.enableCancelBlockUpdate()) {
+            sendCustomPacket(ServerboundCancelBlockUpdateRequestPacket.INSTANCE);
         }
     }
 
-    @SuppressWarnings({"UnstableApiUsage", "unchecked"})
-    public void sendData(ModPacket data) {
-        StreamCodec<FriendlyByteBuf, ModPacket> codec = (StreamCodec<FriendlyByteBuf, ModPacket>) BuiltInRegistries.MOD_PACKET.get(data.type());
-        if (codec == null) {
-            this.mod.logger().warn("Unknown data type class: " + data.getClass().getName());
-            return;
-        }
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-        buf.writeByte(BuiltInRegistries.MOD_PACKET.getId(codec));
-        codec.encode(buf, data);
+    @SuppressWarnings("UnstableApiUsage")
+    public void sendCustomPacket(ServerCustomPacket data) {
         if (Minecraft.getInstance().player != null) {
-            ClientPlayNetworking.send(new CraftEnginePayload(buf.array()));
+            ClientPlayNetworking.send(data);
         } else if (ClientNetworkingImpl.getClientConfigurationAddon() != null) {
-            ClientConfigurationNetworking.send(new CraftEnginePayload(buf.array()));
+            ClientConfigurationNetworking.send(data);
         }
-    }
-
-    private void handleReceiver(CraftEnginePayload payload, Object context) {
-        byte[] data = payload.data();
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.wrappedBuffer(data));
-        byte type = buf.readByte();
-        @SuppressWarnings("unchecked")
-        StreamCodec<FriendlyByteBuf, ModPacket> codec = (StreamCodec<FriendlyByteBuf, ModPacket>) BuiltInRegistries.MOD_PACKET.byId(type);
-        if (codec == null) {
-            this.mod.logger().warn("Unknown data type received: " + type);
-            return;
-        }
-
-        ModPacket networkData = codec.decode(buf);
-        networkData.handle(Context.of(context));
     }
 }
