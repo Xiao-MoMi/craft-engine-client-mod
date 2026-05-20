@@ -37,7 +37,7 @@ public final class BlockStateUtils {
         return id < vanillaStateSize && id >= 0;
     }
 
-    public static BlockState handleRemap(BlockState state) {
+    public static BlockState remap(BlockState state) {
         if (isVanillaBlock(state)) return state;
         int id = Block.BLOCK_STATE_REGISTRY.getId(state);
         int remapped = BlockManager.instance().remapState(id);
