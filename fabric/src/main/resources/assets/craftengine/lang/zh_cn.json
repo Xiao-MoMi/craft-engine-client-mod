@@ -14,6 +14,7 @@
   "disconnect.craftengine.vanilla_block_registry_mismatch": "原版方块注册表大小不匹配. \n 当前: %s. 预期: %s",
   "disconnect.craftengine.current_block_registry_mismatch": "客户端方块注册表大小小于服务端注册表. \n 客户端: %s. 服务端: %s. \n 请增加 '注册的方块数量' 选项的数量后重启客户端.",
   "disconnect.craftengine.invalid_payload": "因发送无效通讯包而断开连接 \n 请确保客户端mod和服务端插件为最新版本",
+  "disconnect.craftengine.client_outdated": "请更新您的 CraftEngine 客户端模组 \n 客户端协议版本 %s，服务器协议版本 %s",
   "craftengine.reload.success": "已重新加载配置文件",
   "warning.craftengine.config": "请安装 Cloth Config API 模组"
 }
