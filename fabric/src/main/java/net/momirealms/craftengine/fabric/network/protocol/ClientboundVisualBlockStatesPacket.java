@@ -14,11 +14,9 @@ import java.util.Arrays;
 import java.util.BitSet;
 
 @Environment(EnvType.CLIENT)
-@SuppressWarnings({"unchecked", "DuplicatedCode"})
 public record ClientboundVisualBlockStatesPacket(int startIndex, int[] data) implements ClientCustomPacket {
     public static final Identifier ID = Identifier.fromNamespaceAndPath("craftengine", "visual_block_states");
     public static final Type<ClientboundVisualBlockStatesPacket> TYPE = new Type<>(ID);
-    private static ClientboundVisualBlockStatesPacket previousPacket;
     public static final StreamCodec<FriendlyByteBuf, ClientboundVisualBlockStatesPacket> CODEC = ClientCustomPacket.codec(
             (packet, buf) -> {
                 buf.writeVarInt(packet.startIndex);
@@ -49,10 +47,6 @@ public record ClientboundVisualBlockStatesPacket(int startIndex, int[] data) imp
                 return new ClientboundVisualBlockStatesPacket(startIndex, data);
             }
     );
-
-    public static void handleTags() {
-        if (previousPacket == null) return;
-    }
 
     @Override
     public Identifier id() {
