@@ -7,8 +7,8 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
@@ -18,7 +18,8 @@ import net.momirealms.craftengine.fabric.mixin.CreativeModeInventoryScreenAccess
 import net.momirealms.craftengine.fabric.mixin.CreativeModeTabAccessor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public final class ItemManager {
     }
 
     public List<ItemStack> creativeTabItems() {
-        return Collections.unmodifiableList(creativeTabItems);
+        return new ArrayList<>(creativeTabItems);
     }
 
     public void clearCreativeTabItems() {
