@@ -1,5 +1,9 @@
 package net.momirealms.craftengine.fabric.block;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
+@Environment(EnvType.CLIENT)
 public class VisualBlockStatesData {
     public final int[] data;
     private volatile boolean isReceived;
