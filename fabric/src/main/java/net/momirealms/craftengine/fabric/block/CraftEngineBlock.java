@@ -50,43 +50,43 @@ public class CraftEngineBlock extends Block implements BonemealableBlock, Simple
     @Override
     protected @NotNull VoxelShape getOcclusionShape(@NotNull BlockState blockState) {
         if (visualBlock == this) return super.getOcclusionShape(blockState);
-        return ((BlockBehaviourInvoker) visualBlock).ce$getOcclusionShape(BlockStateUtils.remap(blockState));
+        return ((BlockBehaviourInvoker) visualBlock).ce$getOcclusionShape(BlockStateUtils.handleRemap(blockState));
     }
 
     @Override
     protected @NotNull VoxelShape getBlockSupportShape(@NotNull BlockState blockState, @NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos) {
         if (visualBlock == this) return super.getBlockSupportShape(blockState, blockGetter, blockPos);
-        return ((BlockBehaviourInvoker) visualBlock).ce$getBlockSupportShape(BlockStateUtils.remap(blockState), blockGetter, blockPos);
+        return ((BlockBehaviourInvoker) visualBlock).ce$getBlockSupportShape(BlockStateUtils.handleRemap(blockState), blockGetter, blockPos);
     }
 
     @Override
     protected @NotNull VoxelShape getInteractionShape(@NotNull BlockState blockState, @NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos) {
         if (visualBlock == this) return super.getInteractionShape(blockState, blockGetter, blockPos);
-        return ((BlockBehaviourInvoker) visualBlock).ce$getInteractionShape(BlockStateUtils.remap(blockState), blockGetter, blockPos);
+        return ((BlockBehaviourInvoker) visualBlock).ce$getInteractionShape(BlockStateUtils.handleRemap(blockState), blockGetter, blockPos);
     }
 
     @Override
     protected @NotNull VoxelShape getShape(@NotNull BlockState blockState, @NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos, @NotNull CollisionContext collisionContext) {
         if (visualBlock == this) return super.getShape(blockState, blockGetter, blockPos, collisionContext);
-        return ((BlockBehaviourInvoker) visualBlock).ce$getShape(BlockStateUtils.remap(blockState), blockGetter, blockPos, collisionContext);
+        return ((BlockBehaviourInvoker) visualBlock).ce$getShape(BlockStateUtils.handleRemap(blockState), blockGetter, blockPos, collisionContext);
     }
 
     @Override
     protected @NotNull VoxelShape getCollisionShape(@NotNull BlockState blockState, @NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos, @NotNull CollisionContext collisionContext) {
         if (visualBlock == this) return super.getCollisionShape(blockState, blockGetter, blockPos, collisionContext);
-        return ((BlockBehaviourInvoker) visualBlock).ce$getCollisionShape(BlockStateUtils.remap(blockState), blockGetter, blockPos, collisionContext);
+        return ((BlockBehaviourInvoker) visualBlock).ce$getCollisionShape(BlockStateUtils.handleRemap(blockState), blockGetter, blockPos, collisionContext);
     }
 
     @Override
     protected @NotNull VoxelShape getEntityInsideCollisionShape(@NotNull BlockState blockState, @NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos, @NotNull Entity entity) {
         if (visualBlock == this) return super.getEntityInsideCollisionShape(blockState, blockGetter, blockPos, entity);
-        return ((BlockBehaviourInvoker) visualBlock).ce$getEntityInsideCollisionShape(BlockStateUtils.remap(blockState), blockGetter, blockPos, entity);
+        return ((BlockBehaviourInvoker) visualBlock).ce$getEntityInsideCollisionShape(BlockStateUtils.handleRemap(blockState), blockGetter, blockPos, entity);
     }
 
     @Override
     protected @NotNull VoxelShape getVisualShape(@NotNull BlockState blockState, @NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos, @NotNull CollisionContext collisionContext) {
         if (visualBlock == this) return super.getVisualShape(blockState, blockGetter, blockPos, collisionContext);
-        return ((BlockBehaviourInvoker) visualBlock).ce$getVisualShape(BlockStateUtils.remap(blockState), blockGetter, blockPos, collisionContext);
+        return ((BlockBehaviourInvoker) visualBlock).ce$getVisualShape(BlockStateUtils.handleRemap(blockState), blockGetter, blockPos, collisionContext);
     }
     // BlockBehaviour end
 
@@ -94,19 +94,19 @@ public class CraftEngineBlock extends Block implements BonemealableBlock, Simple
     @Override
     public boolean canPlaceLiquid(@Nullable LivingEntity livingEntity, @NotNull BlockGetter blockGetter, @NotNull BlockPos blockPos, @NotNull BlockState blockState, @NotNull Fluid fluid) {
         if (visualBlock == this || !(visualBlock instanceof SimpleWaterloggedBlock simpleWaterloggedBlock)) return false;
-        return simpleWaterloggedBlock.canPlaceLiquid(livingEntity, blockGetter, blockPos, BlockStateUtils.remap(blockState), fluid);
+        return simpleWaterloggedBlock.canPlaceLiquid(livingEntity, blockGetter, blockPos, BlockStateUtils.handleRemap(blockState), fluid);
     }
 
     @Override
     public boolean placeLiquid(@NotNull LevelAccessor levelAccessor, @NotNull BlockPos blockPos, @NotNull BlockState blockState, @NotNull FluidState fluidState) {
         if (visualBlock == this || !(visualBlock instanceof SimpleWaterloggedBlock simpleWaterloggedBlock)) return false;
-        return simpleWaterloggedBlock.placeLiquid(levelAccessor, blockPos, BlockStateUtils.remap(blockState), fluidState);
+        return simpleWaterloggedBlock.placeLiquid(levelAccessor, blockPos, BlockStateUtils.handleRemap(blockState), fluidState);
     }
 
     @Override
     public @NotNull ItemStack pickupBlock(@Nullable LivingEntity livingEntity, @NotNull LevelAccessor levelAccessor, @NotNull BlockPos blockPos, @NotNull BlockState blockState) {
         if (visualBlock == this || !(visualBlock instanceof SimpleWaterloggedBlock simpleWaterloggedBlock)) return ItemStack.EMPTY;
-        return simpleWaterloggedBlock.pickupBlock(livingEntity, levelAccessor, blockPos, BlockStateUtils.remap(blockState));
+        return simpleWaterloggedBlock.pickupBlock(livingEntity, levelAccessor, blockPos, BlockStateUtils.handleRemap(blockState));
     }
 
     @Override
@@ -120,19 +120,19 @@ public class CraftEngineBlock extends Block implements BonemealableBlock, Simple
     @Override
     public boolean isValidBonemealTarget(@NotNull LevelReader levelReader, @NotNull BlockPos blockPos, @NotNull BlockState blockState) {
         if (visualBlock == this || !(visualBlock instanceof BonemealableBlock bonemealableBlock)) return false;
-        return bonemealableBlock.isValidBonemealTarget(levelReader, blockPos, BlockStateUtils.remap(blockState));
+        return bonemealableBlock.isValidBonemealTarget(levelReader, blockPos, BlockStateUtils.handleRemap(blockState));
     }
 
     @Override
     public boolean isBonemealSuccess(@NotNull Level level, @NotNull RandomSource randomSource, @NotNull BlockPos blockPos, @NotNull BlockState blockState) {
         if (visualBlock == this || !(visualBlock instanceof BonemealableBlock bonemealableBlock)) return false;
-        return bonemealableBlock.isBonemealSuccess(level, randomSource, blockPos, BlockStateUtils.remap(blockState));
+        return bonemealableBlock.isBonemealSuccess(level, randomSource, blockPos, BlockStateUtils.handleRemap(blockState));
     }
 
     @Override
     public void performBonemeal(@NotNull ServerLevel serverLevel, @NotNull RandomSource randomSource, @NotNull BlockPos blockPos, @NotNull BlockState blockState) {
         if (visualBlock == this || !(visualBlock instanceof BonemealableBlock bonemealableBlock)) return;
-        bonemealableBlock.performBonemeal(serverLevel, randomSource, blockPos, BlockStateUtils.remap(blockState));
+        bonemealableBlock.performBonemeal(serverLevel, randomSource, blockPos, BlockStateUtils.handleRemap(blockState));
     }
 
     @Override

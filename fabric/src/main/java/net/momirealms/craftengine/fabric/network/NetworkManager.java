@@ -27,7 +27,9 @@ import net.momirealms.craftengine.fabric.util.BlockStateUtils;
 @Environment(EnvType.CLIENT)
 public class NetworkManager {
     public static final int PROTOCOL_VERSION = 1;
-    public static final StreamCodec<FriendlyByteBuf, ClientboundVisualBlockStatePacket> VISUAL_BLOCK_STATE = registerClientbound(ClientboundVisualBlockStatePacket.TYPE, ClientboundVisualBlockStatePacket.CODEC);
+    public static final StreamCodec<FriendlyByteBuf, ClientboundVisualBlockStateBatchStartPacket> VISUAL_BLOCK_STATE_BATCH_START = registerClientbound(ClientboundVisualBlockStateBatchStartPacket.TYPE, ClientboundVisualBlockStateBatchStartPacket.CODEC);
+    public static final StreamCodec<FriendlyByteBuf, ClientboundVisualBlockStateBatchFinishedPacket> VISUAL_BLOCK_STATE_BATCH_FINISHED = registerClientbound(ClientboundVisualBlockStateBatchFinishedPacket.TYPE, ClientboundVisualBlockStateBatchFinishedPacket.CODEC);
+    public static final StreamCodec<FriendlyByteBuf, ClientboundVisualBlockStatesPacket> VISUAL_BLOCK_STATES = registerClientbound(ClientboundVisualBlockStatesPacket.TYPE, ClientboundVisualBlockStatesPacket.CODEC);
     public static final StreamCodec<FriendlyByteBuf, ClientboundCancelBlockUpdateResponsePacket> CANCEL_BLOCK_UPDATE_RESPONSE = registerClientbound(ClientboundCancelBlockUpdateResponsePacket.TYPE, ClientboundCancelBlockUpdateResponsePacket.CODEC);
     public static final StreamCodec<FriendlyByteBuf, ClientboundCreativeModeTabItemsPacket> CREATIVE_MODE_TAB_ITEMS = registerClientbound(ClientboundCreativeModeTabItemsPacket.TYPE, ClientboundCreativeModeTabItemsPacket.CODEC);
     public static final StreamCodec<FriendlyByteBuf, ServerboundHandshakePacket> HANDSHAKE = registerServerbound(ServerboundHandshakePacket.TYPE, ServerboundHandshakePacket.CODEC);
@@ -52,9 +54,7 @@ public class NetworkManager {
         ((WritableRegistry<StreamCodec<FriendlyByteBuf, ? extends ClientCustomPacket>>) BuiltInRegistries.CLIENT_MOD_PACKET)
                 .register(ResourceKey.create(Registries.CLIENT_MOD_PACKET, type.id()), codec, RegistrationInfo.BUILT_IN);
         PayloadTypeRegistry.clientboundConfiguration().register(type, codec);
-        PayloadTypeRegistry.serverboundConfiguration().register(type, codec);
         PayloadTypeRegistry.clientboundPlay().register(type, codec);
-        PayloadTypeRegistry.serverboundPlay().register(type, codec);
         ClientConfigurationNetworking.registerGlobalReceiver(type, (payload, context) -> payload.handle(Context.of(context)));
         ClientPlayNetworking.registerGlobalReceiver(type, (payload, context) -> payload.handle(Context.of(context)));
         return codec;
@@ -63,6 +63,8 @@ public class NetworkManager {
     public static <T extends ServerCustomPacket> StreamCodec<FriendlyByteBuf, T> registerServerbound(CustomPacketPayload.Type<T> type, StreamCodec<FriendlyByteBuf, T> codec) {
         ((WritableRegistry<StreamCodec<FriendlyByteBuf, ? extends ServerCustomPacket>>) BuiltInRegistries.SERVER_MOD_PACKET)
                 .register(ResourceKey.create(Registries.SERVER_MOD_PACKET, type.id()), codec, RegistrationInfo.BUILT_IN);
+        PayloadTypeRegistry.serverboundConfiguration().register(type, codec);
+        PayloadTypeRegistry.serverboundPlay().register(type, codec);
         return codec;
     }
 
