@@ -33,7 +33,7 @@ public final class ServerboundCancelBlockUpdateRequestPacket implements ServerCu
     }
 
     @Override
-    public @NotNull Type<? extends ServerCustomPacket> type() {
+    public @NotNull Type<ServerboundCancelBlockUpdateRequestPacket> type() {
         return TYPE;
     }
 }
