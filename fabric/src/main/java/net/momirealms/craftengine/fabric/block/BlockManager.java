@@ -14,6 +14,7 @@ import net.momirealms.craftengine.fabric.mixin.HolderReferenceInvoker;
 import net.momirealms.craftengine.fabric.util.BlockStateUtils;
 
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Environment(EnvType.CLIENT)
 public class BlockManager {
@@ -23,6 +24,8 @@ public class BlockManager {
     private final CraftEngineBlockState[] customBlockStates;
     private final Holder.Reference<Block>[] customBlockHolders;
     private final int[] stateMappings;
+    private final AtomicBoolean handleVisualBlockStateBatchFinished = new AtomicBoolean(true);
+    private VisualBlockStatesData visualBlockStatesData;
 
     @SuppressWarnings("unchecked")
     public BlockManager(CraftEngineFabricMod mod) {
@@ -92,5 +95,39 @@ public class BlockManager {
 
     public void remapState(int state, int newState) {
         this.stateMappings[state] = newState;
+    }
+
+    public void handleVisualBlockStateBatchStart(int size) {
+        if (!this.handleVisualBlockStateBatchFinished.compareAndSet(true, false)) return;
+        this.visualBlockStatesData = new VisualBlockStatesData(size);
+    }
+
+    public void handleVisualBlockStates(int startIndex, int[] data) {
+        if (this.visualBlockStatesData == null || this.visualBlockStatesData.isReceived()) return;
+        this.visualBlockStatesData.receiveDataChunk(startIndex, data);
+    }
+
+    public void handleVisualBlockStateBatchFinished() {
+        if (this.visualBlockStatesData == null || this.visualBlockStatesData.isReceived()) return;
+        this.visualBlockStatesData.setReceived();
+        int[] data = this.visualBlockStatesData.data;
+        for (int i = 0; i < data.length; i++) {
+            int customId = i + BlockStateUtils.vanillaStateSize();
+            int vanillaId = data[i];
+            if (vanillaId == -1) continue;
+            BlockStateUtils.handleRemap(customId, vanillaId);
+        }
+        this.handleVisualBlockStateBatchFinished.set(true);
+    }
+
+    public void handleTags() {
+        if (this.visualBlockStatesData == null || !this.visualBlockStatesData.isReceived()) return;
+        int[] data = this.visualBlockStatesData.data;
+        for (int i = 0; i < data.length; i++) {
+            int customId = i + BlockStateUtils.vanillaStateSize();
+            int vanillaId = data[i];
+            if (vanillaId == -1) continue;
+            BlockStateUtils.handleRemapTag(customId, vanillaId);
+        }
     }
 }
