@@ -2,6 +2,7 @@ package net.momirealms.craftengine.fabric.network.protocol;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -10,7 +11,6 @@ import net.minecraft.world.item.ItemStack;
 import net.momirealms.craftengine.fabric.item.ItemManager;
 import net.momirealms.craftengine.fabric.network.ClientCustomPacket;
 import net.momirealms.craftengine.fabric.network.Context;
-import net.momirealms.craftengine.fabric.util.RegistryUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public record ClientboundCreativeModeTabItemsPacket(Action action,
-                                                    List<ItemStack> itemStacks) implements ClientCustomPacket {
+                                                    FriendlyByteBuf itemStacks) implements ClientCustomPacket {
     public static final Identifier ID = Identifier.fromNamespaceAndPath("craftengine", "creative_mode_tab_items");
     public static final Type<ClientboundCreativeModeTabItemsPacket> TYPE = new Type<>(ID);
     public static final StreamCodec<FriendlyByteBuf, ClientboundCreativeModeTabItemsPacket> CODEC = ClientCustomPacket.codec(
@@ -30,19 +30,16 @@ public record ClientboundCreativeModeTabItemsPacket(Action action,
     private static ClientboundCreativeModeTabItemsPacket decode(FriendlyByteBuf buf) {
         Action action = buf.readEnum(Action.class);
         if (action == Action.CLEAR) {
-            return new ClientboundCreativeModeTabItemsPacket(Action.CLEAR, List.of());
+            return new ClientboundCreativeModeTabItemsPacket(Action.CLEAR, null);
         } else {
-            RegistryFriendlyByteBuf byteBuf = new RegistryFriendlyByteBuf(buf, RegistryUtils.getRegistryAccess());
-            List<ItemStack> list = byteBuf.readCollection(ArrayList::new, $ -> ItemStack.STREAM_CODEC.decode(byteBuf));
-            return new ClientboundCreativeModeTabItemsPacket(action, list);
+            return new ClientboundCreativeModeTabItemsPacket(action, new FriendlyByteBuf(buf.readBytes(buf.readableBytes())));
         }
     }
 
     private void encode(FriendlyByteBuf buf) {
         buf.writeEnum(this.action);
         if (this.action == Action.CLEAR) return;
-        RegistryFriendlyByteBuf byteBuf = new RegistryFriendlyByteBuf(buf, RegistryUtils.getRegistryAccess());
-        byteBuf.writeCollection(this.itemStacks, ($, itemStack) -> ItemStack.STREAM_CODEC.encode(byteBuf, itemStack));
+        buf.writeBytes(itemStacks);
     }
 
 
@@ -63,14 +60,18 @@ public record ClientboundCreativeModeTabItemsPacket(Action action,
 
     @Override
     public void handle(Context context) {
-        this.action.execute(this.itemStacks);
+        if (!(context.networkHandler() instanceof ClientPacketListener listener)) return;
+        RegistryFriendlyByteBuf byteBuf = new RegistryFriendlyByteBuf(this.itemStacks, listener.registryAccess());
+        List<ItemStack> list = byteBuf.readCollection(ArrayList::new, $ -> ItemStack.OPTIONAL_STREAM_CODEC.decode(byteBuf));
+        this.action.execute(list);
     }
 
     public enum Action {
         ADD(list -> {
             ItemManager itemManager = ItemManager.instance();
-            list.addAll(itemManager.creativeTabItems());
-            itemManager.loadFromNetwork(list);
+            List<ItemStack> newList = itemManager.creativeTabItems();
+            newList.addAll(list);
+            itemManager.loadFromNetwork(newList);
         }),
         CLEAR($ -> ItemManager.instance().clearCreativeTabItems()),
         SET(ItemManager.instance()::loadFromNetwork);
