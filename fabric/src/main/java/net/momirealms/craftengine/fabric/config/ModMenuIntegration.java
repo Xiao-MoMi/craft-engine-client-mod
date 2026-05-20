@@ -14,7 +14,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.momirealms.craftengine.fabric.network.NetworkManager;
-import net.momirealms.craftengine.fabric.network.protocol.CancelBlockUpdatePacket;
+import net.momirealms.craftengine.fabric.network.protocol.ServerboundCancelBlockUpdateRequestPacket;
 
 @Environment(EnvType.CLIENT)
 public class ModMenuIntegration implements ModMenuApi {
@@ -41,9 +41,9 @@ public class ModMenuIntegration implements ModMenuApi {
             general.addEntry(entryBuilder.startBooleanToggle(
                             Component.translatable("option.craftengine.enable_network")
                                     .withStyle(ChatFormatting.WHITE),
-                            ModConfig.INSTANCE.enableNetwork())
+                            ModConfig.INSTANCE.enableClientCustomBlock())
                     .setDefaultValue(false)
-                    .setSaveConsumer(ModConfig.INSTANCE::enableNetwork)
+                    .setSaveConsumer(ModConfig.INSTANCE::enableClientCustomBlock)
                     .setTooltip(
                             Component.translatable("tooltip.craftengine.enable_network")
                                     .withStyle(ChatFormatting.GRAY)
@@ -54,9 +54,9 @@ public class ModMenuIntegration implements ModMenuApi {
                                     .withStyle(ChatFormatting.WHITE),
                             ModConfig.INSTANCE.enableCancelBlockUpdate())
                     .setDefaultValue(false)
-                    .setSaveConsumer(s -> {
-                        ModConfig.INSTANCE.enableCancelBlockUpdate(s);
-                        NetworkManager.instance().sendData(new CancelBlockUpdatePacket(s));
+                    .setSaveConsumer(e -> {
+                        if (e) NetworkManager.instance().sendCustomPacket(ServerboundCancelBlockUpdateRequestPacket.INSTANCE);
+                        ModConfig.INSTANCE.enableCancelBlockUpdate(e);
                     })
                     .setTooltip(
                             Component.translatable("tooltip.craftengine.enable_cancel_block_update")

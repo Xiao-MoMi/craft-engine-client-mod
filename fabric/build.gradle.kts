@@ -10,7 +10,7 @@ val latest_minecraft_version: String by project
 val min_supported_minecraft_version: String by project
 
 base {
-    archivesName.set("craft-engine-fabric-mod")
+    archivesName.set("craftengine")
 }
 
 tasks.shadowJar {
@@ -26,12 +26,12 @@ tasks.remapJar {
 
     destinationDirectory.set(file("$rootDir/target"))
     val ver = if (latest_minecraft_version == min_supported_minecraft_version) latest_minecraft_version else "$min_supported_minecraft_version-$latest_minecraft_version"
-    archiveFileName.set("${base.archivesName.get()}-${project.version}+mc$ver.jar")
+    archiveFileName.set("craft-engine-fabric-mod-${project.version}+mc$ver.jar")
 }
 
 loom {
     mods {
-        create("craft-engine-fabric-mod") {
+        create("craftengine") {
             sourceSet(sourceSets.main.get())
         }
     }
