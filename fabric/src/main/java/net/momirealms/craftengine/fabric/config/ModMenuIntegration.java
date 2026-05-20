@@ -56,11 +56,8 @@ public class ModMenuIntegration implements ModMenuApi {
                             ModConfig.INSTANCE.enableCancelBlockUpdate())
                     .setDefaultValue(false)
                     .setSaveConsumer(e -> {
-                        if (e) {
-                            NetworkManager.instance().sendCustomPacket(ServerboundCancelBlockUpdateRequestPacket.INSTANCE);
-                        } else {
-                            ModConfig.INSTANCE.enableCancelBlockUpdate(false);
-                        }
+                        if (e) NetworkManager.instance().sendCustomPacket(ServerboundCancelBlockUpdateRequestPacket.INSTANCE);
+                        ModConfig.INSTANCE.enableCancelBlockUpdate(e);
                     })
                     .setTooltip(
                             Component.translatable("tooltip.craftengine.enable_cancel_block_update")
