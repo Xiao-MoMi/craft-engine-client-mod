@@ -18,7 +18,7 @@ import net.momirealms.craftengine.fabric.mixin.CreativeModeInventoryScreenAccess
 import net.momirealms.craftengine.fabric.mixin.CreativeModeTabAccessor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -62,7 +62,7 @@ public final class ItemManager {
     }
 
     public List<ItemStack> creativeTabItems() {
-        return Collections.unmodifiableList(creativeTabItems);
+        return new ArrayList<>(creativeTabItems);
     }
 
     public void clearCreativeTabItems() {
