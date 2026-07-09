@@ -1,5 +1,8 @@
 package net.momirealms.craftengine.fabric.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.Window;
 import net.fabricmc.api.EnvType;
@@ -15,12 +18,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.IntSupplier;
 
 @Environment(EnvType.CLIENT)
 @Mixin(LoadingOverlay.class)
@@ -31,42 +32,42 @@ public abstract class LoadingOverlayMixin {
     @Shadow @Final private Consumer<Optional<Throwable>> onFinish;
     @Shadow private long fadeOutStart;
 
-    @Redirect(
+    @ModifyExpressionValue(
             method = "extractRenderState",
             at = @At(value = "INVOKE",
                     target = "Ljava/util/function/IntSupplier;getAsInt()I")
     )
-    private int ce$noBrandBackground(IntSupplier original) {
+    private int ce$noBrandBackground(int original) {
         if (ModConfig.INSTANCE.disableResourcePackLoadingScreen()) {
             return 0;
         } else {
-            return original.getAsInt();
+            return original;
         }
     }
 
-    @Redirect(
+    @WrapOperation(
             method = "extractRenderState",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;fill(IIIII)V")
     )
-    private void ce$noBrandBackground(GuiGraphicsExtractor instance, int x0, int y0, int x1, int y1, int col) {
+    private void ce$noBrandBackground(GuiGraphicsExtractor instance, int x0, int y0, int x1, int y1, int col, Operation<Void> original) {
         if (ModConfig.INSTANCE.disableResourcePackLoadingScreen()) {
-            instance.fill(x0, y0, x1, y1, 0);
+            original.call(instance, x0, y0, x1, y1, 0);
         } else {
-            instance.fill(x0, y0, x1, y1, col);
+            original.call(instance, x0, y0, x1, y1, col);
         }
     }
 
-    @Redirect(
+    @WrapOperation(
             method = "extractRenderState",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIFFIIIIIII)V")
     )
-    private void ce$noLogo(GuiGraphicsExtractor instance, RenderPipeline renderPipeline, Identifier texture, int x, int y, float u, float v, int width, int height, int srcWidth, int srcHeight, int textureWidth, int textureHeight, int color) {
+    private void ce$noLogo(GuiGraphicsExtractor instance, RenderPipeline renderPipeline, Identifier texture, int x, int y, float u, float v, int width, int height, int srcWidth, int srcHeight, int textureWidth, int textureHeight, int color, Operation<Void> original) {
         if (ModConfig.INSTANCE.disableResourcePackLoadingScreen()) {
-            instance.blit(renderPipeline, texture, x, y, u, v, width, height, srcWidth, srcHeight, textureWidth, textureHeight, 0);
+            original.call(instance, renderPipeline, texture, x, y, u, v, width, height, srcWidth, srcHeight, textureWidth, textureHeight, 0);
         } else {
-            instance.blit(renderPipeline, texture, x, y, u, v, width, height, srcWidth, srcHeight, textureWidth, textureHeight, color);
+            original.call(instance, renderPipeline, texture, x, y, u, v, width, height, srcWidth, srcHeight, textureWidth, textureHeight, color);
         }
     }
 
