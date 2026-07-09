@@ -14,9 +14,8 @@
     "FluidStateMixin",
     "GhostSlotsMixin",
     "HolderReferenceInvoker",
-    "LoadingOverlayAccessor",
+    "LoadingOverlayMixin",
     "MappedRegistryMixin",
-    "MinecraftMixin",
     "PropertiesAccessor"
   ],
   "injectors": {
