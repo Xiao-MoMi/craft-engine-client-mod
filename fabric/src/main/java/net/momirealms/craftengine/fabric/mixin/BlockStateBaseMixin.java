@@ -48,12 +48,6 @@ public abstract class BlockStateBaseMixin {
         ci.cancel();
     }
 
-    @Inject(method = "canSurvive", at = @At("HEAD"), cancellable = true)
-    private void ce$passCanPlaceAt(LevelReader levelReader, BlockPos blockPos, CallbackInfoReturnable<Boolean> cir) {
-        if (!ModConfig.INSTANCE.enableCancelBlockUpdate() || !NetworkManager.instance().serverInstalled()) return;
-        cir.setReturnValue(true);
-    }
-
     @Inject(method = "randomTick", at = @At("HEAD"), cancellable = true)
     private void ce$cancelRandomTick(ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource, CallbackInfo ci) {
         if (!ModConfig.INSTANCE.enableCancelBlockUpdate() || !NetworkManager.instance().serverInstalled()) return;

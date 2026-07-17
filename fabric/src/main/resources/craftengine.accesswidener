@@ -1,4 +1,0 @@
-accessWidener v2 named
-
-accessible class net/minecraft/client/gui/screens/recipebook/GhostSlots$GhostSlot
-accessible field net/minecraft/client/gui/screens/recipebook/GhostSlots$GhostSlot isResultSlot Z

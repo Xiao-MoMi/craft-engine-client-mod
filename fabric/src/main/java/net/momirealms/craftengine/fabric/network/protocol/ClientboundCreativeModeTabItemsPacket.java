@@ -8,6 +8,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.momirealms.craftengine.fabric.CraftEngineFabricMod;
 import net.momirealms.craftengine.fabric.item.ItemManager;
 import net.momirealms.craftengine.fabric.network.ClientCustomPacket;
 import net.momirealms.craftengine.fabric.network.Context;
@@ -62,8 +63,12 @@ public record ClientboundCreativeModeTabItemsPacket(Action action,
     public void handle(Context context) {
         if (!(context.networkHandler() instanceof ClientPacketListener listener)) return;
         RegistryFriendlyByteBuf byteBuf = new RegistryFriendlyByteBuf(this.itemStacks, listener.registryAccess());
-        List<ItemStack> list = byteBuf.readCollection(ArrayList::new, $ -> ItemStack.OPTIONAL_STREAM_CODEC.decode(byteBuf));
-        this.action.execute(list);
+        try {
+            List<ItemStack> list = byteBuf.readCollection(ArrayList::new, $ -> ItemStack.OPTIONAL_STREAM_CODEC.decode(byteBuf));
+            this.action.execute(list);
+        } catch (Throwable t) {
+            CraftEngineFabricMod.instance().logger().warn("Failed to handle ClientboundCreativeModeTabItemsPacket", t);
+        }
     }
 
     public enum Action {
