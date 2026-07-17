@@ -35,7 +35,6 @@ loom {
             sourceSet(sourceSets.main.get())
         }
     }
-    accessWidenerPath = file("src/main/resources/craftengine.accesswidener")
 }
 
 repositories {
