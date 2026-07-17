@@ -1,5 +1,6 @@
 package net.momirealms.craftengine.fabric.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.recipebook.GhostSlots;
@@ -7,13 +8,12 @@ import net.momirealms.craftengine.fabric.config.ModConfig;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Environment(EnvType.CLIENT)
 @Mixin(GhostSlots.class)
 public class GhostSlotsMixin {
 
-    @Redirect(
+    @ModifyExpressionValue(
             method = "method_62030",
             at = @At(
                     value = "FIELD",
@@ -22,7 +22,7 @@ public class GhostSlotsMixin {
                     ordinal = 1
             )
     )
-    private boolean ce$modifyIsResultSlot(GhostSlots.GhostSlot instance) {
-        return ModConfig.INSTANCE.forceGhostRecipeShowInputItemStackCount() || instance.isResultSlot;
+    private boolean ce$modifyIsResultSlot(boolean original) {
+        return ModConfig.INSTANCE.forceGhostRecipeShowInputItemStackCount() || original;
     }
 }
