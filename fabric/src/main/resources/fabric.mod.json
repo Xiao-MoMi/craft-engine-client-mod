@@ -27,6 +27,5 @@
     "minecraft": ">=${min_minecraft_version} <=${max_minecraft_version}",
     "java": ">=25",
     "fabric-api": "*"
-  },
-  "accessWidener": "craftengine.accesswidener"
+  }
 }
