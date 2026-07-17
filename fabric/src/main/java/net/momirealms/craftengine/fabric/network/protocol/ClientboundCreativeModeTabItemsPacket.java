@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.momirealms.craftengine.fabric.CraftEngineFabricMod;
 import net.momirealms.craftengine.fabric.item.ItemManager;
 import net.momirealms.craftengine.fabric.network.ClientCustomPacket;
 import net.momirealms.craftengine.fabric.network.Context;
@@ -30,7 +31,12 @@ public record ClientboundCreativeModeTabItemsPacket(Action action,
         if (action == Action.CLEAR) {
             return new ClientboundCreativeModeTabItemsPacket(Action.CLEAR, null);
         } else {
-            return new ClientboundCreativeModeTabItemsPacket(action, buf.readList(FriendlyByteBuf::readItem));
+            try {
+                return new ClientboundCreativeModeTabItemsPacket(action, buf.readList(FriendlyByteBuf::readItem));
+            } catch (Throwable t) {
+                CraftEngineFabricMod.instance().logger().warn("Failed to handle ClientboundCreativeModeTabItemsPacket", t);
+                return new ClientboundCreativeModeTabItemsPacket(action, List.of());
+            }
         }
     }
 
