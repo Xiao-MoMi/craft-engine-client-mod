@@ -1,6 +1,4 @@
 # CraftEngine Client Mod
-<<<<<<< Updated upstream
-=======
 
 A companion client mod for [CraftEngine](https://github.com/Xiao-MoMi/craft-engine), running on **Fabric**.
 
@@ -43,4 +41,3 @@ Forces item counts to be displayed on ghost recipe items in the recipe book.
 | `server-side-blocks` | `10000` | Number of placeholder blocks registered on the client. Requires a client restart. |
 | `disable-resource-pack-loading-screen` | `false` | Skip the resource pack loading screen. |
 | `force-ghost-recipe-show-input-itemstack-count` | `false` | Show item counts on ghost recipe ingredients. |
->>>>>>> Stashed changes
