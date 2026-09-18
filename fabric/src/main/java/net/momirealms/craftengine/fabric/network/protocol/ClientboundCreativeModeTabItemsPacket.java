@@ -29,7 +29,7 @@ public record ClientboundCreativeModeTabItemsPacket(Action action,
     );
 
     private static ClientboundCreativeModeTabItemsPacket decode(FriendlyByteBuf buf) {
-        Action action = buf.readEnum(Action.class);
+        Action action = Action.values()[buf.readVarInt()];
         if (action == Action.CLEAR) {
             return new ClientboundCreativeModeTabItemsPacket(Action.CLEAR, null);
         } else {
@@ -38,7 +38,7 @@ public record ClientboundCreativeModeTabItemsPacket(Action action,
     }
 
     private void encode(FriendlyByteBuf buf) {
-        buf.writeEnum(this.action);
+        buf.writeVarInt(this.action.ordinal());
         if (this.action == Action.CLEAR) return;
         buf.writeBytes(itemStacks);
     }
@@ -64,7 +64,11 @@ public record ClientboundCreativeModeTabItemsPacket(Action action,
         if (!(context.networkHandler() instanceof ClientPacketListener listener)) return;
         RegistryFriendlyByteBuf byteBuf = new RegistryFriendlyByteBuf(this.itemStacks, listener.registryAccess());
         try {
-            List<ItemStack> list = byteBuf.readCollection(ArrayList::new, _ -> ItemStack.OPTIONAL_STREAM_CODEC.decode(byteBuf));
+            int count = byteBuf.readVarInt();
+            List<ItemStack> list = new ArrayList<>(count);
+            for (int i = 0; i < count; i++) {
+                list.add(ItemStack.OPTIONAL_STREAM_CODEC.decode(byteBuf));
+            }
             this.action.execute(list);
         } catch (Throwable t) {
             CraftEngineFabricMod.instance().logger().warn("Failed to handle ClientboundCreativeModeTabItemsPacket", t);

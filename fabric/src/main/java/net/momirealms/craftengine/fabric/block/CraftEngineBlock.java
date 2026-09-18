@@ -17,6 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealSource;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,6 +32,7 @@ import net.momirealms.craftengine.fabric.mixin.PropertiesAccessor;
 import net.momirealms.craftengine.fabric.util.BlockStateUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 
@@ -118,21 +120,21 @@ public class CraftEngineBlock extends Block implements BonemealableBlock, Simple
 
     // BonemealableBlock start
     @Override
-    public boolean isValidBonemealTarget(@NotNull LevelReader levelReader, @NotNull BlockPos blockPos, @NotNull BlockState blockState) {
+    public boolean isValidBonemealTarget(@NonNull LevelReader level, @NonNull BlockPos pos, @NonNull BlockState state, @NonNull BonemealSource source) {
         if (visualBlock == this || !(visualBlock instanceof BonemealableBlock bonemealableBlock)) return false;
-        return bonemealableBlock.isValidBonemealTarget(levelReader, blockPos, BlockStateUtils.remap(blockState));
+        return bonemealableBlock.isValidBonemealTarget(level, pos, BlockStateUtils.remap(state), source);
     }
 
     @Override
-    public boolean isBonemealSuccess(@NotNull Level level, @NotNull RandomSource randomSource, @NotNull BlockPos blockPos, @NotNull BlockState blockState) {
+    public boolean isBonemealSuccess(@NonNull Level level, @NonNull RandomSource random, @NonNull BlockPos pos, @NonNull BlockState state, @NonNull BonemealSource source) {
         if (visualBlock == this || !(visualBlock instanceof BonemealableBlock bonemealableBlock)) return false;
-        return bonemealableBlock.isBonemealSuccess(level, randomSource, blockPos, BlockStateUtils.remap(blockState));
+        return bonemealableBlock.isBonemealSuccess(level, random, pos, BlockStateUtils.remap(state), source);
     }
 
     @Override
-    public void performBonemeal(@NotNull ServerLevel serverLevel, @NotNull RandomSource randomSource, @NotNull BlockPos blockPos, @NotNull BlockState blockState) {
+    public void performBonemeal(@NonNull ServerLevel level, @NonNull RandomSource random, @NonNull BlockPos pos, @NonNull BlockState state, @NonNull BonemealSource source) {
         if (visualBlock == this || !(visualBlock instanceof BonemealableBlock bonemealableBlock)) return;
-        bonemealableBlock.performBonemeal(serverLevel, randomSource, blockPos, BlockStateUtils.remap(blockState));
+        bonemealableBlock.performBonemeal(level, random, pos, BlockStateUtils.remap(state), source);
     }
 
     @Override
