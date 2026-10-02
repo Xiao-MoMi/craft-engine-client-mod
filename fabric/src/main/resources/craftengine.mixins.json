@@ -11,6 +11,7 @@
     "BlockStateBaseMixin",
     "CreativeModeInventoryScreenAccessor",
     "CreativeModeTabAccessor",
+    "CreativeModeTabsAccessor",
     "FluidStateMixin",
     "GhostSlotsMixin",
     "HolderReferenceInvoker",

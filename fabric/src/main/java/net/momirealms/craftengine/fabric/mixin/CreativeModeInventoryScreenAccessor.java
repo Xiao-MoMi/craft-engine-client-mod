@@ -14,4 +14,9 @@ public interface CreativeModeInventoryScreenAccessor {
     @Accessor("selectedTab")
     static void setSelectedTab(CreativeModeTab tab) {
     }
+
+    @Accessor("selectedTab")
+    static CreativeModeTab getSelectedTab() {
+        throw new AssertionError();
+    }
 }

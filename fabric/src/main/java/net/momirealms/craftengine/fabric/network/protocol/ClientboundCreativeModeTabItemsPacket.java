@@ -76,14 +76,9 @@ public record ClientboundCreativeModeTabItemsPacket(Action action,
     }
 
     public enum Action {
-        ADD(list -> {
-            ItemManager itemManager = ItemManager.instance();
-            List<ItemStack> newList = itemManager.creativeTabItems();
-            newList.addAll(list);
-            itemManager.loadFromNetwork(newList);
-        }),
+        ADD(list -> ItemManager.instance().addCreativeTabItems(list)),
         CLEAR(_ -> ItemManager.instance().clearCreativeTabItems()),
-        SET(ItemManager.instance()::loadFromNetwork);
+        SET(list -> ItemManager.instance().setCreativeTabItems(list));
 
         private final Consumer<List<ItemStack>> action;
 
