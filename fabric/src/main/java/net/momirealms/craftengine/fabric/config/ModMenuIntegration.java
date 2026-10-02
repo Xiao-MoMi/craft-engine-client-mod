@@ -101,6 +101,20 @@ public class ModMenuIntegration implements ModMenuApi {
                     )
                     .build()
             );
+            general.addEntry(entryBuilder.startIntField(
+                            Component.translatable("option.craftengine.creative_tab_category_slots")
+                                    .withStyle(ChatFormatting.WHITE),
+                            ModConfig.INSTANCE.creativeTabCategorySlots())
+                    .setDefaultValue(ModConfig.DEFAULT_CREATIVE_TAB_CATEGORY_SLOTS)
+                    .setMin(0)
+                    .setMax(ModConfig.MAX_CREATIVE_TAB_CATEGORY_SLOTS)
+                    .setSaveConsumer(ModConfig.INSTANCE::creativeTabCategorySlots)
+                    .setTooltip(
+                            Component.translatable("tooltip.craftengine.creative_tab_category_slots")
+                                    .withStyle(ChatFormatting.GRAY)
+                    )
+                    .build()
+            );
             return builder.build();
         }
     }
